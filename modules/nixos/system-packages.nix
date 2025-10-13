@@ -22,12 +22,11 @@
     unzip
     util-linux
     vim
-    vscode
     wget
     zip
-    nurl
   ];
 
   programs.zsh.enable = true;
+  programs.bash.enable = true;
 
 }
