@@ -206,10 +206,23 @@
 
     gtk = {
       enable = true;
+      
+      theme = {
+        name = "Nordic";
+        package = pkgs.nordic;
+      };
+      
       iconTheme = {
         name = "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
       };
+    };
+
+    home.pointerCursor = {
+      name = "Nordzy-cursors";
+      package = pkgs.nordzy-cursor-theme;
+      size = 24;
+      gtk.enable = true;
     };
 
     # Qt configuration for Wayland
@@ -238,6 +251,7 @@
       nerd-fonts.jetbrains-mono
       udiskie
       clipman
+      nordic
     ];
   };
 }
