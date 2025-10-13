@@ -15,6 +15,6 @@
 
   # Default enables
   git.enable = lib.mkDefault true;
-  sway.enable = lib.mkDefault true;
+  sway.enable = lib.mkDefault false;
   alacritty.enable = lib.mkDefault true;
 }
