@@ -9,11 +9,13 @@
     
     security.polkit.enable = true;
 
+    security.pam.services.swaylock = {};
+
     programs.sway = {
       enable = true;
       package = pkgs.swayfx;
       extraPackages = with pkgs; [
-        swaylock
+        swaylock-effects
         swayidle
         wl-clipboard
         rofi
@@ -38,7 +40,7 @@
     };
 
     environment.systemPackages = with pkgs; [
-      swaylock
+      swaylock-effects
       swayidle
       wl-clipboard
       rofi
@@ -49,7 +51,6 @@
       grim
       slurp
       brightnessctl
-      betterlockscreen
       networkmanagerapplet
       nerd-fonts.jetbrains-mono
       wayland

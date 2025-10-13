@@ -115,7 +115,7 @@
           "Mod4+d" = "exec rofi -show combi";
           "Mod4+Tab" = "exec rofi -show window";
           "Mod4+Return" = "exec alacritty";
-          "Mod4+Shift+x" = "exec betterlockscreen -l blur";
+          "Mod4+Shift+x" = "exec swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566a --key-hl-color 88c0d0 --bs-hl-color bf616a --inside-color 2e344088 --ring-ver-color 5e81ac --inside-ver-color 2e344088 --ring-wrong-color bf616a --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr '' --text-color eceff4 --font 'JetBrainsMono Nerd Font' --font-size 24";
           
           "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +10%";
           "XF86AudioLowerVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ -10%";
@@ -159,7 +159,6 @@
         startup = [
           { command = "dex --autostart --environment sway"; always = false; }
           { command = "swaybg -i ~/.config/wallpapers/wallpaper.png -m fill"; always = true; }
-          { command = "betterlockscreen -u ~/.config/wallpapers/wallpaper.png"; }
           { command = "systemctl --user restart mako"; always = false; }
           { command = "waybar"; always = false; }
           { command = "swaymsg workspace 1"; }
@@ -237,7 +236,7 @@
     };
 
     home.packages = with pkgs; [
-      swaylock
+      swaylock-effects
       swayidle
       waybar
       rofi
@@ -246,7 +245,6 @@
       grim
       slurp
       brightnessctl
-      betterlockscreen
       networkmanagerapplet
       nerd-fonts.jetbrains-mono
       udiskie
