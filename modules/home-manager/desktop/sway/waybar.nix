@@ -65,7 +65,7 @@
           clock = {
             timezone = "Europe/Stockholm";
             format-alt = " {:%a %d %b  %H:%M}";
-            format = " {:%Y-%m-%d}";
+            format = " {:%Y-%m-%d %H:%M}";
             tooltip = false;
           };
 
