@@ -55,6 +55,7 @@
       nerd-fonts.jetbrains-mono
       wayland
       wl-clipboard
+      qalculate-gtk
     ];
   };
 }
