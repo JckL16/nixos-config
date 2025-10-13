@@ -1,4 +1,4 @@
-# hosts/nixos-laptop/hardware-configuration.nix
+# hardware-configuration.nix
 
 { config, lib, pkgs, modulesPath, ... }:
 
