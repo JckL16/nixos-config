@@ -9,6 +9,7 @@
     ./hardware
     ./boot
     ./desktop
+    ./programs
     ./system-packages.nix
     ./users.nix
   ];
@@ -25,4 +26,6 @@
 
   intel-graphics.enable = lib.mkDefault false;
   amd-graphics.enable = lib.mkDefault false;
+
+  steam.enable = lib.mkDefault false;
 }

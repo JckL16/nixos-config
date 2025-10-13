@@ -4,6 +4,7 @@
 {
 
   sway.enable = true;
+  # steam.enable = true;
 
   home.packages = with pkgs; [
     obsidian

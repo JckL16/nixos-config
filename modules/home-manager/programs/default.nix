@@ -5,6 +5,7 @@
     ./git.nix
     ./zsh.nix
     ./neofetch.nix
+    ./steam.nix
   ];
 
 }
