@@ -6,6 +6,7 @@
     ./rofi.nix
     ./mako.nix
     ./kanshi.nix
+    ./clipman.nix
   ];
 
 }
