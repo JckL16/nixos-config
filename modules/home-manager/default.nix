@@ -11,6 +11,7 @@
     ./programs
     ./services
     ./desktop
+    ./programming
   ];
 
   # Default enables
@@ -18,4 +19,5 @@
   sway.enable = lib.mkDefault false;
   alacritty.enable = lib.mkDefault true;
   steam.enable = lib.mkDefault false;
+  rust.enable = lib.mkDefault false;
 }
