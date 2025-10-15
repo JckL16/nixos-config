@@ -1,5 +1,3 @@
-# modules/home-manager/sway/waybar.nix
-
 { pkgs, lib, config, ... }: {
 
   config = lib.mkIf config.sway.enable {
@@ -18,7 +16,7 @@
           margin-right = 10;
           margin-bottom = 0;
           
-          modules-left = [ "sway/workspaces" "sway/mode" "sway/window" ];
+          modules-left = [ "sway/workspaces" "sway/mode" "sway/window" "custom/waybar-mpris" ];
           modules-center = [ "clock" ];
           modules-right = [ 
             "wireplumber"
@@ -58,7 +56,7 @@
 
           # Active window title
           "sway/window" = {
-            max-length = 50;
+            max-length = 30;
           };
 
           # Clock
@@ -120,9 +118,17 @@
           # WirePlumber (PipeWire)
           wireplumber = {
             format = "{icon} {volume}%";
-            format-muted = " {volume}%";
-            format-icons = [ "" "" ];
+            format-muted = "󰸈 {volume}%";
+            format-icons = [ "󰕿" "󰖀" "󰕾" ];
             on-click = "pavucontrol";
+          };
+
+          "custom/waybar-mpris" = {
+            return-type = "json";
+            exec = "waybar-mpris --position --autofocus";
+            on-click = "waybar-mpris --send toggle";
+            escape = true;
+            max-length = 30;
           };
 
           # System tray
@@ -142,10 +148,9 @@
         }
 
         window#waybar {
-            background-color: rgba(0, 0, 0, 0.0);
+            background-color: transparent;
             color: #eceff4;
             transition-property: background-color;
-            transition-duration: .5s;
         }
 
         window#waybar.hidden {
@@ -156,7 +161,7 @@
             padding: 0 8px;
             background-color: transparent;
             color: #d8dee9;
-            border-bottom: 3px solid transparent;
+            border-radius: 8px;
         }
 
         #workspaces button:hover {
@@ -167,7 +172,6 @@
         #workspaces button.focused {
             background-color: #434c5e;
             color: #88c0d0;
-            border-bottom: 3px solid #88c0d0;
         }
 
         #workspaces button.urgent {
@@ -176,15 +180,26 @@
         }
 
         #mode {
-            background-color: rgba(0, 0, 0, 0);
+            background-color: transparent;
             color: #bf616a;
             padding: 0 10px;
             margin: 0 5px;
         }
 
         #window {
-            padding: 0 10px;
             color: #d8dee9;
+            padding: 0 5px;
+            margin-right: 5px;
+            min-width: 10px;
+            transition: min-width 0.3s ease;
+            border-radius: 8px;
+        }
+
+        #window:hover {
+            min-width: 300px;
+            padding: 0 10px;
+            background-color: #3b4252;
+            border-radius: 8px;
         }
 
         #clock,
@@ -196,11 +211,12 @@
         #backlight,
         #network,
         #wireplumber,
+        #waybar-mpris
         #tray {
             padding: 0 5px;
             margin: 0 3px;
             color: #eceff4;
-            background-color: rgba(0, 0, 0, 0);
+            background-color: transparent;
         }
 
         #clock {
@@ -276,6 +292,22 @@
             color: #4c566a;
         }
 
+        #custom-waybar-mpris {
+          color: #d8dee9;
+          padding: 0 10px;
+          margin-left: 10px;
+          min-width: 10px;
+          background-color: #3b4252;
+          border-radius: 8px;
+          transition: min-width 0.3s ease;
+        }
+
+        #custom-waybar-mpris:hover {
+          min-width: 300px;
+          padding: 0 15px;
+          background-color: #434c5e;
+        }
+
         #tray {
             padding: 0 10px 0 5px;
         }
@@ -294,6 +326,7 @@
     # Enable required system packages
     home.packages = with pkgs; [
       pavucontrol
+      waybar-mpris
     ];
   };
 }
