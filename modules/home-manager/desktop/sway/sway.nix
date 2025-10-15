@@ -78,6 +78,7 @@
           
           "Mod4+v" = "splitv";
           "Mod4+b" = "splith";
+          "Mod4+t" = "split toggle";
           "Mod4+f" = "fullscreen toggle";
           "Mod4+s" = "layout stacking";
           "Mod4+w" = "layout tabbed";
@@ -255,14 +256,12 @@
       waybar
       rofi
       mako
-      wl-clipboard
       grim
       slurp
       brightnessctl
       networkmanagerapplet
       nerd-fonts.jetbrains-mono
       udiskie
-      clipman
       nordic
     ];
   };

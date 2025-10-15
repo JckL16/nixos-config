@@ -3,8 +3,6 @@
 { pkgs, lib, config, ... }: 
 
 let
-  cfg = config.programs.kanshi;
-  
   kanshiConfig = ''
     # Single laptop screen
     profile laptop {
