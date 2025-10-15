@@ -114,6 +114,7 @@
           "Mod4+Tab" = "exec rofi -show window";
           "Mod4+Return" = "exec alacritty";
           "Mod4+Shift+x" = "exec swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566a --key-hl-color 88c0d0 --bs-hl-color bf616a --inside-color 2e344088 --ring-ver-color 5e81ac --inside-ver-color 2e344088 --ring-wrong-color bf616a --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr '' --text-color eceff4 --font 'JetBrainsMono Nerd Font' --font-size 24";
+          "Mod4+Shift+v" = "~/.config/rofi/clipman.sh"
           
           "XF86AudioRaiseVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ +10%";
           "XF86AudioLowerVolume" = "exec pactl set-sink-volume @DEFAULT_SINK@ -10%";
