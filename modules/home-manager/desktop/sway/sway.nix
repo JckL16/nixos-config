@@ -216,9 +216,6 @@
       '';
     };
 
-    # Add after the wayland.windowManager.sway block
-    
-
     gtk = {
       enable = true;
       
@@ -243,7 +240,7 @@
     # Qt configuration for Wayland
     qt = {
       enable = true;
-      platformTheme.name = "gtk3";  # Changed from "gtk" to "gtk3"
+      platformTheme.name = "gtk3";
       style.name = "adwaita-dark";
     };
 

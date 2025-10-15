@@ -25,7 +25,6 @@
       };
     };
 
-    # Create Rofi Nord theme file with unique name
     home.file.".config/rofi/nord.rasi".text = ''
       * {
           background:             #2E3440;
