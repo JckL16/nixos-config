@@ -1,5 +1,3 @@
-# modules/home-manager/sway/sway.nix
-
 { pkgs, lib, config, variables, ... }: {
 
   options = {
@@ -149,6 +147,24 @@
         window = {
           border = 2;
           titlebar = false;
+          commands = [
+            {
+              criteria = { app_id = "pavucontrol"; };
+              command = "floating enable";
+            }
+            {
+              criteria = { class = "Pavucontrol"; };
+              command = "floating enable";
+            }
+            {
+              criteria = { app_id = "blueman-manager"; };
+              command = "floating enable";
+            }
+            {
+              criteria = { class = "Blueman-manager"; };
+              command = "floating enable";
+            }
+          ];
         };
 
         floating = {
