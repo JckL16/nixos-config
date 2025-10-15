@@ -1,6 +1,7 @@
 # modules/home-manager/programming/rust.nix
 
-{ pkgs, option, lib, ... }: {
+{ pkgs, config, lib, ... }: {
+
   options = {
     rust.enable = 
       lib.mkEnableOption "Enable rust";
