@@ -24,6 +24,7 @@
       switch = "sudo nixos-rebuild switch --flake ~/nixos-config";
       test = "sudo nixos-rebuild test --flake ~/nixos-config";
       update = "nix flake update ~/nixos-config && sudo nixos-rebuild switch --flake ~/nixos-config";
+      clean = "nix-collect-garbage";
       fuck = "f";
     };
     
