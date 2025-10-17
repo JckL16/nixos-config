@@ -11,6 +11,7 @@
     # Enable OpenGL/Graphics
     hardware.graphics = {
       enable = true;
+      enable32Bit = true;
     };
 
     # AMD-specific packages
@@ -20,6 +21,14 @@
 
     # Load AMDGPU driver early
     boot.initrd.kernelModules = [ "amdgpu" ];
+
+    environment.systemPackages = with pkgs; [
+      mesa
+      vulkan-tools
+      lact
+    ];
+
+    services.lact.enable = true;
   };
   
 }
