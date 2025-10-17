@@ -5,8 +5,6 @@
   };
 
   config = lib.mkIf config.sway.enable {
-    services.gnome-keyring.enable = true;
-
     wayland.windowManager.sway = {
       enable = true;
       package = pkgs.swayfx;
