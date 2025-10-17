@@ -6,6 +6,7 @@
     ./zsh.nix
     ./neofetch.nix
     ./steam.nix
+    ./libreoffice.nix
   ];
 
 }

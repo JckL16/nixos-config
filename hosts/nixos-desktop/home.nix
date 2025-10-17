@@ -6,6 +6,8 @@
   sway.enable = true;
   steam.enable = true;
 
+  libreoffice.enable = true;
+
   home.packages = with pkgs; [
     obsidian
     spotify
