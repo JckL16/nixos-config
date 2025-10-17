@@ -9,21 +9,13 @@
 
   config = lib.mkIf config.amd-graphics.enable {
     # Enable OpenGL/Graphics
-    hardware.opengl = {
+    hardware.graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;  # For 32-bit applications
     };
 
     # AMD-specific packages
-    hardware.opengl.extraPackages = with pkgs; [
-      amdvlk           # Vulkan driver
+    hardware.graphics.extraPackages = with pkgs; [
       rocmPackages.clr.icd  # OpenCL support
-    ];
-
-    # For 32-bit Vulkan support (gaming, Wine, etc.)
-    hardware.opengl.extraPackages32 = with pkgs; [
-      driversi686Linux.amdvlk
     ];
 
     # Load AMDGPU driver early
