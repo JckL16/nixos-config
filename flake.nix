@@ -25,6 +25,19 @@
       ];
     };
 
+    nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { 
+        inherit self home-manager inputs;
+        variables = import ./variables.nix;
+      };
+      modules = [
+        ./hosts/nixos-desktop/configuration.nix
+        ./modules/nixos
+        home-manager.nixosModules.home-manager
+      ];
+    };
+
     homeManagerModules.default = ./modules/home-manager;
   };
 }
