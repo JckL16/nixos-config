@@ -6,7 +6,7 @@
   };
 
   home.packages = with pkgs; [
-    gnome.seahorse  # GUI for managing keyring
+    seahorse        # GUI for managing keyring
     libsecret       # provides secret-tool CLI
   ];
 }
