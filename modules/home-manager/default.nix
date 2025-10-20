@@ -23,4 +23,5 @@
   # Programming languages
   rust.enable = lib.mkDefault false;
   c-cpp.enable = lib.mkDefault false;
+  python-dev.enable = lib.mkDefault false;
 }
