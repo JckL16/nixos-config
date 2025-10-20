@@ -3,7 +3,7 @@
   users.users."${variables.username}" = {
     isNormalUser = true;
     description = variables.description;
-    extraGroups = [ "networkmanager" "wheel" "input" ];
+    extraGroups = [ "networkmanager" "wheel" "input" "video" ];
     packages = with pkgs; [
       firefox
     ];
