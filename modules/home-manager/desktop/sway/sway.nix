@@ -228,6 +228,14 @@
         name = "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
       };
+
+      gtk3.extraConfig = {
+        gtk-application-prefer-dark-theme = 1;
+      };
+      
+      gtk4.extraConfig = {
+        gtk-application-prefer-dark-theme = 1;
+      };
     };
 
     home.pointerCursor = {
@@ -242,6 +250,12 @@
       enable = true;
       platformTheme.name = "gtk3";
       style.name = "adwaita-dark";
+    };
+
+    home.sessionVariables = {
+      GTK_THEME = "Nordic";
+      QT_QPA_PLATFORM = "gtk3";
+      QT_STYLE_OVERRIDE = "adwaita-dark";
     };
 
     home.file = {
