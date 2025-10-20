@@ -19,6 +19,8 @@
   sway.enable = lib.mkDefault false;
   alacritty.enable = lib.mkDefault true;
   steam.enable = lib.mkDefault false;
+  libreoffice.enable = lib.mkDefault false;
+  onlyoffice.enable = lib.mkDefault false;
 
   # Programming languages
   rust.enable = lib.mkDefault false;

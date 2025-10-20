@@ -7,6 +7,7 @@
     ./neofetch.nix
     ./steam.nix
     ./libreoffice.nix
+    ./onlyoffice.nix
   ];
 
 }
