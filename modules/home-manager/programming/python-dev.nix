@@ -9,7 +9,7 @@ in
     
     pythonVersion = lib.mkOption {
       type = lib.types.enum [ "python3" "python311" "python312" "python313" ];
-      default = "python312";
+      default = "python313";
       description = "Which Python version to use";
     };
     
@@ -27,7 +27,7 @@ in
     
     includeDataScience = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = "Include data science packages (jupyter, matplotlib, scipy, etc.)";
     };
     
