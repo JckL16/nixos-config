@@ -1,71 +1,79 @@
-{ config, lib, pkgs, ... }: {
-  options.c-cpp = {
-    enable = mkEnableOption "C/C++ development environment";
+{ config, lib, pkgs, ... }:
 
-    compiler = mkOption {
-      type = types.enum [ "gcc" "clang" "both" ];
-      default = "both";
+let
+  cfg = config.c-cpp;
+in
+{
+  options.c-cpp = {
+    enable = lib.mkEnableOption "C/C++ development environment";
+    
+    compiler = lib.mkOption {
+      type = lib.types.enum [ "gcc" "clang" "both" ];
+      default = "gcc";
       description = "Which C/C++ compiler to use";
     };
-
-    includeDebugTools = mkOption {
-      type = types.bool;
+    
+    includeDebugTools = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Include debugging tools like gdb and valgrind";
     };
-
-    includeBuildTools = mkOption {
-      type = types.bool;
+    
+    includeBuildTools = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Include build tools like cmake, make, and ninja";
     };
-
-    includeLibraries = mkOption {
-      type = types.bool;
+    
+    includeLibraries = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Include common C/C++ libraries";
     };
-
-    extraPackages = mkOption {
-      type = types.listOf types.package;
+    
+    extraPackages = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
       default = [];
       description = "Additional packages to include in the environment";
     };
   };
-
-  config = mkIf config.c-cpp.enable {
+  
+  config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      # Compiler(s)
-      (mkIf (config.c-cpp.compiler == "gcc" || config.c-cpp.compiler == "both") gcc)
-      (mkIf (config.c-cpp.compiler == "clang" || config.c-cpp.compiler == "both") clang)
-      (mkIf (config.c-cpp.compiler == "clang" || config.c-cpp.compiler == "both") llvm)
-      
       # Build essentials
       gnumake
       pkg-config
-      
-      # Build tools
-    ] ++ optionals config.c-cpp.includeBuildTools [
+    ] 
+    # Compiler selection
+    ++ (if cfg.compiler == "gcc" then [ gcc ]
+        else if cfg.compiler == "clang" then [ clang llvm ]
+        else [ gcc clang-tools llvm ])  # For "both": gcc as default, clang-tools for clang features
+    # Build tools
+    ++ lib.optionals cfg.includeBuildTools [
       cmake
       ninja
       meson
       autoconf
       automake
       libtool
-    ] ++ optionals config.c-cpp.includeDebugTools [
+    ] 
+    # Debug tools
+    ++ lib.optionals cfg.includeDebugTools [
       gdb
       valgrind
       lldb
       strace
-    ] ++ optionals config.c-cpp.includeLibraries [
-      # Common libraries
+    ] 
+    # Common libraries
+    ++ lib.optionals cfg.includeLibraries [
       boost
       fmt
       spdlog
       catch2
       gtest
-    ] ++ config.c-cpp.extraPackages;
-
+    ] 
+    ++ cfg.extraPackages;
+    
     # Set up environment variables
     home.sessionVariables = {
       PKG_CONFIG_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/pkgconfig";
