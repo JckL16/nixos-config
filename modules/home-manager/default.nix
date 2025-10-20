@@ -19,5 +19,8 @@
   sway.enable = lib.mkDefault false;
   alacritty.enable = lib.mkDefault true;
   steam.enable = lib.mkDefault false;
+
+  # Programming languages
   rust.enable = lib.mkDefault false;
+  c-cpp.enable = lib.mkDefault false;
 }

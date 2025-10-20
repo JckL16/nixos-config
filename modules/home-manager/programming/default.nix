@@ -3,6 +3,7 @@
   
   imports = [
     ./rust.nix
+    ./c-cpp.nix
   ];
 
 }
