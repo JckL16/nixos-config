@@ -26,6 +26,7 @@
 
   intel-graphics.enable = lib.mkDefault false;
   amd-graphics.enable = lib.mkDefault false;
+  nvidia-graphics.enable = lib.mkDefault false;
 
   steam.enable = lib.mkDefault false;
 }
