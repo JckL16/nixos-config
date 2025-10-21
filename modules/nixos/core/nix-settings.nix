@@ -1,3 +1,5 @@
+# modules/nixos/core/nix-settings.nix
+
 { pkgs, ... }: {
   
   # Unfree packages

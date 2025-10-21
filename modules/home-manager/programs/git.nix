@@ -1,4 +1,4 @@
-# modules/home-manager/git.nix
+# modules/home-manager/programs/git.nix
 
 { pkgs, lib, config, variables, ... }: {
 

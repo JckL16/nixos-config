@@ -1,4 +1,4 @@
-# modules/home-manager/libreoffice.nix
+# modules/home-manager/programs/libreoffice.nix
 
 { pkgs, lib, config, variables, ... }: {
 

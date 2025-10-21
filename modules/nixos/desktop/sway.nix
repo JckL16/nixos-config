@@ -1,3 +1,5 @@
+# modules/nixos/desktop/sway.nix
+
 { pkgs, lib, config, ... }: {
   options = {
     sway.enable = lib.mkEnableOption "Enable sway window manager";

@@ -1,4 +1,4 @@
-# modules/nixos/desktop-env/gnome.nix
+# modules/nixos/desktop/gnome.nix
 
 { pkgs, lib, config, ... }: {
 

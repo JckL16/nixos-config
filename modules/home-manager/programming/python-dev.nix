@@ -1,3 +1,5 @@
+# modules/home-manager/programming/python-dev.nix
+
 { config, lib, pkgs, ... }:
 
 let

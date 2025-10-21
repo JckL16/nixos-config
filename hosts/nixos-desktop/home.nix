@@ -1,4 +1,4 @@
-# hosts/nixos-laptop/home.nix
+# hosts/nixos-desktop/home.nix
 
 { config, pkgs, ... }:
 {
@@ -12,6 +12,7 @@
     obsidian
     spotify
     vscode
+    discord-ptb
   ];
 
 }

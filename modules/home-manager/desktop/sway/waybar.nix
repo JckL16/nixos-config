@@ -1,3 +1,5 @@
+# modules/home-manager/desktop/sway/waybar.nix
+
 { pkgs, lib, config, ... }: {
 
   config = lib.mkIf config.sway.enable {

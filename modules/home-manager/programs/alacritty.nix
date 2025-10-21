@@ -1,4 +1,4 @@
-# modules/home-manager/alacritty.nix
+# modules/home-manager/programs/alacritty.nix
 
 { pkgs, lib, config, variables, ... }: {
   

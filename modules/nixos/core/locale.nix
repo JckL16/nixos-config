@@ -1,3 +1,5 @@
+# modules/nixos/core/locale.nix
+
 { variables, ... }: {
 
   # Timezone

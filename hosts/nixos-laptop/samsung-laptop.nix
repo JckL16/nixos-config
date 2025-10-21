@@ -1,4 +1,4 @@
-# hardware-configuration.nix
+# hosts/nixos-laptop/samsung-laptop.nix
 
 { config, lib, pkgs, modulesPath, ... }:
 

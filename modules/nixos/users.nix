@@ -1,3 +1,5 @@
+# modules/nixos/users.nix
+
 { pkgs, variables, ... }: {
 
   users.users."${variables.username}" = {

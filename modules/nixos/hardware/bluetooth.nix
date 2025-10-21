@@ -1,4 +1,4 @@
-# modules/nixos/bluetooth.nix
+# modules/nixos/hardware/bluetooth.nix
 
 { pkgs, lib, config, ... }: {
 

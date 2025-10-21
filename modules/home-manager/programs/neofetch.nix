@@ -1,3 +1,5 @@
+# modules/home-manager/programs/neofetch.nix
+
 { config, pkgs, ... }:
 
 {

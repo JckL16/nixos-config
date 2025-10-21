@@ -1,3 +1,5 @@
+# modules/home-manager/desktop/sway/sway.nix
+
 { pkgs, lib, config, variables, ... }: {
 
   options = {

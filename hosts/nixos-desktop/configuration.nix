@@ -1,4 +1,4 @@
-# hosts/nixos-laptop/configuration.nix
+# hosts/nixos-desktop/configuration.nix
 
 { config, pkgs, home-manager, inputs, variables, ... }: {
   

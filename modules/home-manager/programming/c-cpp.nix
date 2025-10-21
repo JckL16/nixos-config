@@ -1,3 +1,5 @@
+# modules/home-manager/programming/c-cpp.nix
+
 { config, lib, pkgs, ... }:
 
 let

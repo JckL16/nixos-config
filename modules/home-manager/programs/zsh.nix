@@ -1,4 +1,5 @@
-# modules/home-manager/zsh.nix
+# modules/home-manager/programs/zsh.nix
+
 { pkgs, lib, config, variables, ... }: {
   home.packages = with pkgs; [
     fzf

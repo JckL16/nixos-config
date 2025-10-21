@@ -1,3 +1,5 @@
+# modules/nixos/core/networking.nix
+
 { ... }: {
   
   # Networking
