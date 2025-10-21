@@ -14,20 +14,10 @@
       steamcmd   # Steam command-line client
     ];
 
-    # Environment variables for Steam/Proton/Wayland gaming
+    # Environment variables for Steam/Proton gaming
     home.sessionVariables = {
-      # Wayland-specific Steam variables
-      SDL_VIDEODRIVER = "wayland";
-      
-      # Proton/Wine Wayland support
-      WINE_VK_USE_FSR = "1";  # Enable FSR in Wine/Proton
-      
-      # Steam scaling (adjust for your display)
+      WINE_VK_USE_FSR = "1";
       STEAM_FORCE_DESKTOPUI_SCALING = "1.5";
-      
-      # Uncomment for debugging
-      # PROTON_LOG = "1";
-      # DXVK_HUD = "fps,devinfo,memory";
     };
 
     # Configure MangoHud

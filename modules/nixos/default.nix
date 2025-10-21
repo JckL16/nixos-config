@@ -17,6 +17,7 @@
   # Default enables
   audio.enable = lib.mkDefault true;
   bluetooth.enable = lib.mkDefault true;
+  swap-file.enable = lib.mkDefault true;
   
   sway.enable = lib.mkDefault false;
   gnome.enable = lib.mkDefault false;
