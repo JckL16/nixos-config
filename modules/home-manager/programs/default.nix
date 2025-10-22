@@ -8,6 +8,7 @@
     ./steam.nix
     ./libreoffice.nix
     ./onlyoffice.nix
+    ./nvim.nix
   ];
 
 }

@@ -21,6 +21,7 @@
   steam.enable = lib.mkDefault false;
   libreoffice.enable = lib.mkDefault false;
   onlyoffice.enable = lib.mkDefault false;
+  nvim.enable = lib.mkDefault true;
 
   # Programming languages
   rust.enable = lib.mkDefault false;
