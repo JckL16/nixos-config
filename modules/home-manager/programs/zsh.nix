@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     fzf
     pay-respects
+    eza
   ];
   
   programs.zsh = {
@@ -28,6 +29,13 @@
       update = "nix flake update --flake ~/nixos-config && sudo nixos-rebuild switch --flake ~/nixos-config";
       clean = "nix-collect-garbage";
       fuck = "f";
+
+      # Eza aliases
+      ls = "eza --icons --group-directories-first";
+      ll = "eza --icons --group-directories-first -l";
+      la = "eza --icons --group-directories-first -la";
+      lt = "eza --icons --group-directories-first --tree";
+      tree = "eza --icons --group-directories-first --tree";
     };
     
     initContent = ''
