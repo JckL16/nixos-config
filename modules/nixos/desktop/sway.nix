@@ -59,5 +59,7 @@
       wl-clipboard
       qalculate-gtk
     ];
+
+    services.udisks2.enable = true;
   };
 }

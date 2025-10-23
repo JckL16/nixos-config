@@ -278,5 +278,9 @@
       udiskie
       nordic
     ];
+
+    services.udiskie.settings = {
+      automount = true;
+    };
   };
 }
