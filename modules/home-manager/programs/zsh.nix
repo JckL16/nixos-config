@@ -33,7 +33,7 @@
       # Eza aliases
       ls = "eza --icons --group-directories-first";
       ll = "eza --icons --group-directories-first -l";
-      la = "eza --icos --group-directories-first -la";
+      la = "eza --icons --group-directories-first -la";
       lt = "eza --icons --group-directories-first --tree";
       tree = "eza --icons --group-directories-first --tree";
     };
