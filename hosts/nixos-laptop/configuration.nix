@@ -7,6 +7,9 @@
     home-manager.nixosModules.home-manager
   ];
 
+  # Set to newest kernel to get the samsung-galaxy kernel working
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # Hostname
   networking.hostName = "nixos-laptop";
 

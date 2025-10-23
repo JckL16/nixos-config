@@ -124,6 +124,10 @@
           
           "XF86MonBrightnessUp" = "exec brightnessctl set +5%";
           "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
+          
+          # Specificly for my samsung laptop
+          "XF86KbdBrightnessUp" = "exec brightnessctl --device='samsung-galaxybook::kbd_backlight' set +25%";
+          "XF86KbdBrightnessDown" = "exec brightnessctl --device='samsung-galaxybook::kbd_backlight' set 25%";
         };
 
         modes = {
