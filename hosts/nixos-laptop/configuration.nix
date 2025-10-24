@@ -8,9 +8,9 @@
   ];
 
   # Set to newest kernel to get the samsung-galaxy kernel working
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;
 
-  # Hostname
+  # Hostname7
   networking.hostName = "nixos-laptop";
 
   # Desktop environment
