@@ -3,6 +3,7 @@
   imports = [
     ./sway
     ./shared
+    ./hyprland
   ];
 
 }

@@ -16,12 +16,16 @@
 
   # Default enables
   git.enable = lib.mkDefault true;
-  sway.enable = lib.mkDefault false;
+  nvim.enable = lib.mkDefault true;
   alacritty.enable = lib.mkDefault true;
+
   steam.enable = lib.mkDefault false;
+
   libreoffice.enable = lib.mkDefault false;
   onlyoffice.enable = lib.mkDefault false;
-  nvim.enable = lib.mkDefault true;
+  
+  sway.enable = lib.mkDefault false;
+  hyprland.enable = lib.mkDefault false;
 
   # Programming languages
   rust.enable = lib.mkDefault false;
