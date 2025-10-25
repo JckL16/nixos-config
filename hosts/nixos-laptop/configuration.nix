@@ -8,7 +8,10 @@
   ];
 
   # Set to newest kernel to get the samsung-galaxy kernel working
-  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.initrd.systemd.enable = true;  # Use systemd in initrd for better compatibility
+  boot.initrd.compressor = "zstd";
+  boot.initrd.compressorArgs = [ "-19" "-T0" ];
 
   # Hostname7
   networking.hostName = "nixos-laptop";
