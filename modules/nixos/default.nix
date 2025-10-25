@@ -21,6 +21,7 @@
   
   sway.enable = lib.mkDefault false;
   gnome.enable = lib.mkDefault false;
+  hyprland.enable = lib.mkDefault false;
 
   systemd-boot.enable = lib.mkDefault true;
   grub.enable = lib.mkDefault false;
