@@ -277,6 +277,7 @@
       networkmanagerapplet
       swaybg
       udiskie
+      nerd-fonts.jetbrains-mono
     ];
 
     services.udiskie.settings = {
