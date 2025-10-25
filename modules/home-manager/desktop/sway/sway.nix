@@ -269,18 +269,14 @@
     };
 
     home.packages = with pkgs; [
-      swaylock-effects
-      swayidle
-      waybar
       rofi
       mako
       grim
       slurp
       brightnessctl
       networkmanagerapplet
-      nerd-fonts.jetbrains-mono
+      swaybg
       udiskie
-      nordic
     ];
 
     services.udiskie.settings = {

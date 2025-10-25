@@ -11,7 +11,6 @@
     # Add clipman to home packages
     home.packages = with pkgs; [
       clipman
-      wl-clipboard
     ];
 
     # Rofi script for clipman
