@@ -278,6 +278,7 @@
       swaybg
       udiskie
       nerd-fonts.jetbrains-mono
+      nordic
     ];
 
     services.udiskie.settings = {

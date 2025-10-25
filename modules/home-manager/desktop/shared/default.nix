@@ -3,9 +3,9 @@
 { ... }: {
   
   imports = [
-    ./sway.nix
-    ./waybar.nix
-    ./kanshi.nix
+    ./mako.nix
+    ./clipman.nix
+    ./rofi.nix
   ];
 
 }
