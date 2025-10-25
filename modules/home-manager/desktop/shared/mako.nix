@@ -1,4 +1,4 @@
-# modules/home-manager/sway/mako.nix
+# modules/home-manager/shared/mako.nix
 
 { pkgs, lib, config, ... }: {
 

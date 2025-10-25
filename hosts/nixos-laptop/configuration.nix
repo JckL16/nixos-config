@@ -13,11 +13,12 @@
   boot.initrd.compressor = "zstd";
   boot.initrd.compressorArgs = [ "-19" "-T0" ];
 
-  # Hostname7
+  # Hostname
   networking.hostName = "nixos-laptop";
 
   # Desktop environment
   sway.enable = true;
+  # hyprland.enable = true;
 
   # Graphics drivers
   intel-graphics.enable = true;

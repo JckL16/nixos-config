@@ -1,3 +1,5 @@
+# modules/home-manager/desktop/shared/default.nix
+
 { ... }: {
   
   imports = [

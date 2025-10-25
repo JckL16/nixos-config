@@ -1,4 +1,4 @@
-# modules/home-manager/sway/clipman.nix
+# modules/home-manager/shared/clipman.nix
 
 { pkgs, lib, config, ... }: {
   config = lib.mkIf config.sway.enable {

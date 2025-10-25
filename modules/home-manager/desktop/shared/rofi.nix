@@ -1,4 +1,4 @@
-# modules/home-manager/sway/rofi.nix
+# modules/home-manager/shared/rofi.nix
 
 { pkgs, lib, config, ... }: {
 
