@@ -1,4 +1,4 @@
-# modules/home-manager/desktop/hyprland/waybar.nix
+# modules/home-manager/desktop/hyprland/waybar-hyprland.nix
 
 { pkgs, lib, config, ... }: {
 

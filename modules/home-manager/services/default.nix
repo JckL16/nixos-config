@@ -1,8 +1,8 @@
 { ... }: {
   
   imports = [
-    ./bluetooth.nix
     ./keyring.nix
+    ./udiskie.nix
   ];
 
 }

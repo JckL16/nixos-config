@@ -1,4 +1,4 @@
-# modules/home-manager/desktop/sway/waybar.nix
+# modules/home-manager/desktop/sway/waybar-sway.nix
 
 { pkgs, lib, config, ... }: {
 

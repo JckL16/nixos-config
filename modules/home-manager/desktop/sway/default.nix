@@ -2,7 +2,7 @@
   
   imports = [
     ./sway.nix
-    ./waybar.nix
+    ./waybar-sway.nix
   ];
 
 }

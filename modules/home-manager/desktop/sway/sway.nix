@@ -220,53 +220,7 @@
         layer_effects "waybar" blur disable; shadows disable; corner_radius 1
         layer_effects "rofi" blur enable; shadows enable; corner_radius 5
       '';
-    };
-
-    gtk = {
-      enable = true;
-      
-      theme = {
-        name = "Nordic";
-        package = pkgs.nordic;
-      };
-      
-      iconTheme = {
-        name = "Papirus-Dark";
-        package = pkgs.papirus-icon-theme;
-      };
-
-      gtk3.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
-      };
-      
-      gtk4.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
-      };
-    };
-
-    home.pointerCursor = {
-      name = "Nordzy-cursors";
-      package = pkgs.nordzy-cursor-theme;
-      size = 24;
-      gtk.enable = true;
-    };
-
-    # Qt configuration for Wayland
-    qt = {
-      enable = true;
-      platformTheme.name = "gtk3";
-      style.name = "adwaita-dark";
-    };
-
-    home.sessionVariables = {
-      GTK_THEME = "Nordic";
-      QT_QPA_PLATFORM = "gtk3";
-      QT_STYLE_OVERRIDE = "adwaita-dark";
-    };
-
-    home.file = {
-      ".config/wallpapers/wallpaper.png".source = ../../../../wallpaper/wallpaper.png;
-    };
+    }; 
 
     home.packages = with pkgs; [
       rofi
@@ -278,14 +232,8 @@
       swaybg
       udiskie
       nerd-fonts.jetbrains-mono
-      nordic
     ];
 
-    services.udiskie = {
-      enable = true;
-      automount = true;
-      notify = true;
-      tray = "auto";
-    };
+    services.blueman-applet.enable = true;
   };
 }

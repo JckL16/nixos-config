@@ -1,6 +1,6 @@
 # modules/home-manager/services/keyring.nix
 
-{ pkgs, lib, config, variables, ... }: {
+{ pkgs, ... }: {
 
   services.gnome-keyring = {
     enable = true;

@@ -6,6 +6,7 @@
     ./mako.nix
     ./clipman.nix
     ./rofi.nix
+    ./nordic-theme.nix
   ];
 
 }
