@@ -26,6 +26,7 @@
 
   systemd-boot.enable = lib.mkDefault true;
   grub.enable = lib.mkDefault false;
+  grub.nordic-theme.enable = lib.mkDefault false;
 
   intel-graphics.enable = lib.mkDefault false;
   amd-graphics.enable = lib.mkDefault false;
