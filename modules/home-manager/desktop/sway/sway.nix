@@ -184,6 +184,7 @@
           { command = "systemctl --user restart mako"; always = false; }
           { command = "waybar"; always = false; }
           { command = "swaymsg workspace 1"; }
+          { command = "udiskie --tray --notify --automount &"; always = false; }
         ];
       };
 

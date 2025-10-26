@@ -175,6 +175,7 @@
           "waybar"
           "sleep 2 && systemctl --user start kanshi.service"
           "hyprctl dispatch workspace 1"
+          "udiskie --tray --notify --automount &"
         ];
         
         # Environment variables
