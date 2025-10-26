@@ -184,7 +184,6 @@
           { command = "systemctl --user restart mako"; always = false; }
           { command = "waybar"; always = false; }
           { command = "swaymsg workspace 1"; }
-          { command = "sh -c 'sleep 2 && systemctl --user start kanshi.service'"; always = false; }
         ];
       };
 

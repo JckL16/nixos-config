@@ -3,7 +3,6 @@
   imports = [
     ./sway.nix
     ./waybar.nix
-    ./kanshi.nix
   ];
 
 }
