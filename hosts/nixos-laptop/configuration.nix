@@ -30,7 +30,6 @@
     useUserPackages = true;
     extraSpecialArgs = { 
       inherit inputs variables;
-      sway.enable = config.sway.enable;
     };
     users."${variables.username}" = {
       imports = [
