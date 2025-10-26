@@ -20,8 +20,8 @@
         
         # General settings
         general = {
-          gaps_in = 8;
-          gaps_out = 4;
+          gaps_in = 4;
+          gaps_out = 6;
           border_size = 2;
           "col.active_border" = "rgba(4C566Aee)";
           "col.inactive_border" = "rgba(4C566Aaa)";
@@ -41,7 +41,7 @@
           
           shadow = {
             enabled = true;
-            range = 20;
+            range = 10;
             render_power = 3;
             color = "rgba(00000099)";
           };

@@ -147,7 +147,7 @@
             border: none;
             border-radius: 0;
             font-family: "JetBrainsMono Nerd Font Mono";
-            font-size: 11px;
+            font-size: 13px;
             min-height: 0;
         }
 
