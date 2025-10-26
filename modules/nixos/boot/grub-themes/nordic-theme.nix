@@ -4,29 +4,14 @@
 let
   cfg = config.grub.nordic-theme;
   
-  # Nordic color palette matching your sway.nix configuration
-  nordicColors = {
-    # Polar Night
-    nord0 = "#2E3440";
-    nord1 = "#3B4252";
-    nord2 = "#434C5E";
-    nord3 = "#4C566A";
-    # Snow Storm
-    nord4 = "#D8DEE9";
-    nord5 = "#E5E9F0";
-    nord6 = "#ECEFF4";
-    # Frost
-    nord7 = "#8FBCBB";
-    nord8 = "#88C0D0";
-    nord9 = "#81A1C1";
-    nord10 = "#5E81AC";
-    # Aurora
-    nord11 = "#BF616A";
-    nord12 = "#D08770";
-    nord13 = "#EBCB8B";
-    nord14 = "#A3BE8C";
-    nord15 = "#B48EAD";
-  };
+  # Get the wallpaper path
+  wallpaperSrc = 
+    if (cfg.wallpaperPath != null) then
+      cfg.wallpaperPath
+    else if cfg.useWallpaper then
+      ../../../../wallpaper/wallpaper.png
+    else
+      null;
 
   # Create the Nordic GRUB theme
   nordicTheme = pkgs.stdenv.mkDerivation {
@@ -42,86 +27,152 @@ let
     buildPhase = ''
       mkdir -p theme
       
-      # Create a Nordic-colored gradient background
-      ${pkgs.imagemagick}/bin/convert -size 1920x1080 \
-        -define gradient:angle=135 \
-        gradient:"${nordicColors.nord0}"-"${nordicColors.nord3}" \
-        theme/background.png
+      ${if wallpaperSrc != null then ''
+        # Copy and resize the wallpaper to match resolution
+        ${pkgs.imagemagick}/bin/convert "${wallpaperSrc}" \
+          -resize ${cfg.resolution}^ \
+          -gravity center \
+          -extent ${cfg.resolution} \
+          -type TrueColor \
+          -define png:bit-depth=8 \
+          -define png:color-type=2 \
+          PNG24:theme/background.png
+      '' else ''
+        # Create a solid Nordic background
+        ${pkgs.imagemagick}/bin/convert \
+          -size ${cfg.resolution} \
+          "xc:rgb(46,52,64)" \
+          -type TrueColor \
+          -define png:bit-depth=8 \
+          -define png:color-type=2 \
+          PNG24:theme/background.png
+      ''}
       
-      # Create selection highlight boxes
-      ${pkgs.imagemagick}/bin/convert -size 640x32 xc:"${nordicColors.nord10}" \
-        -alpha set -channel A -evaluate set 40% \
-        theme/select_c.png
+      # Create the menu background panel with rounded corners (like waybar)
+      ${pkgs.imagemagick}/bin/convert \
+        -size 1150x650 \
+        "xc:rgba(59,66,82,0.95)" \
+        \( +clone -alpha extract \
+           -draw 'fill black polygon 0,0 0,8 8,0 fill white circle 8,8 8,0' \
+           \( +clone -flip \) -compose Multiply -composite \
+           \( +clone -flop \) -compose Multiply -composite \
+        \) -alpha off -compose CopyOpacity -composite \
+        -type TrueColorAlpha \
+        -define png:bit-depth=8 \
+        -define png:color-type=6 \
+        PNG32:theme/menu_bg.png
       
-      ${pkgs.imagemagick}/bin/convert -size 8x32 xc:"${nordicColors.nord10}" \
-        -alpha set -channel A -evaluate set 40% \
-        theme/select_e.png
+      # Create selection highlight - subtle background like window module hover
+      # Using a slightly darker shade with rounded corners
+      ${pkgs.imagemagick}/bin/convert \
+        -size 1080x40 \
+        "xc:rgba(67,76,94,0.85)" \
+        \( +clone -alpha extract \
+           -draw 'fill black polygon 0,0 0,8 8,0 fill white circle 8,8 8,0' \
+           \( +clone -flip \) -compose Multiply -composite \
+           \( +clone -flop \) -compose Multiply -composite \
+        \) -alpha off -compose CopyOpacity -composite \
+        -type TrueColorAlpha \
+        -define png:bit-depth=8 \
+        -define png:color-type=6 \
+        PNG32:theme/select_c.png
       
-      ${pkgs.imagemagick}/bin/convert -size 8x32 xc:"${nordicColors.nord10}" \
-        -alpha set -channel A -evaluate set 40% \
-        theme/select_w.png
+      # Create left edge of selection with rounded corner
+      ${pkgs.imagemagick}/bin/convert \
+        -size 8x40 \
+        "xc:rgba(67,76,94,0.85)" \
+        \( +clone -alpha extract \
+           -draw 'fill black polygon 0,0 0,8 8,0 fill white circle 8,8 8,0' \
+           \( +clone -flip \) -compose Multiply -composite \
+        \) -alpha off -compose CopyOpacity -composite \
+        -type TrueColorAlpha \
+        -define png:bit-depth=8 \
+        -define png:color-type=6 \
+        PNG32:theme/select_w.png
+      
+      # Create right edge of selection with rounded corner
+      ${pkgs.imagemagick}/bin/convert \
+        -size 8x40 \
+        "xc:rgba(67,76,94,0.85)" \
+        \( +clone -alpha extract \
+           -draw 'fill white circle 0,8 0,0' \
+           \( +clone -flip \) -compose Multiply -composite \
+        \) -alpha off -compose CopyOpacity -composite \
+        -type TrueColorAlpha \
+        -define png:bit-depth=8 \
+        -define png:color-type=6 \
+        PNG32:theme/select_e.png
     '';
 
     installPhase = ''
       mkdir -p $out
       cp -r theme/* $out/
       
-      # Create theme.txt with Nordic styling
-      cat > $out/theme.txt << 'EOF'
+      # Create theme.txt with Nordic styling matching waybar window module
+      cat > $out/theme.txt <<'EOFTHEME'
 # Nordic GRUB Theme
-# Inspired by Nord color palette
+# Inspired by Nord color palette and Waybar styling
 
 # General settings
 title-text: ""
 desktop-image: "background.png"
-desktop-color: "${nordicColors.nord0}"
-terminal-font: "JetBrainsMono Nerd Font Mono Regular 14"
+desktop-color: "46, 52, 64"
+terminal-font: "Unifont Regular 16"
 
-# Boot menu
+# Menu background panel (like waybar background)
++ image {
+  left = 15%
+  top = 20%
+  width = 70%
+  height = 60%
+  file = "menu_bg.png"
+}
+
+# Boot menu (styled like waybar window module)
 + boot_menu {
-  left = 20%
-  top = 30%
-  width = 60%
-  height = 40%
-  item_font = "JetBrainsMono Nerd Font Mono Regular 16"
-  item_color = "${nordicColors.nord4}"
-  selected_item_color = "${nordicColors.nord6}"
-  item_height = 36
-  item_padding = 12
+  left = 18%
+  top = 25%
+  width = 64%
+  height = 45%
+  item_font = "Unifont Regular 16"
+  item_color = "216, 222, 233"
+  selected_item_color = "216, 222, 233"
+  item_height = 40
+  item_padding = 15
   item_spacing = 8
   selected_item_pixmap_style = "select_*.png"
   icon_width = 32
   icon_height = 32
-  item_icon_space = 12
+  item_icon_space = 15
 }
 
-# Countdown/Progress bar
+# Countdown/Progress bar (cyan like clock in waybar)
 + progress_bar {
   id = "__timeout__"
-  left = 20%
-  top = 75%
-  height = 28
-  width = 60%
-  font = "JetBrainsMono Nerd Font Mono Regular 14"
-  text_color = "${nordicColors.nord4}"
-  fg_color = "${nordicColors.nord8}"
-  bg_color = "${nordicColors.nord2}"
-  border_color = "${nordicColors.nord3}"
+  left = 18%
+  top = 73%
+  height = 30
+  width = 64%
+  font = "Unifont Regular 14"
+  text_color = "216, 222, 233"
+  fg_color = "136, 192, 208"
+  bg_color = "59, 66, 82"
+  border_color = "67, 76, 94"
   text = "@TIMEOUT_NOTIFICATION_LONG@"
 }
 
-# Footer text
+# Footer text (like network info color in waybar)
 + label {
-  top = 90%
+  top = 85%
   left = 0
   width = 100%
   height = 20
   text = "Nordic Theme"
-  color = "${nordicColors.nord9}"
+  color = "129, 161, 193"
   align = "center"
-  font = "JetBrainsMono Nerd Font Mono Regular 12"
+  font = "Unifont Regular 12"
 }
-EOF
+EOFTHEME
     '';
 
     meta = with lib; {
@@ -167,47 +218,24 @@ in {
       gfxmodeEfi = cfg.resolution;
       gfxmodeBios = cfg.resolution;
       
-      # Use JetBrains Mono font to match your desktop
-      font = "${pkgs.nerd-fonts.jetbrains-mono}/share/fonts/truetype/NerdFonts/JetBrainsMonoNerdFont-Regular.ttf";
-      fontSize = 14;
+      # Don't use splashImage as it conflicts with theme
+      splashImage = null;
       
-      # Additional GRUB configuration with Nordic colors
+      # Additional GRUB configuration
       extraConfig = ''
         # Enable graphical terminal
         terminal_output gfxterm
         
-        # Set Nordic color scheme for text mode fallback
-        set color_normal=${nordicColors.nord4}/${nordicColors.nord0}
-        set color_highlight=${nordicColors.nord6}/${nordicColors.nord10}
-        
-        # Load graphics and theme
-        if loadfont $font ; then
-          set gfxmode=${cfg.resolution}
-          insmod gfxterm
-          insmod vbe
-          insmod vga
-          insmod videoinfo
-          insmod png
-        fi
-        
-        # Set menu colors matching Nordic theme
-        set menu_color_normal=${nordicColors.nord4}/${nordicColors.nord0}
-        set menu_color_highlight=${nordicColors.nord6}/${nordicColors.nord10}
+        # Set graphics mode
+        set gfxmode=${cfg.resolution}
+        insmod all_video
+        insmod gfxterm
+        insmod png
       '';
-      
-      # Optional: use your desktop wallpaper
-      splashImage = 
-        if (cfg.wallpaperPath != null) then
-          cfg.wallpaperPath
-        else if cfg.useWallpaper then
-          ../../../../../wallpaper/wallpaper.png
-        else
-          null;
     };
 
-    # Ensure necessary fonts are available
+    # Ensure necessary packages are available
     environment.systemPackages = with pkgs; [
-      nerd-fonts.jetbrains-mono
       imagemagick
     ];
   };
