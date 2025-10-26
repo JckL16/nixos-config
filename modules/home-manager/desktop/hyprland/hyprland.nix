@@ -13,6 +13,10 @@
       settings = {
         # Modifier key
         "$mod" = "SUPER";
+
+        monitor = [
+          ",preferred,auto,1"
+        ];
         
         # General settings
         general = {
@@ -35,10 +39,12 @@
             xray = false;
           };
           
-          drop_shadow = true;
-          shadow_range = 20;
-          shadow_render_power = 3;
-          "col.shadow" = "rgba(00000099)";
+          shadow = {
+            enabled = true;
+            range = 20;
+            render_power = 3;
+            color = "rgba(00000099)";
+          };
         };
         
         # Animations
@@ -112,7 +118,6 @@
           
           "$mod SHIFT, Space, togglefloating"
           "$mod, Space, focuscurrentorlast"
-          "$mod, A, focusparent"
           
           "$mod, 1, workspace, 1"
           "$mod, 2, workspace, 2"
@@ -162,23 +167,6 @@
           "$mod, mouse:273, resizewindow"
         ];
         
-        # Resize mode bindings
-        binde = [
-          "resize, H, resizeactive, -10 0"
-          "resize, J, resizeactive, 0 10"
-          "resize, K, resizeactive, 0 -10"
-          "resize, L, resizeactive, 10 0"
-          
-          "resize, Left, resizeactive, -10 0"
-          "resize, Down, resizeactive, 0 10"
-          "resize, Up, resizeactive, 0 -10"
-          "resize, Right, resizeactive, 10 0"
-          
-          "resize, Return, submap, reset"
-          "resize, Escape, submap, reset"
-          "resize $mod, R, submap, reset"
-        ];
-        
         # Startup applications
         exec-once = [
           "dex --autostart --environment hyprland"
@@ -195,6 +183,28 @@
           "XCURSOR_SIZE,24"
         ];
       };
+      
+      # Resize mode using extraConfig (bypasses Nix validation)
+      extraConfig = ''
+        # Resize submap
+        bind = $mod, R, submap, resize
+        
+        submap = resize
+        binde = , H, resizeactive, -10 0
+        binde = , J, resizeactive, 0 10
+        binde = , K, resizeactive, 0 -10
+        binde = , L, resizeactive, 10 0
+        
+        binde = , Left, resizeactive, -10 0
+        binde = , Down, resizeactive, 0 10
+        binde = , Up, resizeactive, 0 -10
+        binde = , Right, resizeactive, 10 0
+        
+        bind = , Return, submap, reset
+        bind = , Escape, submap, reset
+        bind = $mod, R, submap, reset
+        submap = reset
+      '';
     };
 
     gtk = {
@@ -244,7 +254,7 @@
     };
 
     home.packages = with pkgs; [
-      rofi-wayland
+      rofi
       mako
       grim
       slurp

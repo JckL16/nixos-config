@@ -1,7 +1,7 @@
 # modules/home-manager/shared/clipman.nix
 
 { pkgs, lib, config, ... }: {
-  config = lib.mkIf config.sway.enable or config.hyprland.enable {
+  config = lib.mkIf (config.sway.enable || config.hyprland.enable) {
     # Enable clipman service
     services.clipman = {
       enable = true;

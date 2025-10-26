@@ -2,7 +2,7 @@
 
 { pkgs, lib, config, ... }: {
 
-  config = lib.mkIf config.sway.enable or config.hyprland.enable {
+  config = lib.mkIf (config.sway.enable || config.hyprland.enable) {
     programs.rofi = {
       enable = true;
       package = pkgs.rofi;

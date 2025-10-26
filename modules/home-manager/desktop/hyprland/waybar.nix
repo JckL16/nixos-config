@@ -14,9 +14,9 @@
           height = 30;
           spacing = 4;
           margin-top = 5;
-          margin-left = 10;
-          margin-right = 10;
-          margin-bottom = 0;
+          margin-left = 5;
+          margin-right = 5;
+          margin-bottom = 5;
           
           modules-left = [ "hyprland/workspaces" "hyprland/submap" "hyprland/window" "custom/waybar-mpris" ];
           modules-center = [ "clock" ];
@@ -147,7 +147,7 @@
             border: none;
             border-radius: 0;
             font-family: "JetBrainsMono Nerd Font Mono";
-            font-size: 13px;
+            font-size: 11px;
             min-height: 0;
         }
 
