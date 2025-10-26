@@ -5,6 +5,7 @@
     ./networking.nix
     ./nix-settings.nix
     ./swap-file.nix
+    ./garbage-collection.nix
   ];
 
 }

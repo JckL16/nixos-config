@@ -14,6 +14,7 @@
             device = variables.bootDevice;
             efiSupport = true;
             useOSProber = true;
+            configurationLimit = 5;
         };
         efi.canTouchEfiVariables = true;
         timeout = 5;
