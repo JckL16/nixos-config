@@ -28,6 +28,7 @@
       dry-run = "sudo nixos-rebuild dry-run --flake ~/nixos-config";
       update = "nix flake update --flake ~/nixos-config && sudo nixos-rebuild switch --flake ~/nixos-config";
       clean = "nix-collect-garbage";
+      reinstall-bootloader = "sudo nixos-rebuild --reinstall-bootloader boot --flake ~/nixos-config";
       fuck = "f";
 
       # Eza aliases
