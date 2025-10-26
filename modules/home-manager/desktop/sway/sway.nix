@@ -283,8 +283,8 @@
     services.udiskie = {
       enable = true;
       automount = true;
-      notify = true;  # Optional: get notifications when drives are mounted
-      tray = "auto";  # Optional: show tray icon
+      notify = true;
+      tray = "auto";
     };
   };
 }
