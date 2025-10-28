@@ -9,6 +9,7 @@
     ./libreoffice.nix
     ./onlyoffice.nix
     ./nvim.nix
+    ./gamemode.nix
   ];
 
 }
