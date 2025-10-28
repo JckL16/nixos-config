@@ -60,6 +60,11 @@
             "workspaces, 1, 6, default"
           ];
         };
+
+        misc = {
+          disable_hyprland_logo = true;
+          font_family = "JetBrains Mono";
+        };
         
         # Input configuration
         input = {
