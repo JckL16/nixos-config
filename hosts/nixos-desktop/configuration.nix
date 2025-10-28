@@ -7,16 +7,20 @@
     home-manager.nixosModules.home-manager
   ];
 
+  # Bootloader
+  systemd-boot.enable = false;
+  grub.enable = true;
+  grub.nordic-theme.enable = true;
+
   # Hostname
   networking.hostName = "nixos-desktop";
 
   # Desktop environment
-  sway.enable = true;
+  hyprland.enable = true;
 
   # Graphics drivers
-  # intel-graphics.enable = true;
   amd-graphics.enable = true;
-  steam.enable = true;
+  gamemode.enable = true;
 
   # Home Manager configuration
   home-manager = {
@@ -24,7 +28,6 @@
     useUserPackages = true;
     extraSpecialArgs = { 
       inherit inputs variables;
-      sway.enable = config.sway.enable;
     };
     users."${variables.username}" = {
       imports = [

@@ -3,8 +3,10 @@
 { config, pkgs, ... }:
 {
 
-  sway.enable = true;
+  hyprland.enable = true;
+
   steam.enable = true;
+  gamemode.enable = true;
 
   libreoffice.enable = true;
 
