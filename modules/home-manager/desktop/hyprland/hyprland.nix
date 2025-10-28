@@ -178,7 +178,6 @@
           "swaybg -i ~/.config/wallpapers/wallpaper.png -m fill"
           "systemctl --user restart mako"
           "waybar"
-          "sleep 2 && systemctl --user start kanshi.service"
           "hyprctl dispatch workspace 1"
           "udiskie --tray --notify --automount &"
         ];
