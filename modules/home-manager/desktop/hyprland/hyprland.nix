@@ -86,7 +86,7 @@
         # Window rules
         windowrulev2 = [
           "float, class:(pavucontrol)"
-          "float, class:(blueman-manager)"
+          "float, class:(.blueman-manager-wrapped)"
         ];
         
         # Key bindings
