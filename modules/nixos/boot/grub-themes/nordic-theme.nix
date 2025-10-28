@@ -48,7 +48,7 @@ let
           PNG24:theme/background.png
       ''}
       
-      # Create the menu background panel with rounded corners (like waybar)
+      # Create the menu background panel with rounded corners
       ${pkgs.imagemagick}/bin/convert \
         -size 1150x650 \
         "xc:rgba(59,66,82,0.95)" \
@@ -66,7 +66,7 @@ let
       # Using a slightly darker shade with rounded corners
       ${pkgs.imagemagick}/bin/convert \
         -size 1080x40 \
-        "xc:rgba(67,76,94,0.85)" \
+        "xc:rgba(67,76,94,0.95)" \
         \( +clone -alpha extract \
            -draw 'fill black polygon 0,0 0,8 8,0 fill white circle 8,8 8,0' \
            \( +clone -flip \) -compose Multiply -composite \
@@ -76,42 +76,16 @@ let
         -define png:bit-depth=8 \
         -define png:color-type=6 \
         PNG32:theme/select_c.png
-      
-      # Create left edge of selection with rounded corner
-      ${pkgs.imagemagick}/bin/convert \
-        -size 8x40 \
-        "xc:rgba(67,76,94,0.85)" \
-        \( +clone -alpha extract \
-           -draw 'fill black polygon 0,0 0,8 8,0 fill white circle 8,8 8,0' \
-           \( +clone -flip \) -compose Multiply -composite \
-        \) -alpha off -compose CopyOpacity -composite \
-        -type TrueColorAlpha \
-        -define png:bit-depth=8 \
-        -define png:color-type=6 \
-        PNG32:theme/select_w.png
-      
-      # Create right edge of selection with rounded corner
-      ${pkgs.imagemagick}/bin/convert \
-        -size 8x40 \
-        "xc:rgba(67,76,94,0.85)" \
-        \( +clone -alpha extract \
-           -draw 'fill white circle 0,8 0,0' \
-           \( +clone -flip \) -compose Multiply -composite \
-        \) -alpha off -compose CopyOpacity -composite \
-        -type TrueColorAlpha \
-        -define png:bit-depth=8 \
-        -define png:color-type=6 \
-        PNG32:theme/select_e.png
     '';
 
     installPhase = ''
       mkdir -p $out
       cp -r theme/* $out/
       
-      # Create theme.txt with Nordic styling matching waybar window module
+      # Create theme.txt with Nordic styling
       cat > $out/theme.txt <<'EOFTHEME'
 # Nordic GRUB Theme
-# Inspired by Nord color palette and Waybar styling
+# Inspired by Nord color palette
 
 # General settings
 title-text: ""
@@ -119,16 +93,7 @@ desktop-image: "background.png"
 desktop-color: "46, 52, 64"
 terminal-font: "Unifont Regular 16"
 
-# Menu background panel (like waybar background)
-+ image {
-  left = 15%
-  top = 20%
-  width = 70%
-  height = 60%
-  file = "menu_bg.png"
-}
-
-# Boot menu (styled like waybar window module)
+# Boot menu
 + boot_menu {
   left = 18%
   top = 25%
@@ -136,7 +101,7 @@ terminal-font: "Unifont Regular 16"
   height = 45%
   item_font = "Unifont Regular 16"
   item_color = "216, 222, 233"
-  selected_item_color = "216, 222, 233"
+  selected_item_color = "136, 192, 208"
   item_height = 40
   item_padding = 15
   item_spacing = 8
@@ -146,7 +111,16 @@ terminal-font: "Unifont Regular 16"
   item_icon_space = 15
 }
 
-# Countdown/Progress bar (cyan like clock in waybar)
+# Menu background panel
++ image {
+  left = 15%
+  top = 20%
+  width = 70%
+  height = 60%
+  file = "menu_bg.png"
+}
+
+# Countdown/Progress bar
 + progress_bar {
   id = "__timeout__"
   left = 18%
@@ -161,7 +135,7 @@ terminal-font: "Unifont Regular 16"
   text = "@TIMEOUT_NOTIFICATION_LONG@"
 }
 
-# Footer text (like network info color in waybar)
+# Footer text
 + label {
   top = 85%
   left = 0
