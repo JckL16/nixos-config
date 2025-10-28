@@ -127,7 +127,7 @@
 
           "custom/waybar-mpris" = {
             return-type = "json";
-            exec = "waybar-mpris --position --autofocus";
+            exec = "waybar-mpris --position --autofocus --play '󰐊' --pause '󰏤'";
             on-click = "waybar-mpris --send toggle";
             escape = true;
             max-length = 30;
@@ -296,8 +296,8 @@
 
         #custom-waybar-mpris {
           color: #d8dee9;
-          padding: 0 10px;
-          margin-left: 10px;
+          padding: 0 13px;
+          margin-left: 5px;
           min-width: 10px;
           background-color: #3b4252;
           border-radius: 8px;
@@ -306,7 +306,7 @@
 
         #custom-waybar-mpris:hover {
           min-width: 300px;
-          padding: 0 15px;
+          padding: 0 13px;
           background-color: #434c5e;
         }
 
