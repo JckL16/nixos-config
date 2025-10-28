@@ -1,5 +1,4 @@
 # modules/nixos/programs/gamemode.nix
-
 { pkgs, lib, config, ... }: {
   options = {
     gamemode.enable = 
@@ -7,6 +6,7 @@
   };
   
   config = lib.mkIf config.gamemode.enable {
+    # Enable gamemode system service
     programs.gamemode = {
       enable = true;
       
@@ -57,7 +57,12 @@
       enableRenice = true;
     };
     
-    # Ensure user is in gamemode group
+    # System packages
+    environment.systemPackages = with pkgs; [
+      gamemode
+    ];
+    
+    # Ensure gamemode group exists
     users.groups.gamemode = {};
   };
 }

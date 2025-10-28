@@ -1,5 +1,4 @@
 # modules/home-manager/programs/gamemode.nix
-
 { pkgs, lib, config, ... }: {
   options = {
     gamemode.enable = 
@@ -7,7 +6,7 @@
   };
   
   config = lib.mkIf config.gamemode.enable {
-    # GameMode package
+    # GameMode client package
     home.packages = with pkgs; [
       gamemode
     ];
@@ -27,14 +26,8 @@
       steam-gm = "gamemoderun steam";
     };
     
-    # Environment variables
-    home.sessionVariables = {
-      # Enable gamemode client library
-      LD_PRELOAD = lib.mkDefault "${pkgs.gamemode}/lib/libgamemodeauto.so.0";
-    };
-    
     # Optional: Create a desktop entry for gamemode-enabled Steam
-    xdg.desktopEntries = lib.mkIf config.steam.enable {
+    xdg.desktopEntries = lib.mkIf (config.steam.enable or false) {
       steam-gamemode = {
         name = "Steam (GameMode)";
         comment = "Launch Steam with GameMode optimizations";

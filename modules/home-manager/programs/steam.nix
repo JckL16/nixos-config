@@ -8,6 +8,7 @@
   config = lib.mkIf config.steam.enable {
     # Steam-related packages
     home.packages = with pkgs; [
+      steam
       steam-run
       steamcmd
       

@@ -7,6 +7,11 @@
     home-manager.nixosModules.home-manager
   ];
 
+  # Bootloader
+  systemd-boot.enable = false;
+  grub.enable = true;
+  grub.nordic-theme.enable = true;
+
   # Set to newest kernel to get the samsung-galaxy kernel working
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.initrd.systemd.enable = true;  # Use systemd in initrd for better compatibility
@@ -17,12 +22,11 @@
   networking.hostName = "nixos-laptop";
 
   # Desktop environment
-  sway.enable = true;
-  # hyprland.enable = true;
+  hyprland.enable = true;
 
   # Graphics drivers
   intel-graphics.enable = true;
-  # steam.enable = true;
+  gamemode.enable = true;
 
   # Home Manager configuration
   home-manager = {

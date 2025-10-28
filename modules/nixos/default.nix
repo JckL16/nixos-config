@@ -32,6 +32,5 @@
   amd-graphics.enable = lib.mkDefault false;
   nvidia-graphics.enable = lib.mkDefault false;
 
-  steam.enable = lib.mkDefault false;
   gamemode.enable = lib.mkDefault false;
 }
