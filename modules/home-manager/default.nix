@@ -21,6 +21,7 @@
 
   steam.enable = lib.mkDefault false;
   gamemode.enable = lib.mkDefault false;
+  minecraft.enable = lib.mkDefault false;
 
   libreoffice.enable = lib.mkDefault false;
   onlyoffice.enable = lib.mkDefault false;
