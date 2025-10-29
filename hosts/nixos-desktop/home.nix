@@ -7,6 +7,7 @@
 
   steam.enable = true;
   gamemode.enable = true;
+  minecraft.enable = true;
 
   libreoffice.enable = true;
 
