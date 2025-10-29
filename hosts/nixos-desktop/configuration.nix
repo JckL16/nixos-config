@@ -20,7 +20,12 @@
 
   # Graphics drivers
   amd-graphics.enable = true;
+
+  # Gaming
+  steam.enable = true;
   gamemode.enable = true;
+  # Makes sure gamemode can se the GPU on my desktop
+  programs.gamemode.settings.gpu.gpu_device = 1;
 
   # Home Manager configuration
   home-manager = {

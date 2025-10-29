@@ -22,10 +22,18 @@
     # Load AMDGPU driver early
     boot.initrd.kernelModules = [ "amdgpu" ];
 
+    # AMD-specific environment variables for gaming
+    environment.variables = {
+      AMD_VULKAN_ICD = "RADV";
+      RADV_PERFTEST = "gpl,nggc";
+    };
+
     environment.systemPackages = with pkgs; [
       mesa
       vulkan-tools
       lact
+      clinfo
+      radeontop
     ];
 
     services.lact.enable = true;

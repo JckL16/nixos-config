@@ -1,14 +1,15 @@
 # modules/nixos/programs/gamemode.nix
-{ pkgs, lib, config, ... }: {
+
+{ pkgs, lib, config, variables, ... }: {
   options = {
     gamemode.enable = 
       lib.mkEnableOption "Enable GameMode system configuration";
   };
   
   config = lib.mkIf config.gamemode.enable {
-    # Enable gamemode system service
     programs.gamemode = {
       enable = true;
+      enableRenice = true;
       
       settings = {
         general = {
@@ -26,11 +27,7 @@
         gpu = {
           # Apply GPU optimizations (requires accepting responsibility)
           apply_gpu_optimisations = "accept-responsibility";
-          
-          # GPU device index (usually 0)
-          gpu_device = 0;
-          
-          # AMD-specific performance level (auto, low, high)
+          gpu_device = 1;  # FIXED: Changed from 0 to 1 for your GPU
           amd_performance_level = "high";
         };
         
@@ -52,9 +49,6 @@
           end = "${pkgs.libnotify}/bin/notify-send 'GameMode' 'Optimizations deactivated' -i applications-games";
         };
       };
-      
-      # Enable multilib support for 32-bit games
-      enableRenice = true;
     };
     
     # System packages
@@ -62,7 +56,9 @@
       gamemode
     ];
     
-    # Ensure gamemode group exists
+    services.dbus.packages = [ pkgs.gamemode ];
+    
     users.groups.gamemode = {};
+    users.users."${variables.username}".extraGroups = [ "gamemode" "video" "render" ];
   };
 }

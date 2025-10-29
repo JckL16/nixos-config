@@ -17,7 +17,7 @@
       gm = "gamemoderun";
       
       # Check gamemode status
-      gamemode-status = "gamemoded -s";
+      gamemode-status = "gamemoded --status";
       
       # Test gamemode with a simple app
       gamemode-test = "gamemoderun vkcube";

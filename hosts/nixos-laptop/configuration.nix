@@ -26,6 +26,7 @@
 
   # Graphics drivers
   intel-graphics.enable = true;
+  steam.enable = true;
   gamemode.enable = true;
 
   # Home Manager configuration
