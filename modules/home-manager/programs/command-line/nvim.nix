@@ -39,6 +39,9 @@
         ripgrep
         fd
         gcc
+        
+        # Git (for neogit)
+        git
       ];
 
       plugins = with pkgs.vimPlugins; [
@@ -54,8 +57,7 @@
         telescope-nvim
         telescope-fzf-native-nvim
         
-        # LSP & Completion
-        nvim-lspconfig
+        # Completion
         nvim-cmp
         cmp-nvim-lsp
         cmp-buffer
@@ -88,13 +90,30 @@
         # Git integration
         gitsigns-nvim
         vim-fugitive
+        neogit
+        diffview-nvim  # Dependency for neogit
         
         # Utilities
         comment-nvim
         vim-nix
+        
+        # Minimal recommended additions
+        which-key-nvim
+        nvim-autopairs
+        trouble-nvim
+        todo-comments-nvim
+        nvim-surround
+        
+        # Additional plugins
+        alpha-nvim
+        nvim-colorizer-lua
       ];
 
       extraLuaConfig = ''
+        -- Disable netrw in favor of nvim-tree
+        vim.g.loaded_netrw = 1
+        vim.g.loaded_netrwPlugin = 1
+        
         -- Basic settings
         vim.opt.number = true
         vim.opt.relativenumber = true
@@ -146,6 +165,384 @@
           return result
         end
         
+        -- Define browse_directory function globally BEFORE Alpha setup
+        _G.browse_directory = function()
+          vim.ui.input({ prompt = "Enter directory path: ", default = vim.fn.getcwd() .. "/" }, function(input)
+            if input then
+              local expanded_path = vim.fn.expand(input)
+              if vim.fn.isdirectory(expanded_path) == 1 then
+                vim.cmd("cd " .. vim.fn.fnameescape(expanded_path))
+                require("nvim-tree.api").tree.open()
+                vim.notify("Changed directory to: " .. expanded_path)
+              else
+                vim.notify("Not a valid directory: " .. input, vim.log.levels.ERROR)
+              end
+            end
+          end)
+        end
+        
+        -- Alpha (Dashboard) setup
+        local alpha = safe_require("alpha")
+        if alpha then
+          local dashboard = safe_require("alpha.themes.dashboard")
+          if dashboard then
+            -- Set header
+            dashboard.section.header.val = {
+              "                                                     ",
+              "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ██╗ ",
+              "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗  ██║ ",
+              "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔██╗ ██║ ",
+              "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╗██║ ",
+              "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚████║ ",
+              "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝  ╚═══╝ ",
+              "                                                     ",
+            }
+            
+            -- Set menu
+            dashboard.section.buttons.val = {
+              dashboard.button("f", "  Find file", ":Telescope find_files <CR>"),
+              dashboard.button("r", "  Recent files", ":Telescope oldfiles <CR>"),
+              dashboard.button("g", "  Find text", ":Telescope live_grep <CR>"),
+              dashboard.button("d", "  Browse directory", ":lua browse_directory()<CR>"),
+              dashboard.button("e", "  File explorer", ":NvimTreeOpen<CR>"),
+              dashboard.button("n", "  New file", ":ene <BAR> startinsert <CR>"),
+              dashboard.button("c", "  Configuration", ":e ~/.config/nvim/init.lua <CR>"),
+              dashboard.button("q", "  Quit", ":qa<CR>"),
+            }
+            
+            -- Set footer
+            local function footer()
+              local total_plugins = #vim.tbl_keys(packer_plugins or {})
+              local datetime = os.date(" %d-%m-%Y   %H:%M:%S")
+              local version = vim.version()
+              local nvim_version_info = "   v" .. version.major .. "." .. version.minor .. "." .. version.patch
+              
+              return datetime .. "   " .. total_plugins .. " plugins" .. nvim_version_info
+            end
+            
+            dashboard.section.footer.val = footer()
+            
+            -- Apply Nord colors
+            dashboard.section.header.opts.hl = "Type"
+            dashboard.section.buttons.opts.hl = "Keyword"
+            dashboard.section.footer.opts.hl = "Comment"
+            
+            dashboard.opts.opts.noautocmd = true
+            alpha.setup(dashboard.opts)
+            
+            -- Disable folding on alpha buffer
+            vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
+          end
+        end
+        
+        -- Colorizer setup (exclude certain filetypes and only highlight in comments)
+        local colorizer = safe_require("colorizer")
+        if colorizer then
+          colorizer.setup({
+            filetypes = {
+              "css",
+              "scss",
+              "html",
+              "javascript",
+              "typescript",
+              "jsx",
+              "tsx",
+            },
+            user_default_options = {
+              RGB = true,
+              RRGGBB = true,
+              names = false,  -- Disable color names like "black", "white" etc
+              RRGGBBAA = true,
+              AARRGGBB = true,
+              rgb_fn = true,
+              hsl_fn = true,
+              css = true,
+              css_fn = true,
+              mode = "background",
+              tailwind = true,
+              sass = { enable = true, parsers = { "css" } },
+              virtualtext = "■",
+            },
+            buftypes = {},
+          })
+        end
+        
+        -- Neogit setup (fixed configuration)
+        local neogit = safe_require("neogit")
+        if neogit then
+          neogit.setup({
+            kind = "tab",
+            signs = {
+              section = { "", "" },
+              item = { "", "" },
+              hunk = { "", "" },
+            },
+            integrations = {
+              diffview = true,
+              telescope = true,
+            },
+            sections = {
+              untracked = {
+                folded = false,
+                hidden = false,
+              },
+              unstaged = {
+                folded = false,
+                hidden = false,
+              },
+              staged = {
+                folded = false,
+                hidden = false,
+              },
+              stashes = {
+                folded = true,
+                hidden = false,
+              },
+              unpulled = {
+                folded = true,
+                hidden = false,
+              },
+              unmerged = {
+                folded = false,
+                hidden = false,
+              },
+              recent = {
+                folded = true,
+                hidden = false,
+              },
+            },
+          })
+        end
+        
+        -- Which-key setup (v3 with explicit trigger)
+        local which_key = safe_require("which-key")
+        if which_key then
+          which_key.setup({
+            preset = "modern",
+            delay = function(ctx)
+              return 500
+            end,
+            plugins = {
+              marks = true,
+              registers = true,
+              spelling = {
+                enabled = true,
+                suggestions = 20,
+              },
+            },
+            win = {
+              border = "rounded",
+            },
+            icons = {
+              breadcrumb = "»",
+              separator = "➜",
+              group = "+",
+            },
+            triggers = {
+              { "<leader>", mode = { "n", "v" } },
+            },
+          })
+          
+          -- Register key groups
+          which_key.add({
+            { "<leader>f", group = "Find" },
+            { "<leader>ff", desc = "Find files" },
+            { "<leader>fg", desc = "Live grep" },
+            { "<leader>fb", desc = "Find buffers" },
+            { "<leader>fh", desc = "Help tags" },
+            { "<leader>fr", desc = "Recent files" },
+            { "<leader>ft", desc = "Find TODOs" },
+            
+            { "<leader>b", group = "Buffer" },
+            { "<leader>bn", desc = "Next buffer" },
+            { "<leader>bp", desc = "Previous buffer" },
+            { "<leader>bd", desc = "Delete buffer" },
+            
+            { "<leader>c", group = "Code" },
+            { "<leader>ca", desc = "Code action" },
+            
+            { "<leader>g", group = "Git" },
+            { "<leader>gg", desc = "Open Neogit" },
+            { "<leader>gc", desc = "Git commit" },
+            { "<leader>gp", desc = "Git pull" },
+            { "<leader>gP", desc = "Git push" },
+            { "<leader>gb", desc = "Git branches" },
+            { "<leader>gs", desc = "Git status" },
+            
+            { "<leader>t", group = "Trouble" },
+            { "<leader>tt", desc = "Toggle diagnostics" },
+            { "<leader>td", desc = "Document diagnostics" },
+            { "<leader>tq", desc = "Quickfix list" },
+            { "<leader>tl", desc = "Location list" },
+            
+            { "<leader>e", desc = "Toggle file explorer" },
+            { "<leader>o", desc = "Focus file explorer" },
+            { "<leader>w", desc = "Save file" },
+            { "<leader>q", desc = "Quit" },
+            { "<leader>Q", desc = "Quit all" },
+            { "<leader>y", desc = "Yank to clipboard" },
+            { "<leader>p", desc = "Paste from clipboard" },
+            { "<leader>Y", desc = "Yank line to clipboard" },
+            { "<leader>rn", desc = "Rename symbol" },
+            { "<leader>d", desc = "Show diagnostics" },
+          })
+        end
+
+        -- Autopairs setup
+        local autopairs = safe_require("nvim-autopairs")
+        if autopairs then
+          autopairs.setup({
+            check_ts = true,
+            ts_config = {
+              lua = {'string'},
+              javascript = {'string', 'template_string'},
+            },
+            disable_filetype = { "TelescopePrompt" },
+            fast_wrap = {
+              map = '<M-e>',
+              chars = { '{', '[', '(', '"', "'" },
+              pattern = [=[[%'%"%>%]%)%}%,]]=],
+              end_key = '$',
+              keys = 'qwertyuiopzxcvbnmasdfghjkl',
+              check_comma = true,
+              highlight = 'Search',
+              highlight_grey='Comment'
+            },
+          })
+          
+          -- Integration with nvim-cmp
+          local cmp_autopairs = safe_require('nvim-autopairs.completion.cmp')
+          local cmp = safe_require('cmp')
+          if cmp and cmp_autopairs then
+            cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
+          end
+        end
+        
+        -- Trouble setup
+        local trouble = safe_require("trouble")
+        if trouble then
+          trouble.setup({
+            position = "bottom",
+            height = 10,
+            width = 50,
+            icons = true,
+            mode = "workspace_diagnostics",
+            fold_open = "",
+            fold_closed = "",
+            group = true,
+            padding = true,
+            action_keys = {
+              close = "q",
+              cancel = "<esc>",
+              refresh = "r",
+              jump = {"<cr>", "<tab>"},
+              open_split = { "<c-x>" },
+              open_vsplit = { "<c-v>" },
+              open_tab = { "<c-t>" },
+              jump_close = {"o"},
+              toggle_mode = "m",
+              toggle_preview = "P",
+              hover = "K",
+              preview = "p",
+              close_folds = {"zM", "zm"},
+              open_folds = {"zR", "zr"},
+              toggle_fold = {"zA", "za"},
+              previous = "k",
+              next = "j"
+            },
+            indent_lines = true,
+            auto_open = false,
+            auto_close = false,
+            auto_preview = true,
+            auto_fold = false,
+            signs = {
+              error = "",
+              warning = "",
+              hint = "",
+              information = "",
+              other = ""
+            },
+            use_diagnostic_signs = false
+          })
+        end
+        
+        -- Todo Comments setup
+        local todo_comments = safe_require("todo-comments")
+        if todo_comments then
+          todo_comments.setup({
+            signs = true,
+            sign_priority = 8,
+            keywords = {
+              FIX = {
+                icon = " ",
+                color = "error",
+                alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+              },
+              TODO = { icon = " ", color = "info" },
+              HACK = { icon = " ", color = "warning" },
+              WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+              PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+              NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+              TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+            },
+            gui_style = {
+              fg = "NONE",
+              bg = "BOLD",
+            },
+            merge_keywords = true,
+            highlight = {
+              multiline = true,
+              multiline_pattern = "^.",
+              multiline_context = 10,
+              before = "",
+              keyword = "wide",
+              after = "fg",
+              pattern = [[.*<(KEYWORDS)\s*:]],
+              comments_only = true,
+              max_line_len = 400,
+              exclude = {},
+            },
+            colors = {
+              error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+              warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+              info = { "DiagnosticInfo", "#2563EB" },
+              hint = { "DiagnosticHint", "#10B981" },
+              default = { "Identifier", "#7C3AED" },
+              test = { "Identifier", "#FF00FF" }
+            },
+            search = {
+              command = "rg",
+              args = {
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+              },
+              pattern = [[\b(KEYWORDS):]],
+            },
+          })
+        end
+        
+        -- Nvim-surround setup
+        local surround = safe_require("nvim-surround")
+        if surround then
+          surround.setup({
+            keymaps = {
+              insert = "<C-g>s",
+              insert_line = "<C-g>S",
+              normal = "ys",
+              normal_cur = "yss",
+              normal_line = "yS",
+              normal_cur_line = "ySS",
+              visual = "S",
+              visual_line = "gS",
+              delete = "ds",
+              change = "cs",
+            },
+          })
+        end
+        
         -- Nvim-tree setup with Nord colors
         local nvim_tree = safe_require("nvim-tree")
         if nvim_tree then
@@ -162,6 +559,23 @@
                 },
               },
             },
+            -- Auto-open nvim-tree when opening a directory
+            hijack_directories = {
+              enable = true,
+              auto_open = true,
+            },
+          })
+          
+          -- Open nvim-tree when opening a directory
+          vim.api.nvim_create_autocmd("VimEnter", {
+            callback = function(data)
+              local directory = vim.fn.isdirectory(data.file) == 1
+              
+              if directory then
+                vim.cmd.cd(data.file)
+                require("nvim-tree.api").tree.open()
+              end
+            end
           })
         end
         
@@ -188,57 +602,67 @@
           })
         end
         
-        -- Modern LSP setup
-        local lspconfig = safe_require('lspconfig')
-        if lspconfig then
-          local cmp_nvim_lsp = safe_require('cmp_nvim_lsp')
-          local capabilities = vim.lsp.protocol.make_client_capabilities()
-          
-          if cmp_nvim_lsp then
-            capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-          end
-          
-          -- LSP servers configuration
-          local servers = {
-            nixd = {
-              exe = 'nixd',
-            },
-            lua_ls = {
-              exe = 'lua-language-server',
-              settings = {
-                Lua = {
-                  diagnostics = { globals = {'vim'} },
-                  workspace = { checkThirdParty = false },
-                  telemetry = { enable = false },
-                }
+        -- Modern LSP setup using vim.lsp.config
+        local cmp_nvim_lsp = safe_require('cmp_nvim_lsp')
+        local capabilities = vim.lsp.protocol.make_client_capabilities()
+        
+        if cmp_nvim_lsp then
+          capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+        end
+        
+        -- LSP servers configuration using new vim.lsp.config API
+        local servers = {
+          nixd = {
+            cmd = { 'nixd' },
+            filetypes = { 'nix' },
+          },
+          lua_ls = {
+            cmd = { 'lua-language-server' },
+            filetypes = { 'lua' },
+            settings = {
+              Lua = {
+                diagnostics = { globals = {'vim'} },
+                workspace = { checkThirdParty = false },
+                telemetry = { enable = false },
               }
-            },
-            pyright = {
-              exe = 'pyright',
-            },
-            ts_ls = {
-              exe = 'typescript-language-server',
-            },
-            rust_analyzer = {
-              exe = 'rust-analyzer',
-            },
-          }
-          
-          -- Setup each LSP server
-          for server_name, server_config in pairs(servers) do
-            if vim.fn.executable(server_config.exe) == 1 then
-              local config = { capabilities = capabilities }
-              if server_config.settings then
-                config.settings = server_config.settings
-              end
-              
-              local ok, err = pcall(function()
-                lspconfig[server_name].setup(config)
-              end)
-              
-              if not ok then
-                vim.notify("Failed to setup " .. server_name .. ": " .. tostring(err), vim.log.levels.WARN)
-              end
+            }
+          },
+          pyright = {
+            cmd = { 'pyright-langserver', '--stdio' },
+            filetypes = { 'python' },
+          },
+          ts_ls = {
+            cmd = { 'typescript-language-server', '--stdio' },
+            filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact' },
+          },
+          rust_analyzer = {
+            cmd = { 'rust-analyzer' },
+            filetypes = { 'rust' },
+            settings = {
+              ['rust-analyzer'] = {
+                checkOnSave = {
+                  command = "clippy"
+                },
+              }
+            }
+          },
+        }
+        
+        -- Setup each LSP server using vim.lsp.config
+        for server_name, server_config in pairs(servers) do
+          if vim.fn.executable(server_config.cmd[1]) == 1 then
+            local config = vim.tbl_deep_extend('force', {
+              capabilities = capabilities,
+              name = server_name,
+            }, server_config)
+            
+            local ok, err = pcall(function()
+              vim.lsp.config(server_name, config)
+              vim.lsp.enable(server_name)
+            end)
+            
+            if not ok then
+              vim.notify("Failed to setup " .. server_name .. ": " .. tostring(err), vim.log.levels.WARN)
             end
           end
         end
@@ -375,6 +799,25 @@
         keymap('n', '<leader>fb', '<cmd>Telescope buffers<cr>', { desc = "Find buffers" })
         keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>', { desc = "Help tags" })
         keymap('n', '<leader>fr', '<cmd>Telescope oldfiles<cr>', { desc = "Recent files" })
+        
+        -- Neogit
+        keymap('n', '<leader>gg', '<cmd>Neogit<cr>', { desc = "Open Neogit" })
+        keymap('n', '<leader>gc', '<cmd>Neogit commit<cr>', { desc = "Git commit" })
+        keymap('n', '<leader>gp', '<cmd>Neogit pull<cr>', { desc = "Git pull" })
+        keymap('n', '<leader>gP', '<cmd>Neogit push<cr>', { desc = "Git push" })
+        keymap('n', '<leader>gb', '<cmd>Telescope git_branches<cr>', { desc = "Git branches" })
+        keymap('n', '<leader>gs', '<cmd>Telescope git_status<cr>', { desc = "Git status" })
+        
+        -- Trouble keymaps
+        keymap('n', '<leader>tt', '<cmd>Trouble diagnostics toggle<cr>', { desc = "Toggle diagnostics" })
+        keymap('n', '<leader>td', '<cmd>Trouble diagnostics toggle filter.buf=0<cr>', { desc = "Document diagnostics" })
+        keymap('n', '<leader>tq', '<cmd>Trouble qflist toggle<cr>', { desc = "Quickfix list" })
+        keymap('n', '<leader>tl', '<cmd>Trouble loclist toggle<cr>', { desc = "Location list" })
+        
+        -- Todo Comments keymaps
+        keymap('n', '<leader>ft', '<cmd>TodoTelescope<cr>', { desc = "Find TODOs" })
+        keymap('n', ']t', function() require("todo-comments").jump_next() end, { desc = "Next TODO" })
+        keymap('n', '[t', function() require("todo-comments").jump_prev() end, { desc = "Previous TODO" })
         
         -- Clipboard
         keymap({'n', 'v'}, '<leader>y', '"+y', { desc = "Yank to clipboard" })
