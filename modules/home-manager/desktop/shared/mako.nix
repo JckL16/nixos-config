@@ -16,6 +16,7 @@
         max-visible = 5;
         sort = "-time";
         group-by = "app-name";
+        default-timeout = 10000;
       };
       extraConfig = ''
         [app-name="Spotify"]
