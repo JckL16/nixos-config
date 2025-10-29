@@ -6,10 +6,6 @@
   };
   
   config = lib.mkIf config.steam.enable {
-    # Show warning if system Steam is not enabled
-    warnings = lib.optional (!config.programs.steam.enable or false)
-      "Home-Manager steam.enable is true, but system-level Steam is not enabled. Please enable steam.enable in your NixOS configuration for proper gamemode integration.";
-    
     # Only add utilities, NOT Steam itself
     home.packages = with pkgs; [
       # Proton utilities

@@ -6,6 +6,10 @@
   };
   
   config = lib.mkIf config.gamemode.enable {
+    # OBSERVERVE: For this module to work with steam you also have to specify the gems to run with gamemoderun
+    # you can do this by adding "gamemoderun %command%" to the launch command for each game.
+    # Right click on the game, go to properties, then set launch options.
+
     # GameMode client package
     home.packages = with pkgs; [
       gamemode
@@ -21,21 +25,6 @@
       
       # Test gamemode with a simple app
       gamemode-test = "gamemoderun vkcube";
-      
-      # Launch common apps with gamemode
-      steam-gm = "gamemoderun steam";
-    };
-    
-    # Optional: Create a desktop entry for gamemode-enabled Steam
-    xdg.desktopEntries = lib.mkIf (config.steam.enable or false) {
-      steam-gamemode = {
-        name = "Steam (GameMode)";
-        comment = "Launch Steam with GameMode optimizations";
-        icon = "steam";
-        exec = "gamemoderun steam %U";
-        categories = [ "Game" ];
-        terminal = false;
-      };
     };
   };
 }
