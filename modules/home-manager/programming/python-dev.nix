@@ -1,7 +1,5 @@
 # modules/home-manager/programming/python-dev.nix
-
 { config, lib, pkgs, ... }:
-
 let
   cfg = config.python-dev;
 in
@@ -15,77 +13,48 @@ in
       description = "Which Python version to use";
     };
     
-    includeCommonPackages = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Include common Python packages (requests, numpy, pandas, etc.)";
-    };
-    
-    includeDevTools = lib.mkOption {
-      type = lib.types.bool;
-      default = true;
-      description = "Include development tools (pytest, black, mypy, etc.)";
-    };
-    
-    includeDataScience = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Include data science packages (jupyter, matplotlib, scipy, etc.)";
+    packages = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      description = "List of Python package names to install (e.g., [\"requests\" \"numpy\" \"pandas\"])";
+      example = [ "requests" "numpy" "pandas" "pytest" "black" ];
     };
     
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [];
-      description = "Additional packages to include in the environment";
+      description = "Additional system packages to include in the environment";
     };
   };
-  
+
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; 
-    let
-      python = pkgs.${cfg.pythonVersion};
-      commonPythonPackages = ps: with ps; [
-        pip
-        setuptools
-        wheel
-        virtualenv
-        requests
-        numpy
-        pandas
-      ];
-      
-      devToolPackages = ps: with ps; [
-        pytest
-        pytest-cov
-        black
-        flake8
-        mypy
-        pylint
-        ipython
-        autopep8
-      ];
-      
-      dataSciencePackages = ps: with ps; [
-        jupyter
-        matplotlib
-        scipy
-        scikit-learn
-        seaborn
-        plotly
-      ];
-      
-      allPythonPackages = ps: 
-        (if cfg.includeCommonPackages then commonPythonPackages ps else [])
-        ++ (if cfg.includeDevTools then devToolPackages ps else [])
-        ++ (if cfg.includeDataScience then dataSciencePackages ps else []);
-    in
-    [
-      (python.withPackages allPythonPackages)
-      poetry
-      pipenv
-      pyright  # LSP server
-    ] ++ cfg.extraPackages;
-    
+      let
+        python = pkgs.${cfg.pythonVersion};
+        
+        # Basic packages always included
+        basicPythonPackages = ps: with ps; [
+          pip
+          setuptools
+          wheel
+          virtualenv
+        ];
+        
+        # User-specified packages
+        userPythonPackages = ps: 
+          map (name: ps.${name}) cfg.packages;
+        
+        # Combine all packages
+        allPythonPackages = ps: 
+          (basicPythonPackages ps) ++ (userPythonPackages ps);
+      in
+      [
+        (python.withPackages allPythonPackages)
+        poetry
+        pipenv
+        pyright  # LSP server
+      ] ++ cfg.extraPackages;
+
     # Set up environment variables
     home.sessionVariables = {
       PYTHONDONTWRITEBYTECODE = "1";  # Don't create __pycache__
