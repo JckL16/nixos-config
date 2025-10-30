@@ -12,6 +12,7 @@
     ./services
     ./desktop
     ./programming
+    ./cyber
   ];
 
   # Default enables
@@ -37,4 +38,13 @@
   c-cpp.enable = lib.mkDefault false;
   python-dev.enable = lib.mkDefault false;
   python-dev.packages = lib.mkDefault [];
+
+  # Sets of cyber programs
+  cyber.all = lib.mkDefault false;
+  cyber.binary-exploitation = lib.mkDefault false;
+  cyber.cryptography = lib.mkDefault false;
+  cyber.forensics = lib.mkDefault false;
+  cyber.general = lib.mkDefault false;
+  cyber.reverse-engineering = lib.mkDefault false;
+  cyber.web-exploitation = lib.mkDefault false;
 }

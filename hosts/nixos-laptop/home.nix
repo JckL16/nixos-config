@@ -17,6 +17,8 @@
   # Installs python and some utility programs for the user
   python-dev.enable = true;
 
+  cyber.all = true;
+
   home.packages = with pkgs; [
     obsidian
     spotify
