@@ -87,6 +87,7 @@
         windowrulev2 = [
           "float, class:(org.pulseaudio.pavucontrol)"
           "float, class:(.blueman-manager-wrapped)"
+          "float, class:(nm-connection-editor)"
         ];
         
         # Key bindings
