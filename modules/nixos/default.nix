@@ -19,19 +19,23 @@
   bluetooth.enable = lib.mkDefault true;
   swap-file.enable = lib.mkDefault true;
   garbage-collection.enable = lib.mkDefault true;
-  
+
+  # Desktop environments installed system wide
   sway.enable = lib.mkDefault false;
   gnome.enable = lib.mkDefault false;
   hyprland.enable = lib.mkDefault false;
 
-  systemd-boot.enable = lib.mkDefault true;
-  grub.enable = lib.mkDefault false;
+  # Bootloader
+  systemd-boot.enable = lib.mkDefault false;
+  grub.enable = lib.mkDefault true;
   grub.nordic-theme.enable = lib.mkDefault false;
 
+  # Graphics drivers
   intel-graphics.enable = lib.mkDefault false;
   amd-graphics.enable = lib.mkDefault false;
   nvidia-graphics.enable = lib.mkDefault false;
 
+  # System wide gaming config
   gamemode.enable = lib.mkDefault false;
   steam.enable = lib.mkDefault false;
 }

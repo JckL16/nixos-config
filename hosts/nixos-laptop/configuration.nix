@@ -7,9 +7,7 @@
     home-manager.nixosModules.home-manager
   ];
 
-  # Bootloader
-  systemd-boot.enable = false;
-  grub.enable = true;
+  # Set the Bootloader theme (grub is enabled by default)
   grub.nordic-theme.enable = true;
 
   # Set to newest kernel to get the samsung-galaxy kernel working

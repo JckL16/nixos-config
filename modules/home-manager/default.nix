@@ -18,14 +18,17 @@
   git.enable = lib.mkDefault true;
   nvim.enable = lib.mkDefault true;
   alacritty.enable = lib.mkDefault true;
-
+  
+  # Gaming modules
   steam.enable = lib.mkDefault false;
   gamemode.enable = lib.mkDefault false;
   minecraft.enable = lib.mkDefault false;
 
+  # Office suites
   libreoffice.enable = lib.mkDefault false;
   onlyoffice.enable = lib.mkDefault false;
-  
+
+  # Desktop environments
   sway.enable = lib.mkDefault false;
   hyprland.enable = lib.mkDefault false;
 

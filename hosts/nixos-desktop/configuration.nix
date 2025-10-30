@@ -7,9 +7,7 @@
     home-manager.nixosModules.home-manager
   ];
 
-  # Bootloader
-  systemd-boot.enable = false;
-  grub.enable = true;
+  # Set the bootloader theme (grub is enabled by default)
   grub.nordic-theme.enable = true;
 
   # Hostname
