@@ -111,15 +111,6 @@ terminal-font: "Unifont Regular 16"
   item_icon_space = 15
 }
 
-# Menu background panel
-+ image {
-  left = 15%
-  top = 20%
-  width = 70%
-  height = 60%
-  file = "menu_bg.png"
-}
-
 # Countdown/Progress bar
 + progress_bar {
   id = "__timeout__"
@@ -133,6 +124,15 @@ terminal-font: "Unifont Regular 16"
   bg_color = "59, 66, 82"
   border_color = "67, 76, 94"
   text = "@TIMEOUT_NOTIFICATION_LONG@"
+}
+
+# Menu background panel
++ image {
+  left = 15%
+  top = 20%
+  width = 70%
+  height = 60%
+  file = "menu_bg.png"
 }
 
 # Footer text
