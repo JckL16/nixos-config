@@ -7,6 +7,7 @@
     ./clipman.nix
     ./rofi.nix
     ./nordic-theme.nix
+    ./swayosd.nix
   ];
 
 }

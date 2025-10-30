@@ -152,18 +152,16 @@
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566a --key-hl-color 88c0d0 --bs-hl-color bf616a --inside-color 2e344088 --ring-ver-color 5e81ac --inside-ver-color 2e344088 --ring-wrong-color bf616a --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr '' --text-color eceff4 --font 'JetBrainsMono Nerd Font' --font-size 24"
           "$mod SHIFT, V, exec, ~/.config/rofi/clipman.sh"
-          
-          ", XF86AudioRaiseVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ +2%"
-          ", XF86AudioLowerVolume, exec, pactl set-sink-volume @DEFAULT_SINK@ -2%"
-          ", XF86AudioMute, exec, pactl set-sink-mute @DEFAULT_SINK@ toggle"
-          ", XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-          
-          ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
-          ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
-          
-          # Specifically for my samsung laptop
-          ", XF86KbdBrightnessUp, exec, brightnessctl --device='samsung-galaxybook::kbd_backlight' set +25%"
-          ", XF86KbdBrightnessDown, exec, brightnessctl --device='samsung-galaxybook::kbd_backlight' set 25%"
+
+          # Volume controls with swayosd
+          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume 2"
+          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -2"
+          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+          ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+
+          # Brightness controls with swayosd
+          ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
+          ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
         ];
         
         # Mouse bindings
@@ -180,6 +178,7 @@
           "waybar"
           "hyprctl dispatch workspace 1"
           "udiskie --tray --notify --automount &"
+          "swayosd-server &"
         ];
         
         # Environment variables
