@@ -21,6 +21,7 @@
     obsidian
     spotify
     vscode
+    anki
   ];
 
 }
