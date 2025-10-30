@@ -179,6 +179,7 @@
           "hyprctl dispatch workspace 1"
           "udiskie --tray --notify --automount &"
           "swayosd-server &"
+          "batsignal -b -w 20 -c 10 -d 5 -f 100"
         ];
         
         # Environment variables
@@ -221,6 +222,8 @@
       swaybg
       udiskie
       nerd-fonts.jetbrains-mono
+      libnotify
+      batsignal
     ];
 
     services.blueman-applet.enable = true;

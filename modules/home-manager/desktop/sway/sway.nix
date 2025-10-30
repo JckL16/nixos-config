@@ -182,6 +182,7 @@
           { command = "swaymsg workspace 1"; }
           { command = "udiskie --tray --notify --automount &"; always = false; }
           { command = "swayosd-server &"; always = false; }
+          { command = "batsignal -b -w 20 -c 10 -d 5 -f 100"; always = false; }
         ];
       };
 
@@ -229,6 +230,8 @@
       swaybg
       udiskie
       nerd-fonts.jetbrains-mono
+      libnotify
+      batsignal
     ];
 
     services.blueman-applet.enable = true;
