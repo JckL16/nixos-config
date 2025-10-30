@@ -10,7 +10,6 @@
   libreoffice.enable = true;
 
   python-dev.enable = true;
-  python-dev.includeDataScience = true;
 
   home.packages = with pkgs; [
     obsidian
