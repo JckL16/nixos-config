@@ -31,7 +31,7 @@
       
       # === NETWORK FORENSICS & ANALYSIS ===
       wireshark            # Network protocol analyzer (GUI)
-      tshark               # Network protocol analyzer (CLI version of Wireshark)
+      (lib.lowPrio tshark) # Network protocol analyzer (CLI version of Wireshark)
       tcpdump              # Command-line packet analyzer
       tcpflow              # TCP flow recorder - captures data transmitted over TCP connections
       ngrep                # Network packet analyzer, like grep but for network traffic
@@ -40,7 +40,7 @@
       networkminer         # Network forensic analysis tool
       
       # === BINARY ANALYSIS TOOLS ===
-      binutils             # Collection of binary tools (objdump, strings, etc.)
+      (lib.lowPrio binutils)
       binwalk              # Firmware analysis tool, searches binary images for embedded files
       elfutils             # Utilities to handle ELF object files
       pev                  # PE file analysis toolkit
@@ -72,7 +72,6 @@
       yara                 # Pattern matching tool for malware researchers
       
       # === MOBILE FORENSICS ===
-      adb-sync             # Tool to synchronize files between PC and Android device
       android-tools        # Android platform tools (adb, fastboot)
       
       # === STEGANOGRAPHY ===
@@ -116,10 +115,6 @@
       apktool              # Tool for reverse engineering Android APK files
       upx                  # Ultimate Packer for eXecutables
       nasm                 # Netwide Assembler
-
-
-      # === MISCELLANEOUS ===
-      coreutils
     ];
   };
 }

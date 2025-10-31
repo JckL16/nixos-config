@@ -10,7 +10,7 @@
       
       # === CRYPTOGRAPHIC LIBRARIES & TOOLS ===
       openssl              # Cryptographic library and toolkit
-      libressl             # LibreSSL cryptographic library
+      (lib.lowPrio libressl) # LibreSSL cryptographic library
       gnutls               # GNU TLS library
       
       # === ENCRYPTION & DECRYPTION ===
@@ -37,9 +37,6 @@
       outguess             # Universal steganographic tool
       zsteg                # Detect stegano-hidden data in PNG and BMP
       
-      # === ENCODING/DECODING ===
-      basez                # Base16/32/64 encoding/decoding
-      
       # === RANDOM NUMBER GENERATION ===
       haveged              # Entropy harvesting daemon
       rng-tools            # Random number generator related utilities
@@ -50,11 +47,6 @@
       # === NUMBER THEORY & MATHEMATICS ===
       pari                 # Computer algebra system for number theory
       gap                  # System for computational discrete algebra
-      
-      # === PYTHON CRYPTOGRAPHY ===
-      python3Packages.pycryptodome   # Cryptographic library for Python
-      python3Packages.cryptography   # Cryptographic recipes and primitives
-      python3Packages.gmpy2          # GMP/MPIR, MPFR, and MPC interface
       
       # === SYMMETRIC ENCRYPTION ===
       aespipe              # AES encryption tool for tar/cpio

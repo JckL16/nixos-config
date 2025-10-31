@@ -10,7 +10,7 @@
       
       # === DISASSEMBLERS & DECOMPILERS ===
       ghidra               # NSA's software reverse engineering framework
-      ida-free             # IDA Free version (if available)
+      # ida-free             # IDA Free version (if available)
       radare2              # Reverse engineering framework
       rizin                # Fork of radare2 with better structure
       cutter               # Free reverse engineering platform (GUI for rizin)
@@ -26,10 +26,9 @@
       edb                  # Cross-platform AArch32/x86/x86-64 debugger
       
       # === BINARY ANALYSIS ===
-      binutils             # Collection of binary tools
       elfutils             # Utilities to handle ELF files
+      (lib.lowPrio binutils)
       patchelf             # Tool to modify ELF executables and libraries
-      checksec             # Check binary security properties
       pwninit              # Automate binary security challenge setup
       one_gadget           # Tool for finding one gadget RCE
       
@@ -71,14 +70,6 @@
       qemu                 # Generic machine emulator and virtualizer
       unicorn              # Lightweight multi-platform CPU emulator framework
       
-      # === SCRIPTING FOR REVERSE ENGINEERING ===
-      python3              # Python interpreter for scripting
-      python3Packages.pwntools       # CTF framework and exploit development library
-      python3Packages.capstone       # Disassembly framework
-      python3Packages.keystone-engine # Assembler framework
-      python3Packages.unicorn        # CPU emulator framework
-      python3Packages.r2pipe         # Pipe interface for radare2
-      
       # === WINDOWS PE ANALYSIS ===
       pev                  # PE file analysis toolkit
       
@@ -97,7 +88,7 @@
       hexcurse             # Ncurses-based hex editor
       file                 # Determine file type
       glibc                # Includes ldd 
-      binutils             # Includes objdump, nm, readelf and strings to name a few
+      (lib.lowPrio binutils)
     ];
   };
 }

@@ -7,12 +7,6 @@ in
   options.python-dev = {
     enable = lib.mkEnableOption "Python development environment";
     
-    pythonVersion = lib.mkOption {
-      type = lib.types.enum [ "python3" "python311" "python312" "python313" ];
-      default = "python313";
-      description = "Which Python version to use";
-    };
-    
     packages = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [];
@@ -26,11 +20,11 @@ in
       description = "Additional system packages to include in the environment";
     };
   };
-
+  
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; 
       let
-        python = pkgs.${cfg.pythonVersion};
+        python = pkgs.python3;
         
         # Basic packages always included
         basicPythonPackages = ps: with ps; [
@@ -54,7 +48,7 @@ in
         pipenv
         pyright  # LSP server
       ] ++ cfg.extraPackages;
-
+    
     # Set up environment variables
     home.sessionVariables = {
       PYTHONDONTWRITEBYTECODE = "1";  # Don't create __pycache__

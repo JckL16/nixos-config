@@ -23,6 +23,7 @@
     vim
     wget
     zip
+    coreutils
   ];
 
   programs.zsh.enable = true;

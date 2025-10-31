@@ -9,8 +9,6 @@
     home.packages = with pkgs; [
       
       # === SCRIPTING LANGUAGES ===
-      python3              # Python programming language
-      python3Packages.pip  # Python package installer
       ruby                 # Ruby programming language
       perl                 # Perl programming language
       bash                 # Bourne Again Shell
@@ -23,7 +21,6 @@
       traceroute           # Trace route to network host
       mtr                  # Network diagnostic tool
       whois                # Client for the whois directory service
-      dig                  # DNS lookup utility
       host                 # DNS lookup utility
       
       # === SSH & REMOTE ACCESS ===
@@ -52,9 +49,6 @@
       ripgrep              # Fast search tool (better grep)
       tree                 # Display directory tree
       ncdu                 # NCurses disk usage analyzer
-      
-      # === DATA ENCODING/DECODING ===
-      basez                # Base16/32/64 encoding/decoding
       
       # === JSON/XML PROCESSING ===
       jq                   # Command-line JSON processor
@@ -91,7 +85,7 @@
       # === NETWORKING UTILITIES ===
       iproute2             # Collection of utilities for controlling TCP/IP
       net-tools            # Network configuration tools (ifconfig, netstat)
-      bind                 # DNS tools (dig, nslookup)
+      dnsutils             # DNS tools (dig, nslookup)
       
       # === CALCULATOR & CONVERSION ===
       bc                   # Arbitrary precision calculator
@@ -107,7 +101,6 @@
       pv                   # Monitor progress of data through pipe
       magic-wormhole       # Securely transfer files between computers
       asciinema            # Terminal session recorder
-      coreutils            # Includes base64 and some hashing functions
     ];
   };
 }
