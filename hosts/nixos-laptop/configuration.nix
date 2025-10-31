@@ -22,6 +22,9 @@
   # Desktop environment
   hyprland.enable = true;
 
+  # Enabling virtualisation for the system
+  virtualisation.enable = true;
+
   # Graphics drivers
   intel-graphics.enable = true;
   steam.enable = true;

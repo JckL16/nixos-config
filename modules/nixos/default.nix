@@ -38,4 +38,6 @@
   # System wide gaming config
   gamemode.enable = lib.mkDefault false;
   steam.enable = lib.mkDefault false;
+
+  virtualisation.enable = lib.mkDefault false;
 }

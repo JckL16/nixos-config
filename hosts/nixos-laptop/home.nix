@@ -19,6 +19,8 @@
 
   cyber.all = true;
 
+  virt-manager.enable = true;
+
   home.packages = with pkgs; [
     obsidian
     spotify
