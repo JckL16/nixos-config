@@ -40,6 +40,23 @@
       ];
     };
 
+    nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { 
+        inherit self home-manager inputs;
+        variables = (import ./variables.nix) // {
+          bootDevice = "/dev/vda";
+          isBIOS = true;
+        };
+      };
+      modules = [
+        ./hosts/nixos-vm/hardware-configuration.nix
+        ./hosts/nixos-vm/configuration.nix
+        ./modules/nixos
+        home-manager.nixosModules.home-manager
+      ];
+    };
+
     homeManagerModules.default = ./modules/home-manager;
   };
 }

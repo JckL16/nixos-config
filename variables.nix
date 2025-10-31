@@ -18,5 +18,8 @@
 
   # If using grub this will be used. 
   # When using a BIOS system this has to specify the drive to install GRUB to
+  # These settings are meant to be changed in flake.nix
   bootDevice = "nodev";
+
+  isBIOS = false;
 }

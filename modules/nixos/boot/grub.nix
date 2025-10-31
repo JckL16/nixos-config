@@ -12,11 +12,11 @@
         grub = {
             enable = true;
             device = variables.bootDevice;
-            efiSupport = true;
+            efiSupport = !variables.isBIOS;
             useOSProber = true;
             configurationLimit = 5;
         };
-        efi.canTouchEfiVariables = true;
+        efi.canTouchEfiVariables = !variables.isBIOS;
         timeout = 5;
     };
   };
