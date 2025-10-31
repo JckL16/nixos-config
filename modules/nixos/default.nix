@@ -10,6 +10,7 @@
     ./boot
     ./desktop
     ./programs
+    ./guest-agents
     ./system-packages.nix
     ./users.nix
   ];
@@ -40,4 +41,6 @@
   steam.enable = lib.mkDefault false;
 
   virtualisation.enable = lib.mkDefault false;
+  qemu-guest-agent.enable = lib.mkDefault false;
+  virtualbox-guest-agent.enable = lib.mkDefault false;
 }
