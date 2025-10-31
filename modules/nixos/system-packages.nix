@@ -24,6 +24,7 @@
     wget
     zip
     coreutils
+    nerd-fonts.jetbrains-mono
   ];
 
   programs.zsh.enable = true;
