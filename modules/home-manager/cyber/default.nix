@@ -47,7 +47,7 @@
       forensics.enable = lib.mkIf (config.cyber.all || config.cyber.forensics) true;
       binary-exploitation.enable = lib.mkIf (config.cyber.all || config.cyber.binary-exploitation) true;
       cryptography.enable = lib.mkIf (config.cyber.all || config.cyber.cryptography) true;
-      general.enable = lib.mkIf (config.cyber.all || config.cyber.general-skills) true;
+      general.enable = lib.mkIf (config.cyber.all || config.cyber.general) true;
       reverse-engineering.enable = lib.mkIf (config.cyber.all || config.cyber.reverse-engineering) true;
       web-exploitation.enable = lib.mkIf (config.cyber.all || config.cyber.web-exploitation) true;
     }
