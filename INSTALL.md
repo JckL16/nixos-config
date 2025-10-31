@@ -18,6 +18,8 @@ Boot from the NixOS ISO (USB or CD).
 
 ### 2. Partition Your Disk
 
+#### EFI
+
 ```bash
 # List available disks
 lsblk
@@ -29,21 +31,28 @@ sudo parted /dev/<your-disk> -- set 1 esp on
 sudo parted /dev/<your-disk> -- mkpart primary 512MiB 100%
 ```
 
+#### BIOS (VMs for example)
+```bash
+# List all availables disks
+
+# Partition the disks
+parted /dev/<your-disk> -- mklabel msdos
+parted /dev/<your-disk> -- mkpart primary 1MiB 100%
+parted /dev/<your-disk> -- set 1 boot on
+```
+
 The configuration creates a swap file by standard but if you want a separate partition for it you can simply set swap.enable = false in your hosts configuration.nix file
 
-### 3. Format Partitions
+### 3. Format and mount Partitions
 
+#### EFI
 ```bash
 # Format boot partition
 sudo mkfs.fat -F 32 -n boot /dev/<your-disk>1
 
 # Format root partition
 sudo mkfs.ext4 -L nixos /dev/<your-disk>2
-```
 
-### 4. Mount Partitions
-
-```bash
 # Mount root partition
 sudo mount /dev/disk/by-label/nixos /mnt
 
@@ -52,13 +61,23 @@ sudo mkdir -p /mnt/boot
 sudo mount /dev/disk/by-label/boot /mnt/boot
 ```
 
-### 5. Generate Initial Configuration
+#### BIOS
+
+```bash
+# Format the root paritition
+mkfs.ext4 -L nixos /dev/<your-disk>1
+
+# Mount the root partition
+mount /dev/disk/by-label/nixos /mnt
+```
+
+### 4. Generate Initial Configuration
 
 ```bash
 sudo nixos-generate-config --root /mnt
 ```
 
-### 6. Enable Flakes (Optional but Recommended)
+### 5. Enable Flakes (Optional but Recommended)
 
 Edit `/mnt/etc/nixos/configuration.nix`:
 
@@ -78,7 +97,16 @@ Also enable networking:
 networking.networkmanager.enable = true;
 ```
 
-### 7. Install Minimal NixOS
+#### BIOS
+
+When installing the bootloader for a BIOS system. Grub requires you to give it the device to install it to. Edit configuration.nix and set the following argument
+
+```nix
+boot.loader.grub.device = "/dev/<your-disk>"
+
+```
+
+### 6. Install Minimal NixOS
 
 ```bash
 sudo nixos-install
@@ -86,7 +114,7 @@ sudo nixos-install
 
 You'll be prompted to set the root password. Choose a secure password.
 
-### 8. Reboot into New System
+### 7. Reboot into New System
 
 ```bash
 reboot
@@ -98,18 +126,18 @@ Remove the installation media when prompted.
 
 ## Post-Installation Setup
 
-### 9. Login and Connect to Network
+### 8. Login and Connect to Network
 
 Login as **root** with the password you set during installation.
 
 #### If using NetworkManager:
 ```bash
-nmtui
+nmttu
 ```
 
 Select "Activate a connection" and connect to your network.
 
-### 10. Create Your User Account
+### 9. Create Your User Account
 
 > 📝 **Note**: Replace `jack` with your desired username.
 
@@ -121,7 +149,7 @@ useradd -m -G wheel jack
 passwd jack
 ```
 
-### 11. Login as Your User
+### 10. Login as Your User
 
 ```bash
 exit  # Logout from root
@@ -133,7 +161,7 @@ exit  # Logout from root
 su jack # replace 'jack' with your desired username.
 ```
 
-### 12. Clone This Configuration
+### 11. Clone This Configuration
 
 ```bash
 # Enter a nix-shell with git available
@@ -145,7 +173,7 @@ git clone https://github.com/JckL16/nixos-config.git
 cd nixos-config
 ```
 
-### 13. Integrate Hardware Configuration
+### 12. Integrate Hardware Configuration
 
 Copy the generated hardware configuration into your config structure:
 
@@ -157,7 +185,7 @@ sudo cp /etc/nixos/hardware-configuration.nix ~/nixos-config/hosts/YOUR_HOST/har
 sudo cp /etc/nixos/hardware-configuration.nix ~/nixos-config/hardware-configuration.nix
 ```
 
-### 14. Customize Configuration
+### 13. Customize Configuration
 
 Edit your flake or host configuration to match your system:
 
@@ -172,7 +200,7 @@ nano flake.nix
 nano hosts/YOUR_HOST/configuration.nix
 ```
 
-### 15. Apply Your Full Configuration
+### 14. Apply Your Full Configuration
 
 ```bash
 cd ~/nixos-config
@@ -184,7 +212,7 @@ sudo nixos-rebuild switch --flake .#YOUR_HOST_NAME
 
 This will take some time as it downloads and builds all packages.
 
-### 16. Reboot (Recommended)
+### 15. Reboot (Recommended)
 
 ```bash
 reboot
