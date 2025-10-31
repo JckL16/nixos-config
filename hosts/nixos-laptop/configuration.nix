@@ -3,7 +3,6 @@
 { config, pkgs, home-manager, inputs, variables, ... }: {
   
   imports = [
-    ./samsung-laptop.nix
     home-manager.nixosModules.home-manager
   ];
 

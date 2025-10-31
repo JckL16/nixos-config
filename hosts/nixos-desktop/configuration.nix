@@ -3,7 +3,6 @@
 { config, pkgs, home-manager, inputs, variables, ... }: {
   
   imports = [
-    ./amd-desktop.nix
     home-manager.nixosModules.home-manager
   ];
 

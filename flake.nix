@@ -19,6 +19,7 @@
         variables = import ./variables.nix;
       };
       modules = [
+        ./hosts/nixos-laptop/hardware-configuration.nix
         ./hosts/nixos-laptop/configuration.nix
         ./modules/nixos
         home-manager.nixosModules.home-manager
@@ -32,6 +33,7 @@
         variables = import ./variables.nix;
       };
       modules = [
+        ./hosts/nixos-desktop/hardware-configuration.nix
         ./hosts/nixos-desktop/configuration.nix
         ./modules/nixos
         home-manager.nixosModules.home-manager
