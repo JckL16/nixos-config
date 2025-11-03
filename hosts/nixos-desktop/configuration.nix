@@ -6,6 +6,9 @@
     home-manager.nixosModules.home-manager
   ];
 
+  # Enable emulation of ARM systems
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   # Set the bootloader theme (grub is enabled by default)
   grub.nordic-theme.enable = true;
 

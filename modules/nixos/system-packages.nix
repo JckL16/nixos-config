@@ -27,6 +27,7 @@
     nerd-fonts.jetbrains-mono
     gnumake
     openssl
+    python3
   ];
 
   programs.zsh.enable = true;
