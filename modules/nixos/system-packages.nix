@@ -25,6 +25,7 @@
     zip
     coreutils
     nerd-fonts.jetbrains-mono
+    gnumake
   ];
 
   programs.zsh.enable = true;
