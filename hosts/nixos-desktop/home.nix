@@ -14,6 +14,8 @@
   # Installs the libreoffice suite on the system
   # libreoffice.enable = true;
 
+  winbox.enable = true;
+
   home.packages = with pkgs; [
     obsidian
     spotify

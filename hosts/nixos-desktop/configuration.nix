@@ -24,6 +24,8 @@
   # Makes sure gamemode can se the GPU on my desktop
   programs.gamemode.settings.gpu.gpu_device = 1;
 
+  winbox.enable = true;
+
   # Home Manager configuration
   home-manager = {
     useGlobalPkgs = true;

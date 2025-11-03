@@ -31,6 +31,7 @@
   # Office suites
   libreoffice.enable = lib.mkDefault false;
   onlyoffice.enable = lib.mkDefault false;
+  winbox.enable = lib.mkDefault false;
 
   # Desktop environments
   sway.enable = lib.mkDefault false;

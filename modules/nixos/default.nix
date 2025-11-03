@@ -40,6 +40,8 @@
   gamemode.enable = lib.mkDefault false;
   steam.enable = lib.mkDefault false;
 
+  winbox.enable = lib.mkDefault false;
+
   virtualisation.enable = lib.mkDefault false;
   qemu-guest-agent.enable = lib.mkDefault false;
   virtualbox-guest-agent.enable = lib.mkDefault false;
