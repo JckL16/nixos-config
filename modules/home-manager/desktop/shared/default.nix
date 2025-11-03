@@ -8,6 +8,7 @@
     ./rofi.nix
     ./nordic-theme.nix
     ./swayosd.nix
+    ./wlogout.nix
   ];
 
 }

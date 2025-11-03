@@ -95,6 +95,7 @@
           "$mod SHIFT, Q, killactive"
           "$mod SHIFT, C, exec, hyprctl reload"
           "$mod SHIFT, E, exit"
+          "$mod SHIFT, P, exec, pgrep wlogout || wlogout -b 2 -c 2 -r 2 -L 500 -R 500 -T 300 -B 300"
           
           "$mod, H, movefocus, l"
           "$mod, J, movefocus, d"
@@ -225,6 +226,7 @@
       nerd-fonts.jetbrains-mono
       libnotify
       batsignal
+      swaylock-effects
     ];
 
     services.blueman-applet.enable = true;
