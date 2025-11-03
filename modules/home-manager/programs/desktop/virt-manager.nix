@@ -18,7 +18,7 @@
       spice-gtk
       spice-protocol
       qemu
-      win-virtio
+      virtio-win
       win-spice
     ];
 
