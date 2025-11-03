@@ -17,7 +17,7 @@
   # Installs python and some utility programs for the user
   python-dev.enable = true;
 
-  cyber.all = true;
+  # cyber.all = true;
 
   virt-manager.enable = true;
 

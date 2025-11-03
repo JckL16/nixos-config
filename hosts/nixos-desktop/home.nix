@@ -12,7 +12,7 @@
   minecraft.enable = true;
 
   # Installs the libreoffice suite on the system
-  libreoffice.enable = true;
+  # libreoffice.enable = true;
 
   home.packages = with pkgs; [
     obsidian
