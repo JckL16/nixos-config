@@ -26,6 +26,7 @@
     coreutils
     nerd-fonts.jetbrains-mono
     gnumake
+    openssl
   ];
 
   programs.zsh.enable = true;
