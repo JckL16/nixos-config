@@ -156,10 +156,15 @@
           "$mod SHIFT, V, exec, ~/.config/rofi/clipman.sh"
 
           # Volume controls with swayosd
-          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume 2"
-          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -2"
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
           ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+        ];
+        
+        # Binds that can be held down
+        binde = [
+          # Volume controls with swayosd
+          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume 2"
+          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -2"
 
           # Brightness controls with swayosd
           ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
