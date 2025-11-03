@@ -21,6 +21,7 @@
     spotify
     vscode
     discord-ptb
+    caligula
   ];
 
 }
