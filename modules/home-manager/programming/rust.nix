@@ -15,5 +15,9 @@
       pkgs.clippy
       pkgs.rust-analyzer
     ];
+
+    home.sessionPath = [
+      "$HOME/.cargo/bin"
+    ];
   };
 }

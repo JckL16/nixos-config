@@ -16,6 +16,8 @@
 
   # Installs python and some utility programs for the user
   python-dev.enable = true;
+  rust.enable = true;
+  c-cpp.enable = true;
 
   # cyber.all = true;
 
@@ -26,6 +28,7 @@
     spotify
     vscode
     anki
+    signal-desktop
   ];
 
 }
