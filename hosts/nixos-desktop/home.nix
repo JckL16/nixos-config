@@ -22,6 +22,9 @@
     vscode
     discord-ptb
     caligula
+    nmap
+    nixos-anywhere
+    jq
   ];
 
 }
