@@ -68,7 +68,7 @@
         
         # Input configuration
         input = {
-          kb_layout = "${variables.keyboard-layout}";
+          kb_layout = "${variables.keyboard-layout},us";
           kb_options = "grp:alt_shift_toggle";
           follow_mouse = 1;
           

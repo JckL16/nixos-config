@@ -21,6 +21,7 @@
           modules-left = [ "hyprland/workspaces" "hyprland/submap" "hyprland/window" "custom/waybar-mpris" ];
           modules-center = [ "clock" ];
           modules-right = [ 
+            "hyprland/language"
             "wireplumber"
             "network" 
             "cpu" 
@@ -61,6 +62,13 @@
           "hyprland/window" = {
             max-length = 30;
             separate-outputs = true;
+          };
+
+          # Keyboard layout
+          "hyprland/language" = {
+            format = "󰌌 {}";
+            format-en = "EN";
+            format-sv = "SV";
           };
 
           # Clock
@@ -215,6 +223,7 @@
         #backlight,
         #network,
         #wireplumber,
+        #language,
         #custom-waybar-mpris,
         #tray {
             padding: 0 5px;
@@ -294,6 +303,11 @@
 
         #wireplumber.muted {
             color: #4c566a;
+        }
+
+        #language {
+            color: #a3be8c;
+            padding: 0 10px;
         }
 
         #custom-waybar-mpris {
