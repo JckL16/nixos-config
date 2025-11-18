@@ -8,7 +8,7 @@
   
   config = lib.mkIf config.onlyoffice.enable {
     home.packages = with pkgs; [
-      onlyoffice-bin
+      onlyoffice-desktopeditors
     ];
   };
 }
