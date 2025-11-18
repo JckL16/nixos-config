@@ -12,7 +12,8 @@
   minecraft.enable = true;
 
   # Installs the libreoffice suite for the user
-  libreoffice.enable = true;
+  # libreoffice.enable = true;
+  onlyoffice.enable = true;
 
   # Installs python and some utility programs for the user
   python-dev.enable = true;
@@ -28,7 +29,13 @@
     spotify
     vscode
     anki
-    signal-desktop
+    signal-desktop-bin
+    discord-ptb
+    ttyper
+    cmatrix
+    sl
+    cowsay
+    fortune
   ];
 
 }
