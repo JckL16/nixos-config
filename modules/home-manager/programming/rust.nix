@@ -8,12 +8,13 @@
   };
 
   config = lib.mkIf config.rust.enable {
-    home.packages = [
-      pkgs.rustc
-      pkgs.cargo
-      pkgs.rustfmt
-      pkgs.clippy
-      pkgs.rust-analyzer
+    home.packages = with pkgs; [
+      rustc
+      cargo
+      rustfmt
+      clippy
+      rust-analyzer
+      gcc
     ];
 
     home.sessionPath = [
