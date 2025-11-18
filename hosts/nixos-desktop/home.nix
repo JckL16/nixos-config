@@ -16,6 +16,8 @@
 
   winbox.enable = true;
 
+  rust.enable = true;
+
   home.packages = with pkgs; [
     obsidian
     spotify
