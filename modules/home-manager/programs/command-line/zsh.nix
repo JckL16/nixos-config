@@ -54,9 +54,6 @@
       lt = "eza --icons --group-directories-first --tree";
       tree = "eza --icons --group-directories-first --tree";
       
-      # Bat alias (cat replacement)
-      cat = "bat";
-      
       # Zoxide alias (cd replacement)
       cd = "z";
       
