@@ -27,6 +27,7 @@
     nmap
     nixos-anywhere
     jq
+    signal-desktop-bin
   ];
 
 }
