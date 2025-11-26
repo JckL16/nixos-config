@@ -5,6 +5,7 @@
     ./steam.nix
     ./virtualisation.nix
     ./winbox.nix
+    ./docker.nix
   ];
 
 }

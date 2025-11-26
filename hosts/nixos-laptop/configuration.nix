@@ -23,6 +23,7 @@
 
   # Enabling virtualisation for the system
   virtualisation.enable = true;
+  docker.enable = true;
 
   # Graphics drivers
   intel-graphics.enable = true;
