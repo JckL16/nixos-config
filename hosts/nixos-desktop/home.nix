@@ -17,6 +17,8 @@
   winbox.enable = true;
 
   rust.enable = true;
+  python-dev.enable = true;
+  python-dev.packages = [ "tqdm" ];
 
   home.packages = with pkgs; [
     obsidian
