@@ -17,10 +17,11 @@
 
   # Installs python and some utility programs for the user
   python-dev.enable = true;
+  python-dev.packages = [ "tqdm" ];
   rust.enable = true;
   c-cpp.enable = true;
 
-  # cyber.all = true;
+  cyber.all = true;
 
   virt-manager.enable = true;
 
@@ -36,6 +37,7 @@
     sl
     cowsay
     fortune
+    qbittorrent
   ];
 
 }

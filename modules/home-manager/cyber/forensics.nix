@@ -52,7 +52,7 @@
       # === PDF ANALYSIS ===
       pdf-parser           # Parse PDF files and extract various objects
       pdfid                # Tool to identify PDF files with specific characteristics
-      poppler_utils        # PDF rendering library utilities (pdfinfo, pdftotext, etc.)
+      poppler-utils        # PDF rendering library utilities (pdfinfo, pdftotext, etc.)
       
       # === DOCUMENT FORENSICS ===
       odt2txt              # Simple converter from OpenDocument Text to plain text
