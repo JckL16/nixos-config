@@ -35,7 +35,7 @@
       tcpdump              # Command-line packet analyzer
       tcpflow              # TCP flow recorder - captures data transmitted over TCP connections
       ngrep                # Network packet analyzer, like grep but for network traffic
-      dsniff               # Collection of tools for network auditing and penetration testing
+      # dsniff               # Collection of tools for network auditing and penetration testing
       ettercap             # Comprehensive suite for MITM attacks on LAN
       networkminer         # Network forensic analysis tool
       
