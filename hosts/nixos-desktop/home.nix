@@ -20,6 +20,8 @@
   python-dev.enable = true;
   python-dev.packages = [ "tqdm" ];
 
+  cyber.all = true;
+
   home.packages = with pkgs; [
     obsidian
     spotify
@@ -30,6 +32,11 @@
     nixos-anywhere
     jq
     signal-desktop-bin
+    qbittorrent
+    lolcat
+    figlet
+    cowsay
+    sl
   ];
 
 }
