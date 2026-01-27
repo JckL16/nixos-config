@@ -20,7 +20,7 @@
   python-dev.enable = true;
   python-dev.packages = [ "tqdm" ];
 
-  cyber.all = true;
+  cyber.enable = true;
 
   home.packages = with pkgs; [
     obsidian

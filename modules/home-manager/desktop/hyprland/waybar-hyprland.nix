@@ -1,6 +1,6 @@
 # modules/home-manager/desktop/hyprland/waybar-hyprland.nix
 
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, variables, ... }: {
 
   config = lib.mkIf config.hyprland.enable {
     programs.waybar = {
@@ -73,7 +73,7 @@
 
           # Clock
           clock = {
-            timezone = "Europe/Stockholm";
+            timezone = variables.timeZone;
             format-alt = " {:%a %d %b  %H:%M}";
             format = " {:%Y-%m-%d %H:%M}";
             tooltip = false;

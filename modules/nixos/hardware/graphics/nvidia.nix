@@ -6,11 +6,10 @@
   };
   
   config = lib.mkIf config.nvidia-graphics.enable {
-    # Enable OpenGL/Graphics
-    hardware.opengl = {
+    # Enable graphics (hardware.opengl is deprecated, use hardware.graphics)
+    hardware.graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true; # For 32-bit applications
+      enable32Bit = true; # For 32-bit applications
     };
     
     # Load nvidia driver for Xorg and Wayland

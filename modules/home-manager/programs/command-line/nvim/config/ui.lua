@@ -331,17 +331,15 @@ if telescope then
   pcall(telescope.load_extension, 'fzf')
 end
 
--- Treesitter setup
-local treesitter = safe_require('nvim-treesitter.configs')
-if treesitter then
-  treesitter.setup({
-    highlight = { 
-      enable = true,
-      additional_vim_regex_highlighting = false,
-    },
-    indent = { enable = true },
-  })
-end
+-- Treesitter setup (new API - highlighting enabled by default when parsers are loaded)
+-- Disable legacy regex syntax highlighting in favor of treesitter
+vim.cmd('syntax off')
+-- Ensure treesitter highlighting is enabled for all buffers with parsers
+vim.api.nvim_create_autocmd('FileType', {
+  callback = function()
+    pcall(vim.treesitter.start)
+  end,
+})
 
 -- Lualine with Nord theme
 local lualine = safe_require('lualine')

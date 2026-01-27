@@ -6,7 +6,7 @@
   };
   
   config = lib.mkIf config.gamemode.enable {
-    # OBSERVERVE: For this module to work with steam you also have to specify the gems to run with gamemoderun
+    # OBSERVE: For this module to work with steam you also have to specify the games to run with gamemoderun
     # you can do this by adding "gamemoderun %command%" to the launch command for each game.
     # Right click on the game, go to properties, then set launch options.
 

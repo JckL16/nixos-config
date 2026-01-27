@@ -30,7 +30,7 @@
   steam.enable = true;
   gamemode.enable = true;
 
-  # Metasploit database (used with cyber.general)
+  # Metasploit database (used with cyber.enable)
   metasploit-db.enable = true;
 
   # Home Manager configuration

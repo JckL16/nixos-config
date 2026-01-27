@@ -10,7 +10,7 @@
     ];
   };
 
-  cyber.all = true;
+  cyber.enable = true;
 
   home.packages = with pkgs; [
 

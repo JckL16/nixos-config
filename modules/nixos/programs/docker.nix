@@ -1,7 +1,7 @@
 
 # modules/nixos/programs/docker.nix
 
-{ pkgs, lib, config, variables, ... }: {
+{ pkgs, lib, config, ... }: {
   options = {
     docker.enable = 
       lib.mkEnableOption "Enable docker and add the main user to the docker group";

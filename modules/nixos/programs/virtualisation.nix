@@ -1,11 +1,11 @@
 # modules/nixos/programs/virtualisation.nix
 
-{ config, lib, pkgs, variables, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   options = {
     virtualisation.enable = 
-      lib.mkEnableOption "Enable libvirt and add user to the libvrtd group";
+      lib.mkEnableOption "Enable libvirt and add user to the libvirtd group";
   };
   
   config = lib.mkIf config.virtualisation.enable {

@@ -1,6 +1,6 @@
 # modules/home-manager/desktop/sway/waybar-sway.nix
 
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, variables, ... }: {
 
   config = lib.mkIf config.sway.enable {
     programs.waybar = {
@@ -63,7 +63,7 @@
 
           # Clock
           clock = {
-            timezone = "Europe/Stockholm";
+            timezone = variables.timeZone;
             format-alt = " {:%a %d %b  %H:%M}";
             format = " {:%Y-%m-%d %H:%M}";
             tooltip = false;

@@ -21,7 +21,7 @@
   rust.enable = true;
   c-cpp.enable = true;
 
-  cyber.all = true;
+  cyber.enable = true;
 
   virt-manager.enable = true;
 

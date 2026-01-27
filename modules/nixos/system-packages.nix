@@ -13,7 +13,6 @@
     inetutils
     man-db
     man-pages
-    neovim
     procps
     texinfo
     tldr

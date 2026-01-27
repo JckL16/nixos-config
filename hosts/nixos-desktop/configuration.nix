@@ -27,7 +27,7 @@
   # Makes sure gamemode can se the GPU on my desktop
   programs.gamemode.settings.gpu.gpu_device = 1;
 
-  # Metasploit database (used with cyber.general)
+  # Metasploit database (used with cyber.enable)
   metasploit-db.enable = true;
 
   winbox.enable = true;
