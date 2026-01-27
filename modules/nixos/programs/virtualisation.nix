@@ -23,9 +23,5 @@
     virtualisation.libvirtd.onBoot = "start";
     virtualisation.libvirtd.onShutdown = "shutdown";
 
-    # Add your user to the libvirtd group
-    users.users."${variables.username}" = {
-      extraGroups = [ "libvirtd" ];
-    };
   };
 }

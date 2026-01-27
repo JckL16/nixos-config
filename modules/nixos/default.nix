@@ -45,4 +45,6 @@
   virtualisation.enable = lib.mkDefault false;
   qemu-guest-agent.enable = lib.mkDefault false;
   virtualbox-guest-agent.enable = lib.mkDefault false;
+
+  metasploit-db.enable = lib.mkDefault false;
 }

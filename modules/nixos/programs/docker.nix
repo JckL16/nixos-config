@@ -9,7 +9,5 @@
   
   config = lib.mkIf config.docker.enable {
     virtualisation.docker.enable = true;
-
-    users.users."${variables.username}".extraGroups = [ "docker" ];
   };
 }

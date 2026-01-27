@@ -59,6 +59,5 @@
     services.dbus.packages = [ pkgs.gamemode ];
     
     users.groups.gamemode = {};
-    users.users."${variables.username}".extraGroups = [ "gamemode" "video" "render" ];
   };
 }

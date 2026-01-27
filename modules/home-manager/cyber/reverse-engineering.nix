@@ -87,8 +87,7 @@
       ghex                 # ------ || ------
       # hexcurse             # Ncurses-based hex editor
       file                 # Determine file type
-      glibc                # Includes ldd 
-      (lib.lowPrio binutils)
+      glibc                # Includes ldd
     ];
   };
 }

@@ -97,7 +97,7 @@
       export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 
       _fzf_compgen_path() {
-        fd --hidden --exclude .got . "$1"
+        fd --hidden --exclude .git . "$1"
       }
 
       _fzf_compgen_dir() {

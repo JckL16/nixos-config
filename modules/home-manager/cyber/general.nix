@@ -102,6 +102,10 @@
       magic-wormhole       # Securely transfer files between computers
       asciinema            # Terminal session recorder
       wordlists
+
+      # === METASPLOIT FRAMEWORK ===
+      msfpc                # Msfvenom
+      metasploit           # Metasploit framework
     ];
   };
 }

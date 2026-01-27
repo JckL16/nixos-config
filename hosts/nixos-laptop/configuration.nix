@@ -30,6 +30,9 @@
   steam.enable = true;
   gamemode.enable = true;
 
+  # Metasploit database (used with cyber.general)
+  metasploit-db.enable = true;
+
   # Home Manager configuration
   home-manager = {
     useGlobalPkgs = true;

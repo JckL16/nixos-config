@@ -38,6 +38,7 @@
     cowsay
     fortune
     qbittorrent
+    claude-code
   ];
 
 }
