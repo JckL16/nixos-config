@@ -50,7 +50,7 @@
       
       # === SYMMETRIC ENCRYPTION ===
       aespipe              # AES encryption tool for tar/cpio
-      mcrypt               # Replacement for crypt(1)
+      # mcrypt               # Replacement for crypt(1)
       
       # === BLOCKCHAIN & CRYPTOCURRENCY ===
       bitcoin              # Bitcoin client (if doing crypto CTFs)

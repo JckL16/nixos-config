@@ -101,6 +101,7 @@
       pv                   # Monitor progress of data through pipe
       magic-wormhole       # Securely transfer files between computers
       asciinema            # Terminal session recorder
+      wordlists
     ];
   };
 }

@@ -30,6 +30,8 @@
     python3
   ];
 
+  programs.direnv.enable = true;
+
   programs.zsh.enable = true;
   programs.bash.enable = true;
 

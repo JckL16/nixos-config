@@ -15,7 +15,7 @@
       rizin                # Fork of radare2 with better structure
       cutter               # Free reverse engineering platform (GUI for rizin)
       iaito                # GUI for radare2
-      hopper               # Reverse engineering tool (if available)
+      # hopper               # Reverse engineering tool (if available)
       
       # === DEBUGGERS ===
       gdb                  # GNU Debugger
@@ -85,7 +85,7 @@
       xxd                  # Make a hexdump or reverse a hexdump
       imhex                # High quality hex editor
       ghex                 # ------ || ------
-      hexcurse             # Ncurses-based hex editor
+      # hexcurse             # Ncurses-based hex editor
       file                 # Determine file type
       glibc                # Includes ldd 
       (lib.lowPrio binutils)

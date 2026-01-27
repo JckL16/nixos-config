@@ -9,7 +9,7 @@
     home.packages = with pkgs; [
       
       # === DISK FORENSICS & DATA RECOVERY ===
-      autopsy              # Digital forensics platform and graphical interface to The Sleuth Kit
+      #autopsy              # Digital forensics platform and graphical interface to The Sleuth Kit
       sleuthkit            # Collection of command line tools for digital forensics
       testdisk             # Data recovery software, works with partition tables
       foremost             # Console program to recover files based on headers/footers
@@ -67,6 +67,9 @@
       
       # === WINDOWS FORENSICS ===
       regripper            # Tool for extracting info from Windows registry
+
+      # === EVENT LOG FORENSICS (EVTX) ==
+      evtx
       
       # === SYSTEM FORENSICS ===
       yara                 # Pattern matching tool for malware researchers
@@ -101,6 +104,7 @@
       # === DISK UTILITIES ===
       hdparm               # Get/set SATA/IDE device parameters
       smartmontools        # Tools to monitor hard drive health (SMART)
+      dislocker            # For reading bitlocker encrypted images in linux
       
       # === DEBUGGING & TRACING ===
       strace               # System call tracer for Linux
