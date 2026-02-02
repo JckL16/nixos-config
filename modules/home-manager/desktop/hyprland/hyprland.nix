@@ -83,13 +83,6 @@
           preserve_split = true;
         };
         
-        # Window rules
-        windowrulev2 = [
-          "float, class:(org.pulseaudio.pavucontrol)"
-          "float, class:(.blueman-manager-wrapped)"
-          "float, class:(nm-connection-editor)"
-        ];
-        
         # Key bindings
         bind = [
           "$mod SHIFT, Q, killactive"
@@ -198,6 +191,11 @@
       
       # Resize mode using extraConfig (bypasses Nix validation)
       extraConfig = ''
+        # Window rules
+        windowrule = match:class org.pulseaudio.pavucontrol, float on
+        windowrule = match:class .blueman-manager-wrapped, float on
+        windowrule = match:class nm-connection-editor, float on
+
         # Resize submap
         bind = $mod, R, submap, resize
         
