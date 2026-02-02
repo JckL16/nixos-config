@@ -27,6 +27,7 @@
     gnumake
     openssl
     python3
+    ncdu
   ];
 
   programs.direnv.enable = true;
