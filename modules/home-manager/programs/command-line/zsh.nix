@@ -75,6 +75,9 @@
       
       # Nix helpers
       nix-search = "nix search nixpkgs";
+
+      # Open files with default application
+      open = "xdg-open";
     };
     
     initContent = ''
