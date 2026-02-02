@@ -40,13 +40,18 @@
       ];
     };
 
+    # Per-host displayScale overrides:
+    # nixos-laptop: variables = (import ./variables.nix) // { displayScale = 1.5; };
+    # nixos-desktop: variables = (import ./variables.nix) // { displayScale = 1; };
+
     nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { 
+      specialArgs = {
         inherit self home-manager inputs;
         variables = (import ./variables.nix) // {
           bootDevice = "/dev/vda";
           isBIOS = true;
+          displayScale = 1;
         };
       };
       modules = [
