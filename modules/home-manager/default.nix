@@ -34,7 +34,6 @@
   winbox.enable = lib.mkDefault false;
 
   # Desktop environments
-  sway.enable = lib.mkDefault false;
   hyprland.enable = lib.mkDefault false;
 
   # Programming languages

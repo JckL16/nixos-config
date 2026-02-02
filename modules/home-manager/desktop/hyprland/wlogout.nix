@@ -1,20 +1,22 @@
 # modules/home-manager/desktop/shared/wlogout.nix
 
-{ pkgs, lib, config, ... }: 
+{ pkgs, lib, config, variables, ... }:
 
 let
-  # Create Nord-colored icons using ImageMagick at a specific size
+  iconSize = builtins.floor (64 * variables.displayScale);
+
+  # Create Nord-colored icons using ImageMagick at a scaled size
   nordIcons = pkgs.runCommand "wlogout-nord-icons" {
     buildInputs = [ pkgs.imagemagick ];
   } ''
     mkdir -p $out/icons
-    
-    # Convert default wlogout icons to Nord gray color and resize to 48x48
+
+    # Convert default wlogout icons to Nord gray color and resize
     for icon in lock logout shutdown reboot; do
       if [ -f ${pkgs.wlogout}/share/wlogout/icons/$icon.png ]; then
         # Convert the icon: resize, make it grayscale, then tint it to Nord color
         convert ${pkgs.wlogout}/share/wlogout/icons/$icon.png \
-          -resize 64x64 \
+          -resize ${toString iconSize}x${toString iconSize} \
           -colorspace gray \
           -fill '#D8DEE9' -tint 100 \
           $out/icons/$icon.png
@@ -23,7 +25,7 @@ let
   '';
 in
 {
-  config = lib.mkIf (config.sway.enable || config.hyprland.enable) {
+  config = lib.mkIf config.hyprland.enable {
     programs.wlogout = {
       enable = true;
       layout = [

@@ -15,7 +15,7 @@
         "$mod" = "SUPER";
 
         monitor = [
-          ",preferred,auto,1"
+          ",preferred,auto,${toString variables.displayScale}"
         ];
         
         # General settings
@@ -45,19 +45,39 @@
             render_power = 3;
             color = "rgba(00000099)";
           };
+
+          dim_inactive = true;
+          dim_strength = 0.15;
         };
         
         # Animations
         animations = {
           enabled = true;
-          bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-          
+          bezier = [
+            "easeOutQuint, 0.23, 1, 0.32, 1"
+            "easeInOutCubic, 0.65, 0, 0.35, 1"
+            "linear, 0, 0, 1, 1"
+            "almostLinear, 0.5, 0.5, 0.75, 1.0"
+            "quick, 0.15, 0, 0.1, 1"
+          ];
+
           animation = [
-            "windows, 1, 7, myBezier"
-            "windowsOut, 1, 7, default, popin 80%"
-            "border, 1, 10, default"
-            "fade, 1, 7, default"
-            "workspaces, 1, 6, default"
+            "global, 1, 10, default"
+            "border, 1, 5.39, easeOutQuint"
+            "windows, 1, 4.79, easeOutQuint"
+            "windowsIn, 1, 4.1, easeOutQuint, popin 87%"
+            "windowsOut, 1, 1.49, linear, popin 87%"
+            "fadeIn, 1, 1.73, almostLinear"
+            "fadeOut, 1, 1.46, almostLinear"
+            "fade, 1, 3.03, quick"
+            "layers, 1, 3.81, easeOutQuint"
+            "layersIn, 1, 4, easeOutQuint, fade"
+            "layersOut, 1, 1.5, linear, fade"
+            "fadeLayersIn, 1, 1.79, almostLinear"
+            "fadeLayersOut, 1, 1.39, almostLinear"
+            "workspaces, 1, 1.94, almostLinear, fade"
+            "workspacesIn, 1, 1.21, almostLinear, fade"
+            "workspacesOut, 1, 1.94, almostLinear, fade"
           ];
         };
 
@@ -151,6 +171,18 @@
           # Volume controls with swayosd
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
           ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
+
+          # Screenshot keybindings
+          ", Print, exec, grim ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Full screen saved to ~/Pictures/Screenshots/'"
+          "$mod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy && notify-send 'Screenshot' 'Region copied to clipboard'"
+          "$mod, Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Region saved to ~/Pictures/Screenshots/'"
+
+          # Mouse workspace switching
+          "$mod, mouse_down, workspace, e+1"
+          "$mod, mouse_up, workspace, e-1"
+
+          # Toggle lid suspend behavior
+          ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
         ];
         
         # Binds that can be held down
@@ -169,9 +201,16 @@
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
         ];
+
+        # Lid switch binding
+        bindl = [
+          '', switch:on:Lid Switch, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" != "0" ]; then swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566a --key-hl-color 88c0d0 --bs-hl-color bf616a --inside-color 2e344088 --ring-ver-color 5e81ac --inside-ver-color 2e344088 --ring-wrong-color bf616a --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr "" --text-color eceff4 --font 'JetBrainsMono Nerd Font' --font-size 24 && systemctl suspend; fi''
+        ];
         
         # Startup applications
         exec-once = [
+          "mkdir -p ~/Pictures/Screenshots"
+          "[ -f ~/.config/hypr/lid-suspend-enabled ] || echo 1 > ~/.config/hypr/lid-suspend-enabled"
           "dex --autostart --environment hyprland"
           "swaybg -i ~/.config/wallpapers/wallpaper.png -m fill"
           "systemctl --user restart mako"
@@ -195,6 +234,13 @@
         windowrule = match:class org.pulseaudio.pavucontrol, float on
         windowrule = match:class .blueman-manager-wrapped, float on
         windowrule = match:class nm-connection-editor, float on
+
+        # Layer rules - blur and transparency
+        layerrule = blur on, ignore_alpha 1, match:namespace rofi
+        layerrule = blur on, ignore_alpha 1, match:namespace waybar
+        layerrule = blur on, ignore_alpha 1, match:namespace notifications
+        layerrule = blur on, ignore_alpha 1, match:namespace swayosd
+        layerrule = blur on, ignore_alpha 1, match:namespace logout_dialog
 
         # Resize submap
         bind = $mod, R, submap, resize
@@ -222,6 +268,8 @@
       mako
       grim
       slurp
+      wl-clipboard
+      playerctl
       brightnessctl
       networkmanagerapplet
       swaybg

@@ -6,8 +6,11 @@
   };
   config = lib.mkIf config.hyprland.enable {
     services.printing.enable = true;
-    
+
     security.polkit.enable = true;
+
+    # Let Hyprland handle lid switch instead of systemd
+    services.logind.lidSwitch = "ignore";
 
     programs.hyprland = {
       enable = true;
@@ -34,6 +37,7 @@
       kitty
       waybar
       rofi
+      wl-clipboard
     ];
     
     services.udisks2.enable = true;

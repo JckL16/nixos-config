@@ -1,11 +1,11 @@
 # modules/home-manager/shared/clipman.nix
 
 { pkgs, lib, config, ... }: {
-  config = lib.mkIf (config.sway.enable || config.hyprland.enable) {
+  config = lib.mkIf config.hyprland.enable {
     # Enable clipman service
     services.clipman = {
       enable = true;
-      systemdTarget = "sway-session.target";
+      systemdTarget = "hyprland-session.target";
     };
 
     # Add clipman to home packages

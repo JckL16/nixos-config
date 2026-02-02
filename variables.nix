@@ -23,6 +23,10 @@
 
   isBIOS = false;
 
+  # Wayland compositor scale factor (e.g., 1, 1.5, 2)
+  # Controls Hyprland monitor scaling; all UI renders in logical pixels
+  displayScale = 1;
+
   # Wallpaper path (relative to home directory config)
   wallpaperPath = "~/.config/wallpapers/wallpaper.png";
 }

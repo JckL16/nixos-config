@@ -22,7 +22,6 @@
   garbage-collection.enable = lib.mkDefault true;
 
   # Desktop environments installed system wide
-  sway.enable = lib.mkDefault false;
   gnome.enable = lib.mkDefault false;
   hyprland.enable = lib.mkDefault false;
 

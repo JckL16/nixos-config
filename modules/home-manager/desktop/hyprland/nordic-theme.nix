@@ -2,7 +2,7 @@
 
 { pkgs, lib, config, ... }: {
 
-  config = lib.mkIf (config.sway.enable || config.hyprland.enable) {
+  config = lib.mkIf config.hyprland.enable {
     gtk = {
       enable = true;
       

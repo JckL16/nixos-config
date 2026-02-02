@@ -18,7 +18,7 @@
           margin-right = 5;
           margin-bottom = 5;
           
-          modules-left = [ "hyprland/workspaces" "hyprland/submap" "hyprland/window" "custom/waybar-mpris" ];
+          modules-left = [ "hyprland/workspaces" "hyprland/submap" "hyprland/window" "mpris" ];
           modules-center = [ "clock" ];
           modules-right = [ 
             "hyprland/language"
@@ -135,12 +135,18 @@
             on-click = "pavucontrol";
           };
 
-          "custom/waybar-mpris" = {
-            return-type = "json";
-            exec = "waybar-mpris --position --autofocus --play '󰐊' --pause '󰏤'";
-            on-click = "waybar-mpris --send toggle";
-            escape = true;
-            max-length = 30;
+          "mpris" = {
+            format = "{player_icon} {title} - {artist}";
+            format-paused = "{status_icon} <i>{title} - {artist}</i>";
+            player-icons = {
+              spotify = "󰓇 ";
+              default = "󰎆 ";
+            };
+            status-icons = {
+              paused = "󰏤 ";
+            };
+            ignored-players = [ "firefox" ];
+            max-length = 35;
           };
 
           # System tray
@@ -224,7 +230,7 @@
         #network,
         #wireplumber,
         #language,
-        #custom-waybar-mpris,
+        #mpris,
         #tray {
             padding: 0 5px;
             margin: 0 3px;
@@ -310,7 +316,7 @@
             padding: 0 10px;
         }
 
-        #custom-waybar-mpris {
+        #mpris {
           color: #d8dee9;
           padding: 0 13px;
           margin-left: 5px;
@@ -320,8 +326,7 @@
           transition: min-width 0.3s ease;
         }
 
-        #custom-waybar-mpris:hover {
-          min-width: 300px;
+        #mpris:hover {
           padding: 0 13px;
           background-color: #434c5e;
         }
@@ -344,7 +349,7 @@
     # Enable required system packages
     home.packages = with pkgs; [
       pavucontrol
-      waybar-mpris
+      playerctl
     ];
   };
 }
