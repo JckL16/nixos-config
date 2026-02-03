@@ -23,7 +23,7 @@ Some highlights:
 
 A guide to installing the configuration including where to find the ISO and files can be found in [INSTALL.md](INSTALL.md)
 
-Global settings like username, timezone, and git config live in [variables.nix](INSTALL.md).
+Global settings like username, timezone, and git config live in [variables.nix](variables.nix).
 
 ## Docs
 
