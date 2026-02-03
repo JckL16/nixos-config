@@ -1,6 +1,6 @@
 # NixOS Installation Guide
 
-This guide walks you through installing NixOS with this flake-based configuration.
+This guide walks you through installing NixOS using this flake-based configuration. An example host (`hosts/nixos-example/`) is included as a starting point for your own system.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ This guide walks you through installing NixOS with this flake-based configuratio
 
 ### 1. Boot NixOS Installation Media
 
-Boot from the NixOS ISO (USB or CD).
+Boot from the NixOS ISO.
 
 ### 2. Partition Your Disk
 
@@ -32,20 +32,23 @@ sudo parted /dev/<your-disk> -- mkpart primary 512MiB 100%
 ```
 
 #### BIOS (VMs for example)
-```bash
-# List all availables disks
 
-# Partition the disks
+```bash
+# List available disks
+lsblk
+
+# Partition the disk
 parted /dev/<your-disk> -- mklabel msdos
 parted /dev/<your-disk> -- mkpart primary 1MiB 100%
 parted /dev/<your-disk> -- set 1 boot on
 ```
 
-The configuration creates a swap file by standard but if you want a separate partition for it you can simply set swap.enable = false in your hosts configuration.nix file
+> **Note:** A swap file is created by default. If you prefer a separate swap partition or no swap at all, you can set `swap-file.enable = false` in your host's `configuration.nix`.
 
-### 3. Format and mount Partitions
+### 3. Format and Mount Partitions
 
 #### EFI
+
 ```bash
 # Format boot partition
 sudo mkfs.fat -F 32 -n boot /dev/<your-disk>1
@@ -64,7 +67,7 @@ sudo mount /dev/disk/by-label/boot /mnt/boot
 #### BIOS
 
 ```bash
-# Format the root paritition
+# Format the root partition
 mkfs.ext4 -L nixos /dev/<your-disk>1
 
 # Mount the root partition
@@ -77,7 +80,7 @@ mount /dev/disk/by-label/nixos /mnt
 sudo nixos-generate-config --root /mnt
 ```
 
-### 5. Enable Flakes (Optional but Recommended)
+### 5. Enable Flakes
 
 Edit `/mnt/etc/nixos/configuration.nix`:
 
@@ -85,25 +88,19 @@ Edit `/mnt/etc/nixos/configuration.nix`:
 sudo nano /mnt/etc/nixos/configuration.nix
 ```
 
-Add the following line inside the configuration block:
+Add the following inside the configuration block:
 
 ```nix
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
-```
-
-Also enable networking:
-
-```nix
 networking.networkmanager.enable = true;
 ```
 
-#### BIOS
+#### BIOS Only
 
-When installing the bootloader for a BIOS system. Grub requires you to give it the device to install it to. Edit configuration.nix and set the following argument
+For BIOS systems, GRUB needs to know which device to install to. Add this to the same file:
 
 ```nix
-boot.loader.grub.device = "/dev/<your-disk>"
-
+boot.loader.grub.device = "/dev/<your-disk>";
 ```
 
 ### 6. Install Minimal NixOS
@@ -112,7 +109,7 @@ boot.loader.grub.device = "/dev/<your-disk>"
 sudo nixos-install
 ```
 
-You'll be prompted to set the root password. Choose a secure password.
+You'll be prompted to set the root password.
 
 ### 7. Reboot into New System
 
@@ -130,22 +127,18 @@ Remove the installation media when prompted.
 
 Login as **root** with the password you set during installation.
 
-#### If using NetworkManager:
 ```bash
-nmttu
+nmtui
 ```
 
 Select "Activate a connection" and connect to your network.
 
 ### 9. Create Your User Account
 
-> 📝 **Note**: Replace `jack` with your desired username.
+> **Note:** Replace `jack` with the username you intend to set in `variables.nix`.
 
 ```bash
-# Add user to wheel group for sudo access
 useradd -m -G wheel jack
-
-# Set user password
 passwd jack
 ```
 
@@ -155,64 +148,90 @@ passwd jack
 exit  # Logout from root
 ```
 
-#### Login as your newly created user.
-
-```bash
-su jack # replace 'jack' with your desired username.
-```
+Login as the user you just created.
 
 ### 11. Clone This Configuration
 
 ```bash
-# Enter a nix-shell with git available
 nix-shell -p git
 
-# Clone this repository to your home directory
 cd ~
 git clone https://github.com/JckL16/nixos-config.git
 cd nixos-config
 ```
 
-### 12. Integrate Hardware Configuration
+### 12. Set Up Your Host Using the Example
 
-Copy the generated hardware configuration into your config structure:
-
-```bash
-# Option 1: Copy to host-specific directory
-sudo cp /etc/nixos/hardware-configuration.nix ~/nixos-config/hosts/YOUR_HOST/hardware-configuration.nix
-
-# Option 2: Keep in root of config (and add to .gitignore) (this will require editing of the flake.nix file)
-sudo cp /etc/nixos/hardware-configuration.nix ~/nixos-config/hardware-configuration.nix
-```
-
-### 13. Customize Configuration
-
-Edit your flake or host configuration to match your system:
-
-- Update hostname
-- Verify username in variables.nix matches the one you created
-- Ensure `hardware-configuration.nix` is properly imported
-- Adjust any system-specific settings
+The repository includes an example host at `hosts/nixos-example/` that you can copy and customize.
 
 ```bash
-nano flake.nix
-# or
-nano hosts/YOUR_HOST/configuration.nix
+cp -r hosts/nixos-example hosts/<your-hostname>
 ```
 
-### 14. Apply Your Full Configuration
+#### Copy your hardware configuration into the new host directory:
+
+```bash
+sudo cp /etc/nixos/hardware-configuration.nix ~/nixos-config/hosts/<your-hostname>/hardware-configuration.nix
+```
+
+### 13. Register Your Host in flake.nix
+
+Add a new entry to `flake.nix` for your host. Use the existing entries as reference:
+
+```nix
+nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
+  system = "x86_64-linux";
+  specialArgs = {
+    inherit self home-manager inputs;
+    variables = import ./variables.nix;
+  };
+  modules = [
+    ./hosts/<your-hostname>/hardware-configuration.nix
+    ./hosts/<your-hostname>/configuration.nix
+    ./modules/nixos
+    home-manager.nixosModules.home-manager
+  ];
+};
+```
+
+For BIOS systems or when you need to override variables per host, use the override syntax:
+
+```nix
+variables = (import ./variables.nix) // {
+  bootDevice = "/dev/sda";
+  isBIOS = true;
+};
+```
+
+### 14. Edit variables.nix
+
+Update the global variables to match your setup:
+
+```bash
+nano ~/nixos-config/variables.nix
+```
+
+Set your username, timezone, locale, keyboard layout, and git credentials. These values are used throughout the entire configuration.
+
+### 15. Customize Your Host
+
+Edit your host's `configuration.nix` and `home.nix` to enable the features you need. The example config has comments showing available options:
+
+```bash
+nano ~/nixos-config/hosts/<your-hostname>/configuration.nix
+nano ~/nixos-config/hosts/<your-hostname>/home.nix
+```
+
+The example host comes with Hyprland enabled and graphics drivers commented out for you to choose from. Uncomment and enable modules as needed. See [CONTENT.md](CONTENT.md) for a full list of available modules and how to configure them.
+
+### 16. Apply Your Configuration
 
 ```bash
 cd ~/nixos-config
-
-# Rebuild with your flake configuration
-# Replace YOUR_HOST_NAME with system flake you want to use
-sudo nixos-rebuild switch --flake .#YOUR_HOST_NAME
+sudo nixos-rebuild switch --flake .#<your-hostname>
 ```
 
-This will take some time as it downloads and builds all packages.
-
-### 15. Reboot (Recommended)
+### 17. Reboot
 
 ```bash
 reboot
@@ -224,8 +243,6 @@ reboot
 
 ### Network Issues
 
-If you can't connect to the network after installation:
-
 ```bash
 # Check network status
 nmcli device status
@@ -233,3 +250,11 @@ nmcli device status
 # Restart NetworkManager
 sudo systemctl restart NetworkManager
 ```
+
+### Build Failures
+
+If the build fails, check that:
+- Your `hardware-configuration.nix` is in the correct host directory
+- Your hostname in `configuration.nix` matches the flake entry name
+- The username in `variables.nix` matches the user you created
+- You have selected the correct graphics driver for your hardware
