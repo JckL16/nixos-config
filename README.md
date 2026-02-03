@@ -4,8 +4,8 @@ My NixOS configuration, managed with flakes and home-manager.
 
 ## What's in here
 
-The config is split into reusable modules under [modules/] -- system-level stuff
-lives in [modules/nixos/] and user-level stuff in [modules/home-manager/]. Each
+The config is split into reusable modules under [modules/](modules/) -- system-level stuff
+lives in [modules/nixos/](modules/nixos/) and user-level stuff in [modules/home-manager/](modules/home-manager/). Each
 host picks what it needs.
 
 Some highlights:
@@ -21,12 +21,12 @@ Some highlights:
 
 ## Getting started
 
-A guide to installing the configuration including where to find the ISO and files can be found in [INSTALL.md]
+A guide to installing the configuration including where to find the ISO and files can be found in [INSTALL.md](INSTALL.md)
 
-Global settings like username, timezone, and git config live in [variables.nix].
+Global settings like username, timezone, and git config live in [variables.nix](INSTALL.md).
 
 ## Docs
 
-- [CONTENT.md] -- full breakdown of every module and option
-- [INSTALL.md] -- installation and setup instructions
-- [hosts/nixos-example/] -- commented example config to use as a starting point
+- [CONTENT.md](CONTENT.md) -- full breakdown of every module and option
+- [INSTALL.md](INSTALL.md) -- installation and setup instructions
+- [hosts/nixos-example/](hosts/nixos-example/) -- commented example config to use as a starting point
