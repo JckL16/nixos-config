@@ -25,6 +25,17 @@
       };
     };
 
+    home.file.".config/rofi/web-search.sh" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        query=$(rofi -dmenu -p "Web Search" -theme-str 'listview { enabled: false; }')
+        [ -z "$query" ] && exit 0
+        encoded=$(echo -n "$query" | python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read()))")
+        xdg-open "https://www.google.com/search?q=$encoded"
+      '';
+    };
+
     home.file.".config/rofi/nord.rasi".text = ''
       * {
           background:             #2E3440;
