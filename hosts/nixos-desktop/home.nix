@@ -33,10 +33,9 @@
     jq
     signal-desktop-bin
     qbittorrent
-    lolcat
-    figlet
-    cowsay
-    sl
+    claude-code
+    minikube
+    kubectl
   ];
 
 }

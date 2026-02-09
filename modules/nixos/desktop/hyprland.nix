@@ -10,7 +10,7 @@
     security.polkit.enable = true;
 
     # Let Hyprland handle lid switch instead of systemd
-    services.logind.lidSwitch = "ignore";
+    services.logind.settings.Login.HandleLidSwitch = "ignore";
 
     programs.hyprland = {
       enable = true;

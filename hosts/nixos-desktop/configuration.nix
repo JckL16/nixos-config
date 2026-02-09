@@ -24,13 +24,15 @@
   # Gaming
   steam.enable = true;
   gamemode.enable = true;
-  # Makes sure gamemode can se the GPU on my desktop
+  # Makes sure gamemode can see the GPU on my desktop
   programs.gamemode.settings.gpu.gpu_device = 1;
 
   # Metasploit database (used with cyber.enable)
   metasploit-db.enable = true;
 
   winbox.enable = true;
+
+  docker.enable = true;
 
   # Home Manager configuration
   home-manager = {
