@@ -7,6 +7,7 @@
     ./winbox.nix
     ./docker.nix
     ./metasploit-db.nix
+    ./yubikey.nix
   ];
 
 }

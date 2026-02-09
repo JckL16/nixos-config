@@ -39,11 +39,17 @@
   gamemode.enable = lib.mkDefault false;
   steam.enable = lib.mkDefault false;
 
+  # Winbox for configuring and working with mikrotik routers and switches
   winbox.enable = lib.mkDefault false;
 
+  # Some settings concerning virtualization and gueast agents
   virtualisation.enable = lib.mkDefault false;
   qemu-guest-agent.enable = lib.mkDefault false;
   virtualbox-guest-agent.enable = lib.mkDefault false;
 
+  # To set up a postgres database for the metasploit framework
   metasploit-db.enable = lib.mkDefault false;
+
+  # Enableing the system to work with a yubikey
+  yubikey.enable = lib.mkDefault true;
 }
