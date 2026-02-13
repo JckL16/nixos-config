@@ -32,6 +32,14 @@
   # gnome.enable = true;
 
   # ==========================================================================
+  # Display Manager
+  # greetd is enabled by default when using Hyprland. Uncomment below to
+  # switch to ly (when available) or to explicitly disable greetd.
+  # ==========================================================================
+  # greetd.enable = false;
+  # ly.enable = true;
+
+  # ==========================================================================
   # Graphics Drivers — uncomment the one matching your hardware
   # ==========================================================================
   # intel-graphics.enable = true;

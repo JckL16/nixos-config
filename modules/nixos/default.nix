@@ -25,6 +25,9 @@
   gnome.enable = lib.mkDefault false;
   hyprland.enable = lib.mkDefault false;
 
+  # Display managers (greetd is auto-enabled by hyprland, ly can be enabled manually)
+  ly.enable = lib.mkDefault false;
+
   # Bootloader
   systemd-boot.enable = lib.mkDefault false;
   grub.enable = lib.mkDefault true;

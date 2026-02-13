@@ -154,7 +154,7 @@ One bootloader should be active. GRUB is the default.
 
 System-level (`modules/nixos/desktop/hyprland.nix`) provides:
 - Hyprland compositor with XWayland support
-- Ly display manager
+- greetd display manager with tuigreet (enabled by default, can be overridden)
 - XDG portals for sandboxed apps
 - Polkit, printing, udisks2 (USB automounting)
 - System packages: wayland, kitty, waybar, rofi, wl-clipboard
@@ -188,6 +188,29 @@ hyprland.enable = true;
 hyprland.enable = false;
 gnome.enable = true;
 ```
+
+---
+
+## Display Managers
+
+Display managers handle the login screen. When using Hyprland, greetd is enabled by default. You can override this or use an alternative.
+
+### greetd (with tuigreet)
+- **Option:** `greetd.enable` (default: `true` when Hyprland is enabled)
+- **File:** `modules/nixos/desktop/display-managers/greetd.nix`
+- Terminal-based login manager using tuigreet.
+- Automatically configured to launch Hyprland.
+
+### ly
+- **Option:** `ly.enable` (default: `false`)
+- **File:** `modules/nixos/desktop/display-managers/ly.nix`
+- TUI display manager similar to greetd.
+- To use ly instead of greetd:
+  ```nix
+  # configuration.nix
+  greetd.enable = false;
+  ly.enable = true;
+  ```
 
 ---
 
@@ -433,6 +456,8 @@ Always active. Configured with:
 |---|---|---|
 | `hyprland.enable` | `false` | Hyprland Wayland compositor |
 | `gnome.enable` | `false` | GNOME desktop environment |
+| `greetd.enable` | `false`* | greetd with tuigreet (*auto-enabled with Hyprland) |
+| `ly.enable` | `false` | ly display manager |
 | `grub.enable` | `true` | GRUB bootloader |
 | `grub.nordic-theme.enable` | `false` | Nordic theme for GRUB |
 | `systemd-boot.enable` | `false` | systemd-boot (EFI only) |

@@ -5,6 +5,9 @@
     hyprland.enable = lib.mkEnableOption "Enable hyprland window manager";
   };
   config = lib.mkIf config.hyprland.enable {
+    # Enable greetd display manager by default
+    greetd.enable = lib.mkDefault true;
+
     services.printing.enable = true;
 
     security.polkit.enable = true;
@@ -26,10 +29,6 @@
       enable = true;
       wlr.enable = true;
       extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    };
-    
-    services.displayManager.ly = {
-      enable = true;
     };
     
     environment.systemPackages = with pkgs; [
