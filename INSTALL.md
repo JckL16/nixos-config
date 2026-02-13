@@ -24,11 +24,15 @@ Boot from the NixOS ISO.
 # List available disks
 lsblk
 
-# Partition the disk
-sudo parted /dev/<your-disk> -- mklabel gpt
-sudo parted /dev/<your-disk> -- mkpart ESP fat32 1MiB 512MiB
-sudo parted /dev/<your-disk> -- set 1 esp on
-sudo parted /dev/<your-disk> -- mkpart primary 512MiB 100%
+# Open parted
+sudo parted /dev/<your-disk>
+
+# Inside parted, run:
+mklabel gpt
+mkpart ESP fat32 1MiB 512MiB
+set 1 esp on
+mkpart primary 512MiB 100%
+quit
 ```
 
 #### BIOS (VMs for example)
@@ -37,10 +41,14 @@ sudo parted /dev/<your-disk> -- mkpart primary 512MiB 100%
 # List available disks
 lsblk
 
-# Partition the disk
-parted /dev/<your-disk> -- mklabel msdos
-parted /dev/<your-disk> -- mkpart primary 1MiB 100%
-parted /dev/<your-disk> -- set 1 boot on
+# Open parted
+sudo parted /dev/<your-disk>
+
+# Inside parted, run:
+mklabel msdos
+mkpart primary 1MiB 100%
+set 1 boot on
+quit
 ```
 
 > **Note:** A swap file is created by default. If you prefer a separate swap partition or no swap at all, you can set `swap-file.enable = false` in your host's `configuration.nix`.
@@ -155,7 +163,7 @@ Login as the user you just created.
 ```bash
 nix-shell -p git
 
-cd ~
+cd
 git clone https://github.com/JckL16/nixos-config.git
 cd nixos-config
 ```
