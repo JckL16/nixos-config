@@ -40,6 +40,20 @@
       ];
     };
 
+    nixosConfigurations.nixos-rugged = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { 
+        inherit self home-manager inputs;
+        variables = (import ./variables.nix) // { displayScale = 1; };
+      };
+      modules = [
+        ./hosts/nixos-rugged/hardware-configuration.nix
+        ./hosts/nixos-rugged/configuration.nix
+        ./modules/nixos
+        home-manager.nixosModules.home-manager
+      ];
+    };
+
     # Per-host displayScale overrides:
     # nixos-laptop: variables = (import ./variables.nix) // { displayScale = 1.5; };
     # nixos-desktop: variables = (import ./variables.nix) // { displayScale = 1; };
