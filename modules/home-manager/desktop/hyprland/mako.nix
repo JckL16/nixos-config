@@ -35,6 +35,9 @@
         [summary~="Battery"]
         default-timeout=0
         group-by=summary
+
+        [summary~="Battery is full"]
+        invisible=1
         
         [urgency=critical]
         default-timeout=0
