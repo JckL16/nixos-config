@@ -11,7 +11,16 @@ vim.opt.relativenumber = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 2
 vim.opt.tabstop = 2
-vim.opt.smartindent = true
+
+-- Python: use 4-space indent (PEP 8)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "python",
+  callback = function()
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
+  end,
+})
 vim.opt.wrap = false
 vim.opt.swapfile = false
 vim.opt.backup = false

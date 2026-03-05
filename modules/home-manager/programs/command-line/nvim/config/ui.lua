@@ -331,13 +331,20 @@ if telescope then
   pcall(telescope.load_extension, 'fzf')
 end
 
--- Treesitter setup (new API - highlighting enabled by default when parsers are loaded)
--- Disable legacy regex syntax highlighting in favor of treesitter
-vim.cmd('syntax off')
--- Ensure treesitter highlighting is enabled for all buffers with parsers
+-- Treesitter indent helper for use in indentexpr
+function _G.ts_indent()
+  return require('nvim-treesitter.indent').get_indent(vim.v.lnum)
+end
+
+-- Treesitter setup - enable highlighting and indentation per buffer
+-- vim.treesitter.start() disables legacy syntax for that buffer, which breaks
+-- legacy indent scripts (e.g. python#GetIndent), so we also switch to
+-- treesitter-based indentation
 vim.api.nvim_create_autocmd('FileType', {
   callback = function()
-    pcall(vim.treesitter.start)
+    if pcall(vim.treesitter.start) then
+      vim.bo.indentexpr = "v:lua.ts_indent()"
+    end
   end,
 })
 
