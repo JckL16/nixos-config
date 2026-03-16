@@ -11,6 +11,7 @@
     services.printing.enable = true;
 
     security.polkit.enable = true;
+    security.pam.services.hyprlock = {};
 
     # Let Hyprland handle lid switch instead of systemd
     services.logind.settings.Login.HandleLidSwitch = "ignore";

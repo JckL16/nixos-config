@@ -166,7 +166,7 @@
           "$mod SHIFT, D, exec, ~/.config/rofi/web-search.sh"
           "$mod, Tab, exec, rofi -show window"
           "$mod, Return, exec, alacritty"
-          "$mod SHIFT, X, exec, swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566a --key-hl-color 88c0d0 --bs-hl-color bf616a --inside-color 2e344088 --ring-ver-color 5e81ac --inside-ver-color 2e344088 --ring-wrong-color bf616a --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr '' --text-color eceff4 --font 'JetBrainsMono Nerd Font' --font-size 24"
+          "$mod SHIFT, X, exec, hyprlock"
           "$mod SHIFT, V, exec, ~/.config/rofi/clipman.sh"
 
           # Volume controls with swayosd
@@ -205,7 +205,7 @@
 
         # Lid switch binding
         bindl = [
-          '', switch:on:Lid Switch, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" != "0" ]; then swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566a --key-hl-color 88c0d0 --bs-hl-color bf616a --inside-color 2e344088 --ring-ver-color 5e81ac --inside-ver-color 2e344088 --ring-wrong-color bf616a --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr "" --text-color eceff4 --font 'JetBrainsMono Nerd Font' --font-size 24 && systemctl suspend; fi''
+          '', switch:on:Lid Switch, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" != "0" ]; then hyprlock && systemctl suspend; fi''
         ];
         
         # Startup applications
@@ -279,8 +279,54 @@
       nerd-fonts.jetbrains-mono
       libnotify
       batsignal
-      swaylock-effects
     ];
+
+    programs.hyprlock = {
+      enable = true;
+      settings = {
+        general = {
+          hide_cursor = true;
+        };
+
+        background = [
+          {
+            path = "~/.config/wallpapers/wallpaper.png";
+            blur_passes = 2;
+            blur_size = 7;
+          }
+        ];
+
+        input-field = [
+          {
+            size = "300, 50";
+            outline_thickness = 7;
+            outer_color = "rgb(4c566a)";
+            inner_color = "rgba(2e344088)";
+            font_color = "rgb(eceff4)";
+            check_color = "rgb(5e81ac)";
+            fail_color = "rgb(bf616a)";
+            fade_on_empty = false;
+            placeholder_text = "";
+            font_family = "JetBrainsMono Nerd Font";
+            halign = "center";
+            valign = "center";
+            position = "0, -80";
+          }
+        ];
+
+        label = [
+          {
+            text = ''cmd[update:1000] echo "$(date +'%H:%M:%S')"'';
+            font_size = 24;
+            font_family = "JetBrainsMono Nerd Font";
+            color = "rgb(eceff4)";
+            halign = "center";
+            valign = "center";
+            position = "0, 80";
+          }
+        ];
+      };
+    };
 
     services.blueman-applet.enable = true;
   };
