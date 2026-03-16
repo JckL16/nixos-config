@@ -145,7 +145,7 @@
             status-icons = {
               paused = "󰏤 ";
             };
-            ignored-players = [ "firefox" ];
+            ignored-players = [ "zen-browser" ];
             max-length = 35;
           };
 
