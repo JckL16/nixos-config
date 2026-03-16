@@ -6,10 +6,14 @@
 
   hyprland.enable = true;
 
-  # Default lid-close to do nothing (toggle with Super+Shift+O)
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "echo 0 > ~/.config/hypr/lid-suspend-enabled"
-  ];
+  # Lid close does nothing
+  wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];
+
+  # Enabled user specific configuration for gaming
+  steam.enable = true;
+  gamemode.enable = true;
+
+  zen-browser.enable = true;
 
   python-dev.enable = true;
   python-dev.packages = [ "requests" "numpy" "pandas" ];
@@ -30,6 +34,7 @@
     ttyper
     qbittorrent
     claude-code
+    caligula
   ];
 
 }

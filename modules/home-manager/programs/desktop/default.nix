@@ -5,6 +5,7 @@
     ./onlyoffice.nix
     ./virt-manager.nix
     ./winbox.nix
+    ./zen-browser.nix
   ];
 
 }

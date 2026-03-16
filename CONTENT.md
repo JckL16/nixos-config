@@ -111,7 +111,7 @@ These have no enable toggle and are always imported:
 - **Networking** (`modules/nixos/core/networking.nix`) -- NetworkManager, hostname.
 - **Nix Settings** (`modules/nixos/core/nix-settings.nix`) -- Enables flakes, allows unfree packages.
 - **System Packages** (`modules/nixos/system-packages.nix`) -- Base packages installed on every system: git, curl, vim, wget, python3, direnv, ncdu, nerd-fonts, and more. Sets the default editor to `nvim` and enables zsh/bash.
-- **Users** (`modules/nixos/users.nix`) -- Creates the user from `variables.username` with groups: `networkmanager`, `wheel`, `input`, `video`, `render`, `gamemode`, `docker`, `libvirtd`. Installs Firefox and sets zsh as the default shell.
+- **Users** (`modules/nixos/users.nix`) -- Creates the user from `variables.username` with groups: `networkmanager`, `wheel`, `input`, `video`, `render`, `gamemode`, `docker`, `libvirtd`. Sets zsh as the default shell.
 
 ---
 
@@ -384,6 +384,17 @@ libreoffice.enable = true;
 onlyoffice.enable = true;
 ```
 
+### Zen Browser
+- **Option:** `zen-browser.enable = true;` in `home.nix`
+- Firefox-based browser set as the XDG default for `http`, `https`, and `text/html`.
+- Installed via the `0xc000022070/zen-browser-flake` community flake (requires the flake input in `flake.nix`).
+- The Rofi web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
+
+```nix
+# home.nix
+zen-browser.enable = true;
+```
+
 ### Winbox (MikroTik Network Management)
 Requires both system and user level:
 ```nix
@@ -491,6 +502,7 @@ Always active. Configured with:
 | `virt-manager.enable` | `false` | Virtual machine manager GUI |
 | `libreoffice.enable` | `false` | LibreOffice suite |
 | `onlyoffice.enable` | `false` | OnlyOffice suite |
+| `zen-browser.enable` | `true` | Zen Browser (default browser) |
 | `winbox.enable` | `false` | MikroTik Winbox |
 | `python-dev.enable` | `false` | Python development environment |
 | `python-dev.packages` | `[]` | Extra Python packages to install |

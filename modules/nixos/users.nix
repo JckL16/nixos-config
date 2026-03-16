@@ -6,9 +6,7 @@
     isNormalUser = true;
     description = variables.description;
     extraGroups = [ "networkmanager" "wheel" "input" "video" "render" "gamemode" "docker" "libvirtd" ];
-    packages = with pkgs; [
-      firefox
-    ];
+    packages = [];
     shell = pkgs.zsh;
   };
 
