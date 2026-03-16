@@ -449,6 +449,11 @@ Always active. Configured with:
 - **Option:** `alacritty.enable` (default: `true`)
 - GPU-accelerated terminal emulator.
 
+### Zen Browser
+- **Option:** `zen-browser.enable` (default: `true`)
+- Set as the XDG default browser for `http`, `https`, and `text/html`.
+- See the [Zen Browser](#zen-browser) section under Office & Desktop Applications for full details.
+
 ### Git
 - **Option:** `git.enable` (default: `true`)
 - Configured with the username and email from `variables.nix`.

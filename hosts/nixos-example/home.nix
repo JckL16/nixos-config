@@ -52,9 +52,10 @@
   # ==========================================================================
   # Defaults (enabled automatically, override here if needed)
   # ==========================================================================
-  # git.enable = false;         # Disable Git (configured from variables.nix)
-  # nvim.enable = false;        # Disable Neovim
-  # alacritty.enable = false;   # Disable Alacritty terminal
+  # git.enable = false;           # Disable Git (configured from variables.nix)
+  # nvim.enable = false;          # Disable Neovim
+  # alacritty.enable = false;     # Disable Alacritty terminal
+  # zen-browser.enable = false;   # Disable Zen Browser
 
   # ==========================================================================
   # Extra Packages
@@ -63,7 +64,6 @@
   # ==========================================================================
   home.packages = with pkgs; [
     # Example:
-    # firefox
     # spotify
     # discord
     # obsidian
