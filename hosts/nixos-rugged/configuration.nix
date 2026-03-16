@@ -17,8 +17,8 @@
 
   nvidia-graphics.enable = true;
 
-  # steam.enable = true;
-  # gamemode.enable = true;
+  steam.enable = true;
+  gamemode.enable = true;
 
   virtualisation.enable = true;   # libvirt/QEMU KVM
   docker.enable = true;
