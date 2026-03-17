@@ -103,7 +103,7 @@
       pv                   # Monitor progress of data through pipe
       magic-wormhole       # Securely transfer files between computers
       asciinema            # Terminal session recorder
-      # wordlists          # Common wordlists for security testing (broken — depends on wfuzz)
+      wordlists            # Common wordlists for security testing
       seclists             # Security assessment wordlists collection
 
       # === METASPLOIT FRAMEWORK ===
@@ -339,7 +339,7 @@
       dirbuster            # Multi-threaded web directory brute-forcer
       gobuster             # Directory/file, DNS and VHost busting tool
       ffuf                 # Fast web fuzzer
-      # wfuzz             # Web application fuzzer (broken in nixpkgs — pyparsing patch mismatch)
+      wfuzz                # Web application fuzzer
       feroxbuster          # Fast content discovery tool
       whatweb              # Web scanner to identify websites
       wafw00f              # Web Application Firewall detection tool

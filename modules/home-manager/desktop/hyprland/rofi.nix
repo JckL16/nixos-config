@@ -25,6 +25,27 @@
       };
     };
 
+    home.file.".config/rofi/keybinds.sh" = {
+      executable = true;
+      text = ''
+        #!/usr/bin/env bash
+        hyprctl binds -j | jq -r '.[] |
+          (
+            [
+              if (.modmask % 2) == 1 then "SHIFT" else empty end,
+              if ((.modmask / 4 | floor) % 2) == 1 then "CTRL" else empty end,
+              if ((.modmask / 8 | floor) % 2) == 1 then "ALT" else empty end,
+              if ((.modmask / 64 | floor) % 2) == 1 then "SUPER" else empty end
+            ] | join("+")
+          ) as $mods |
+          (if $mods != "" then $mods + "+" else "" end) +
+          (.key | ascii_upcase) +
+          "  →  " + .dispatcher +
+          (if .arg != "" then "  " + .arg else "" end)
+        ' | sort -u | rofi -dmenu -p "Keybinds" -i -theme-str 'window { width: 800px; }'
+      '';
+    };
+
     home.file.".config/rofi/web-search.sh" = {
       executable = true;
       text = ''
@@ -32,7 +53,7 @@
         query=$(rofi -dmenu -p "Web Search" -theme-str 'listview { enabled: false; }')
         [ -z "$query" ] && exit 0
         encoded=$(echo -n "$query" | python3 -c "import sys, urllib.parse; print(urllib.parse.quote(sys.stdin.read()))")
-        zen-browser "https://www.google.com/search?q=$encoded"
+        xdg-open "https://www.google.com/search?q=$encoded"
       '';
     };
 

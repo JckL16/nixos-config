@@ -19,7 +19,7 @@
       
       plugins = import ./plugins.nix { inherit pkgs; };
 
-      initLua = ''
+      extraLuaConfig = ''
         ${builtins.readFile ./config/utils.lua}
         ${builtins.readFile ./config/options.lua}
         ${builtins.readFile ./config/ui.lua}

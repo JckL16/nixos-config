@@ -4,9 +4,10 @@
   description = "Nixos config flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     zen-browser = {
@@ -46,9 +47,13 @@
 
     nixosConfigurations.nixos-rugged = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { 
+      specialArgs = {
         inherit self home-manager inputs;
         variables = (import ./variables.nix) // { displayScale = 1; };
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
       };
       modules = [
         ./hosts/nixos-rugged/hardware-configuration.nix

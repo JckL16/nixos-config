@@ -161,9 +161,17 @@
           "$mod SHIFT, 9, movetoworkspace, 9"
           "$mod SHIFT, 0, movetoworkspace, 10"
           
+          # Preselect split direction (dwindle layout)
+          "$mod CTRL, H, layoutmsg, preselect l"
+          "$mod CTRL, J, layoutmsg, preselect d"
+          "$mod CTRL, K, layoutmsg, preselect u"
+          "$mod CTRL, L, layoutmsg, preselect r"
+          "$mod CTRL, Escape, layoutmsg, preselectreset"
+
           "$mod, R, submap, resize"
           "$mod, D, exec, rofi -show combi"
           "$mod SHIFT, D, exec, ~/.config/rofi/web-search.sh"
+          "$mod, F1, exec, ~/.config/rofi/keybinds.sh"
           "$mod, Tab, exec, rofi -show window"
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
@@ -181,6 +189,9 @@
           # Mouse workspace switching
           "$mod, mouse_down, workspace, e+1"
           "$mod, mouse_up, workspace, e-1"
+
+          # Restore last dismissed notification
+          "$mod, N, exec, makoctl restore"
 
           # Toggle lid suspend behavior
           ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
@@ -205,7 +216,7 @@
 
         # Lid switch binding
         bindl = [
-          '', switch:on:Lid Switch, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" != "0" ]; then hyprlock && systemctl suspend; fi''
+          '', switch:on:Lid Switch, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" != "0" ]; then loginctl lock-session; sleep 1; systemctl suspend; fi''
         ];
         
         # Startup applications
@@ -231,18 +242,23 @@
       
       # Resize mode using extraConfig (bypasses Nix validation)
       extraConfig = ''
-        # Window rules
-        windowrule = match:class org.pulseaudio.pavucontrol, float on
-        windowrule = match:class .blueman-manager-wrapped, float on
-        windowrule = match:class nm-connection-editor, float on
-        windowrule = no_blur on, match:fullscreen 1
+        # Window rules (windowrulev2 syntax for stable Hyprland)
+        windowrulev2 = float, class:^(org.pulseaudio.pavucontrol)$
+        windowrulev2 = float, class:^(.blueman-manager-wrapped)$
+        windowrulev2 = float, class:^(nm-connection-editor)$
+        windowrulev2 = noblur, fullscreen:1
 
         # Layer rules - blur and transparency
-        layerrule = blur on, ignore_alpha 1, match:namespace rofi
-        layerrule = blur on, ignore_alpha 1, match:namespace waybar
-        layerrule = blur on, ignore_alpha 1, match:namespace notifications
-        layerrule = blur on, ignore_alpha 1, match:namespace swayosd
-        layerrule = blur on, ignore_alpha 1, match:namespace logout_dialog
+        layerrule = blur, rofi
+        layerrule = ignorealpha 1, rofi
+        layerrule = blur, waybar
+        layerrule = ignorealpha 1, waybar
+        layerrule = blur, notifications
+        layerrule = ignorealpha 1, notifications
+        layerrule = blur, swayosd
+        layerrule = ignorealpha 1, swayosd
+        layerrule = blur, logout_dialog
+        layerrule = ignorealpha 1, logout_dialog
 
         # Resize submap
         bind = $mod, R, submap, resize
@@ -279,6 +295,7 @@
       nerd-fonts.jetbrains-mono
       libnotify
       batsignal
+      jq
     ];
 
     programs.hyprlock = {
@@ -325,6 +342,17 @@
             position = "0, 80";
           }
         ];
+      };
+    };
+
+    services.hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          lock_cmd = "pidof hyprlock || hyprlock";
+          before_sleep_cmd = "loginctl lock-session";
+          after_sleep_cmd = "hyprctl dispatch dpms on";
+        };
       };
     };
 

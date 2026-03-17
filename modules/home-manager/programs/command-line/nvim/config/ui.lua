@@ -94,6 +94,7 @@ if which_key then
     { "<leader>fh", desc = "Help tags" },
     { "<leader>fr", desc = "Recent files" },
     { "<leader>ft", desc = "Find TODOs" },
+    { "<leader>fk", desc = "Find keymaps" },
     
     { "<leader>b", group = "Buffer" },
     { "<leader>bn", desc = "Next buffer" },

@@ -27,6 +27,7 @@ keymap('n', '<leader>tl', '<cmd>Trouble loclist toggle<cr>', { desc = "Location 
 
 -- Todo Comments keymaps
 keymap('n', '<leader>ft', '<cmd>TodoTelescope<cr>', { desc = "Find TODOs" })
+keymap('n', '<leader>fk', '<cmd>Telescope keymaps<cr>', { desc = "Find keymaps" })
 keymap('n', ']t', function() require("todo-comments").jump_next() end, { desc = "Next TODO" })
 keymap('n', '[t', function() require("todo-comments").jump_prev() end, { desc = "Previous TODO" })
 

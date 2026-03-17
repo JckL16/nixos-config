@@ -1,7 +1,6 @@
 # hosts/nixos-rugged/home.nix
-#
 
-{ config, pkgs, lib, ... }:
+{ config, pkgs, pkgs-unstable, lib, ... }:
 {
 
   hyprland.enable = true;
@@ -35,6 +34,11 @@
     qbittorrent
     claude-code
     caligula
+    todoist-electron
+    ticktick
+    thunderbird
+  ] ++ [
+    pkgs-unstable.protonmail-desktop
   ];
 
 }
