@@ -4,7 +4,7 @@
 # Uncomment options below to enable them. For details on each module
 # see CONTENT.md in the repository root.
 
-{ config, pkgs, home-manager, inputs, variables, ... }: {
+{ config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
 
   imports = [
     home-manager.nixosModules.home-manager
@@ -93,7 +93,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      inherit inputs variables;
+      inherit inputs variables pkgs-unstable;
     };
     users."${variables.username}" = {
       imports = [

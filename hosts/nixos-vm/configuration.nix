@@ -1,6 +1,6 @@
 # hosts/nixos-vm/configuration.nix
 
-{ config, pkgs, home-manager, inputs, variables, ... }: {
+{ config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
   
   imports = [
     home-manager.nixosModules.home-manager
@@ -26,8 +26,8 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { 
-      inherit inputs variables;
+    extraSpecialArgs = {
+      inherit inputs variables pkgs-unstable;
     };
     users."${variables.username}" = {
       imports = [

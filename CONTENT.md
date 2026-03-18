@@ -73,6 +73,23 @@ variables = (import ./variables.nix) // {
 };
 ```
 
+### Unstable Packages (pkgs-unstable)
+
+Every host receives `pkgs-unstable` via `specialArgs` in `flake.nix`, which provides access to the `nixpkgs-unstable` channel. This is useful for packages that are not yet available or are outdated on the stable channel. It is passed through to home-manager via `extraSpecialArgs` in each host's `configuration.nix`.
+
+Use it in `home.nix` or `configuration.nix` by adding `pkgs-unstable` to the module arguments:
+
+```nix
+# home.nix
+{ config, pkgs, pkgs-unstable, ... }:
+{
+  home.packages = [
+    pkgs.spotify           # from stable
+    pkgs-unstable.some-pkg # from unstable
+  ];
+}
+```
+
 ---
 
 ## Core Modules (Enabled by Default)

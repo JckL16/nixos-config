@@ -19,9 +19,13 @@
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {
     nixosConfigurations.nixos-laptop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { 
+      specialArgs = {
         inherit self home-manager inputs;
         variables = import ./variables.nix;
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
       };
       modules = [
         ./hosts/nixos-laptop/hardware-configuration.nix
@@ -33,9 +37,13 @@
 
     nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
-      specialArgs = { 
+      specialArgs = {
         inherit self home-manager inputs;
         variables = import ./variables.nix;
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
+        };
       };
       modules = [
         ./hosts/nixos-desktop/hardware-configuration.nix
@@ -75,6 +83,10 @@
           bootDevice = "/dev/vda";
           isBIOS = true;
           displayScale = 1;
+        };
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          system = "x86_64-linux";
+          config.allowUnfree = true;
         };
       };
       modules = [

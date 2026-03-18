@@ -3,7 +3,7 @@
 # User-level configuration. Programs and settings here are installed
 # per-user via Home Manager. For details on each module see CONTENT.md.
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 {
 
   # ==========================================================================
@@ -68,6 +68,9 @@
     # discord
     # obsidian
     # vlc
+  ] ++ [
+    # Packages from the unstable channel:
+    # pkgs-unstable.some-package
   ];
 
 }

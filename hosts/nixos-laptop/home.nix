@@ -1,6 +1,6 @@
 # hosts/nixos-laptop/home.nix
 
-{ config, pkgs, ... }:
+{ config, pkgs-unstable,  pkgs, ... }:
 {
 
   # Enables the user level config of hyprland
@@ -39,6 +39,10 @@
     fortune
     qbittorrent
     claude-code
+    ticktick
+    thunderbird
+  ] ++ [
+    pkgs-unstable.protonmail-desktop
   ];
 
 }

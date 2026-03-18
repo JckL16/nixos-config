@@ -1,6 +1,6 @@
 # hosts/nixos-vm/home.nix
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 {
 
   hyprland.enable = true;

@@ -34,7 +34,6 @@
     qbittorrent
     claude-code
     caligula
-    todoist-electron
     ticktick
     thunderbird
   ] ++ [

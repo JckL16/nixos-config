@@ -1,6 +1,6 @@
 # hosts/nixos-desktop/home.nix
 
-{ config, pkgs, ... }:
+{ config, pkgs, pkgs-unstable, ... }:
 {
 
   # Enabled the hyprland config for this user

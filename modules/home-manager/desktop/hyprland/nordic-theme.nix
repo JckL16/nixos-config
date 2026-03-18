@@ -43,6 +43,7 @@
       GTK_THEME = "Nordic";
       QT_QPA_PLATFORM = "wayland";
       QT_STYLE_OVERRIDE = "adwaita-dark";
+      ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     };
 
     home.file = {
