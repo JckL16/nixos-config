@@ -176,6 +176,7 @@
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
           "$mod SHIFT, V, exec, ~/.config/rofi/clipman.sh"
+          "$mod, T, exec, xdg-open https://"
 
           # Volume controls with swayosd
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
