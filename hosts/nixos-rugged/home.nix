@@ -8,6 +8,11 @@
   # Lid close does nothing
   wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];
 
+  # External monitor at native ultrawide resolution
+  wayland.windowManager.hyprland.settings.monitor = lib.mkForce [
+    ",3440x1440@100,auto,1"
+  ];
+
   # Enabled user specific configuration for gaming
   steam.enable = true;
   gamemode.enable = true;
