@@ -20,7 +20,7 @@
   # Guest-agent for the vm
   qemu-guest-agent.enable = true;
 
-  intel-graphics.enable = true;
+  # intel-graphics.enable = true;  # Not needed for VM - uses virtio-gpu
 
   # Home Manager configuration
   home-manager = {
