@@ -234,7 +234,7 @@ nano ~/nixos-config/hosts/<your-hostname>/configuration.nix
 nano ~/nixos-config/hosts/<your-hostname>/home.nix
 ```
 
-The example host comes with Hyprland enabled and graphics drivers commented out for you to choose from. Uncomment and enable modules as needed. See [CONTENT.md](CONTENT.md) for a full list of available modules and how to configure them.
+The example host comes with Hyprland enabled and graphics drivers commented out for you to choose from. Uncomment and enable modules as needed. See [modules/overview.md](modules/overview.md) for a full list of available modules and how to configure them.
 
 ### 16. Apply Your Configuration
 
@@ -248,100 +248,3 @@ sudo nixos-rebuild switch --flake .#<your-hostname>
 ```bash
 reboot
 ```
-
----
-
-## WSL Installation
-
-This configuration includes a WSL (Windows Subsystem for Linux) host at `hosts/nixos-wsl/`. It comes with programming environments (Go, Rust, Python, C/C++) and cyber security tools pre-configured.
-
-### Prerequisites
-
-- Windows 10 version 2004+ or Windows 11
-- WSL2 enabled
-
-### Installation Steps
-
-#### 1. Enable WSL2
-
-Open PowerShell as Administrator:
-
-```powershell
-wsl --install
-```
-
-Restart your computer if prompted.
-
-#### 2. Install NixOS-WSL
-
-Download the latest NixOS-WSL release:
-
-```powershell
-# Download the latest tarball from GitHub
-# https://github.com/nix-community/NixOS-WSL/releases
-
-wsl --import NixOS $env:USERPROFILE\NixOS\ nixos-wsl.tar.gz --version 2
-```
-
-#### 3. Launch NixOS
-
-```powershell
-wsl -d NixOS
-```
-
-#### 4. Clone and Apply This Configuration
-
-Inside the WSL instance:
-
-```bash
-# Enable flakes temporarily
-nix-shell -p git
-
-# Clone the configuration
-cd ~
-git clone https://github.com/JckL16/nixos-config.git
-cd nixos-config
-
-# Update variables.nix with your settings
-nano variables.nix
-
-# Apply the WSL configuration
-sudo nixos-rebuild switch --flake .#nixos-wsl
-```
-
-#### 5. Restart WSL
-
-Exit and restart the WSL instance:
-
-```powershell
-wsl --shutdown
-wsl -d NixOS
-```
-
-### WSL-Specific Notes
-
-- The WSL host automatically mounts Windows drives under `/mnt/c`, `/mnt/d`, etc.
-- Desktop environments are disabled since WSL runs headless (use WSLg for GUI apps if needed)
-- Audio and Bluetooth modules are disabled as they're not applicable to WSL
-
----
-
-## Troubleshooting
-
-### Network Issues
-
-```bash
-# Check network status
-nmcli device status
-
-# Restart NetworkManager
-sudo systemctl restart NetworkManager
-```
-
-### Build Failures
-
-If the build fails, check that:
-- Your `hardware-configuration.nix` is in the correct host directory
-- Your hostname in `configuration.nix` matches the flake entry name
-- The username in `variables.nix` matches the user you created
-- You have selected the correct graphics driver for your hardware

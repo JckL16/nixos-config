@@ -1,4 +1,4 @@
-# Nixos Config
+# NixOS Config
 
 My NixOS configuration, managed with flakes and home-manager.
 
@@ -21,12 +21,18 @@ Some highlights:
 
 ## Getting started
 
-A guide to installing the configuration including where to find the ISO and files can be found in [INSTALL.md](INSTALL.md)
+See the [Installation Guide](docs/installation.md) to get started, or [WSL Installation](docs/wsl.md) for Windows Subsystem for Linux.
 
 Global settings like username, timezone, and git config live in [variables.nix](variables.nix).
 
-## Docs
+## Documentation
 
-- [CONTENT.md](CONTENT.md) -- full breakdown of every module and option
-- [INSTALL.md](INSTALL.md) -- installation and setup instructions
-- [hosts/nixos-example/](hosts/nixos-example/) -- commented example config to use as a starting point
+All documentation is in the [docs/](docs/) directory:
+
+- [Installation Guide](docs/installation.md) - Installing NixOS with this configuration
+- [WSL Installation](docs/wsl.md) - Using this configuration on Windows
+- [Module Documentation](docs/modules/) - Detailed documentation for each module category
+- [Quick Reference](docs/reference.md) - All options at a glance
+- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
+
+See also [hosts/nixos-example/](hosts/nixos-example/) for a commented example config to use as a starting point.
