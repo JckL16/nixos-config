@@ -8,6 +8,7 @@
     ./docker.nix
     ./metasploit-db.nix
     ./yubikey.nix
+    ./veracrypt.nix
   ];
 
 }

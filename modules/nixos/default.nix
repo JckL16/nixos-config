@@ -55,4 +55,7 @@
 
   # Enableing the system to work with a yubikey
   yubikey.enable = lib.mkDefault true;
+
+  # VeraCrypt disk encryption
+  veracrypt.enable = lib.mkDefault true;
 }
