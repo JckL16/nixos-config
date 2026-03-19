@@ -8,10 +8,10 @@
   };
 
   config = lib.mkIf config.qemu-guest-agent.enable {
-    # Enable QEMU Guest Agent
-    # services.qemu-guest-agent.enable = true;
+    # Enable QEMU Guest Agent for graceful shutdown and IP reporting
+    services.qemuGuest.enable = true;
 
-    # Enable Spice vdagent for clipboard sharing
+    # Enable Spice vdagent for clipboard sharing and resolution
     services.spice-vdagentd.enable = true;
   };
   
