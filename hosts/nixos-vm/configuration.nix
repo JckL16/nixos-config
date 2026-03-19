@@ -14,13 +14,18 @@
   networking.hostName = "nixos-vm";
 
   # Desktop environment
-  # gnome.enable = true;
-  hyprland.enable = true;
+  # GNOME works better without 3D acceleration (needed for snapshots)
+  gnome.enable = true;
+  # hyprland.enable = true;  # Requires 3D acceleration
 
   # Guest-agent for the vm
   qemu-guest-agent.enable = true;
 
   # intel-graphics.enable = true;  # Not needed for VM - uses virtio-gpu
+
+  # Security tools
+  metasploit-db.enable = true;  # PostgreSQL database for Metasploit
+  docker.enable = true;         # For vulnerable containers (e.g., VulnHub)
 
   # Home Manager configuration
   home-manager = {

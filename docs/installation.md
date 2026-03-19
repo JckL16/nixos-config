@@ -76,10 +76,10 @@ sudo mount /dev/disk/by-label/boot /mnt/boot
 
 ```bash
 # Format the root partition
-mkfs.ext4 -L nixos /dev/<your-disk>1
+sudo mkfs.ext4 -L nixos /dev/<your-disk>1
 
 # Mount the root partition
-mount /dev/disk/by-label/nixos /mnt
+sudo mount /dev/disk/by-label/nixos /mnt
 ```
 
 ### 4. Generate Initial Configuration
