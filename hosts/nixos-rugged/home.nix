@@ -23,6 +23,7 @@
   python-dev.packages = [ "requests" "numpy" "pandas" ];
   rust.enable = true;
   c-cpp.enable = true;
+  go.enable = true;
 
   cyber.enable = true;
 
