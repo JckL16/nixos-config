@@ -25,6 +25,47 @@ Firefox-based browser set as the XDG default for `http`, `https`, and `text/html
 
 The Rofi web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
 
+## VeraCrypt (Disk Encryption)
+
+- **Option:** `veracrypt.enable = true;` in `configuration.nix`
+- **File:** `modules/nixos/programs/veracrypt.nix`
+- **Default:** `true`
+
+VeraCrypt is a free and open-source disk encryption tool. It allows you to create virtual encrypted disks within files or encrypt entire partitions and storage devices.
+
+### Features
+
+- AES, Serpent, and Twofish encryption algorithms
+- Hidden volume support for plausible deniability
+- Cross-platform compatibility (Windows, macOS, Linux)
+- Hardware acceleration support
+
+### System Configuration
+
+The module configures:
+
+- FUSE support (`programs.fuse.userAllowOther = true`) for mounting volumes
+- A setuid security wrapper so the GUI can mount volumes without requiring sudo
+
+### Usage
+
+**GUI:** Run `veracrypt` to open the graphical interface.
+
+**Command line:**
+
+```bash
+# Mount a volume
+veracrypt /path/to/volume /mnt/point
+
+# Dismount a volume
+veracrypt -d /mnt/point
+
+# Dismount all volumes
+veracrypt -d
+```
+
+---
+
 ## Winbox (MikroTik Network Management)
 
 Requires both system and user level:

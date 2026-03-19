@@ -30,6 +30,7 @@ All module enable options at a glance.
 | `virtualbox-guest-agent.enable` | `false` | VirtualBox guest additions |
 | `metasploit-db.enable` | `false` | PostgreSQL database for Metasploit |
 | `yubikey.enable` | `true` | YubiKey support |
+| `veracrypt.enable` | `true` | VeraCrypt disk encryption |
 
 ## User Level (home.nix)
 
