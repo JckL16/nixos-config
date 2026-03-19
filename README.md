@@ -10,10 +10,10 @@ host picks what it needs.
 
 Some highlights:
 
-- **Hyprland** or **GNOME** desktop environments
+- **Hyprland** or **GNOME** desktop environments (or headless for WSL)
 - GPU drivers for Intel, AMD, and NVIDIA
 - Gaming setup with Steam + Proton-GE and GameMode
-- Dev environments for Python, Rust, and C/C++
+- Dev environments for Python, Rust, C/C++, and Go
 - Virtualisation with libvirt/QEMU and Docker
 - A cyber security toolkit with the usual suspects (Metasploit, Burp Suite, Wireshark, Ghidra, etc.)
 - Zsh + Neovim + Alacritty + Zen Browser as the default shell/editor/terminal/browser

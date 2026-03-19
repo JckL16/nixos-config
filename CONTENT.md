@@ -346,7 +346,12 @@ These are user-level modules set in `home.nix`.
 
 ### C/C++
 - **Option:** `c-cpp.enable = true;`
-- Installs gcc, cmake, ninja, meson, autoconf, automake, gdb, valgrind, lldb, strace, and common libraries (Boost, fmt, spdlog, Catch2, Google Test).
+- Installs gcc, cmake, ninja, meson, autoconf, automake, gdb, valgrind, lldb, strace, clangd (LSP), and common libraries (Boost, fmt, spdlog, Catch2, Google Test).
+
+### Go
+- **Option:** `go.enable = true;`
+- Installs go, gopls (LSP), golangci-lint, delve (debugger), and gotools.
+- Sets `GOPATH=$HOME/go` and adds `~/go/bin` to `PATH`.
 
 ```nix
 # home.nix
@@ -354,6 +359,7 @@ python-dev.enable = true;
 python-dev.packages = [ "flask" "sqlalchemy" ];
 rust.enable = true;
 c-cpp.enable = true;
+go.enable = true;
 ```
 
 ---
@@ -530,4 +536,5 @@ Always active. Configured with:
 | `python-dev.packages` | `[]` | Extra Python packages to install |
 | `rust.enable` | `false` | Rust development environment |
 | `c-cpp.enable` | `false` | C/C++ development environment |
+| `go.enable` | `false` | Go development environment |
 | `cyber.enable` | `false` | Cyber security toolkit |
