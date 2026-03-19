@@ -7,6 +7,7 @@ if cmp_nvim_lsp then
 end
 
 -- LSP servers configuration
+-- Servers are only enabled if their binary is found on the system
 local servers = {
   nixd = {
     cmd = { 'nixd' },
@@ -41,6 +42,46 @@ local servers = {
         },
       }
     }
+  },
+  gopls = {
+    cmd = { 'gopls' },
+    filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+  },
+  clangd = {
+    cmd = { 'clangd' },
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
+  },
+  bashls = {
+    cmd = { 'bash-language-server', 'start' },
+    filetypes = { 'sh', 'bash' },
+  },
+  jsonls = {
+    cmd = { 'vscode-json-language-server', '--stdio' },
+    filetypes = { 'json', 'jsonc' },
+  },
+  yamlls = {
+    cmd = { 'yaml-language-server', '--stdio' },
+    filetypes = { 'yaml', 'yaml.docker-compose' },
+  },
+  html = {
+    cmd = { 'vscode-html-language-server', '--stdio' },
+    filetypes = { 'html', 'templ' },
+  },
+  cssls = {
+    cmd = { 'vscode-css-language-server', '--stdio' },
+    filetypes = { 'css', 'scss', 'less' },
+  },
+  dockerls = {
+    cmd = { 'docker-langserver', '--stdio' },
+    filetypes = { 'dockerfile' },
+  },
+  terraformls = {
+    cmd = { 'terraform-ls', 'serve' },
+    filetypes = { 'terraform', 'terraform-vars' },
+  },
+  zls = {
+    cmd = { 'zls' },
+    filetypes = { 'zig' },
   },
 }
 

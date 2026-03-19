@@ -29,6 +29,9 @@ in
       valgrind
       lldb
       strace
+
+      # LSP
+      clang-tools
       
       # Common libraries
       boost
