@@ -39,7 +39,7 @@ swap-file.size = 8192;  # Size in MiB
 - **File:** `modules/nixos/core/garbage-collection.nix`
 - **Where to set:** `configuration.nix`
 
-Runs `nix-collect-garbage` weekly, deleting store paths older than 7 days.
+Runs `nix-collect-garbage` weekly, deleting store paths older than 7 days. Also runs `nix-store --optimise` weekly to deduplicate identical files in the Nix store.
 
 ## Always-Active Modules
 
