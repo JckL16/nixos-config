@@ -6,6 +6,7 @@ This directory contains the full documentation for the NixOS configuration.
 
 - [Installation Guide](installation.md) - Installing NixOS with this configuration
 - [WSL Installation](wsl.md) - Using this configuration on Windows Subsystem for Linux
+- [Creating a VM](virt-manager-vm.md) - Setting up a NixOS VM in virt-manager
 
 ## Module Documentation
 
