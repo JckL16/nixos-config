@@ -128,6 +128,7 @@
       cutter               # Free reverse engineering platform (GUI for rizin)
       iaito                # GUI for radare2
       ghidra               # NSA's software reverse engineering framework
+      ida-free             # IDA Free - freeware disassembler
 
       # === BINARY ANALYSIS ===
       (lib.lowPrio binutils)
@@ -202,7 +203,9 @@
       # ============================================================
 
       # === DISK FORENSICS & DATA RECOVERY ===
+      libguestfs-with-appliance # Tools for accessing/modifying VM disk images (VHD, VMDK, QCOW2)
       sleuthkit            # Collection of command line tools for digital forensics
+      autopsy              # Digital forensics platform (GUI for sleuthkit)
       testdisk             # Data recovery software, works with partition tables
       foremost             # Console program to recover files based on headers/footers
       scalpel              # Fast file carver
@@ -388,6 +391,47 @@
       # === TEXT BROWSERS ===
       lynx                 # Text-based web browser
       w3m                  # Text-based web browser
+
+      # ============================================================
+      # SDR (SOFTWARE DEFINED RADIO)
+      # ============================================================
+
+      gnuradio             # SDR signal processing framework
+      inspectrum           # SDR signal analyzer for captured samples
+      urh                  # Universal Radio Hacker - protocol analyzer
+      sox                  # Sound processing for audio/signal analysis
+      audacity             # Audio editor for signal visualization
+
+      # ============================================================
+      # MEDIA
+      # ============================================================
+
+      ffmpeg               # Audio/video conversion and processing
+      vlc                  # Media player for audio/video analysis
     ];
+
+    # Default applications for media files
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        # Audio
+        "audio/mpeg" = "vlc.desktop";
+        "audio/mp3" = "vlc.desktop";
+        "audio/flac" = "vlc.desktop";
+        "audio/ogg" = "vlc.desktop";
+        "audio/wav" = "vlc.desktop";
+        "audio/x-wav" = "vlc.desktop";
+        "audio/aac" = "vlc.desktop";
+        "audio/m4a" = "vlc.desktop";
+        "audio/x-m4a" = "vlc.desktop";
+        # Video
+        "video/mp4" = "vlc.desktop";
+        "video/x-matroska" = "vlc.desktop";
+        "video/webm" = "vlc.desktop";
+        "video/avi" = "vlc.desktop";
+        "video/x-msvideo" = "vlc.desktop";
+        "video/quicktime" = "vlc.desktop";
+      };
+    };
   };
 }
