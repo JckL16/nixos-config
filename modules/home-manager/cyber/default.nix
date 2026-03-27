@@ -128,7 +128,7 @@
       cutter               # Free reverse engineering platform (GUI for rizin)
       iaito                # GUI for radare2
       ghidra               # NSA's software reverse engineering framework
-      ida-free             # IDA Free - freeware disassembler
+      # ida-free             # IDA Free - freeware disassembler
 
       # === BINARY ANALYSIS ===
       (lib.lowPrio binutils)

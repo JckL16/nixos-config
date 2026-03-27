@@ -80,3 +80,6 @@ keymap('v', '>', '>gv', { desc = "Indent right" })
 -- Move text up and down
 keymap('v', 'J', ":m '>+1<CR>gv=gv", { desc = "Move text down" })
 keymap('v', 'K', ":m '<-2<CR>gv=gv", { desc = "Move text up" })
+
+-- Toggle line wrap
+keymap('n', '<leader>uw', ':set wrap!<CR>', { desc = "Toggle line wrap" })

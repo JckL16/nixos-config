@@ -33,7 +33,6 @@
 
   home.packages = with pkgs; [
     obsidian
-    spotify
     signal-desktop-bin
     discord-ptb
     ttyper
@@ -43,7 +42,8 @@
     ticktick
     thunderbird
   ] ++ [
-    pkgs-unstable.protonmail-desktop
+      pkgs-unstable.protonmail-desktop
+      pkgs-unstable.spotify
   ];
 
 }
