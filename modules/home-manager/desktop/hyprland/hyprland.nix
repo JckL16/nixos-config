@@ -222,6 +222,7 @@
         
         # Startup applications
         exec-once = [
+          "xset fp+ $(readlink -f /run/current-system/sw/share/X11/fonts) && xset fp rehash"
           "mkdir -p ~/Pictures/Screenshots"
           "[ -f ~/.config/hypr/lid-suspend-enabled ] || echo 1 > ~/.config/hypr/lid-suspend-enabled"
           "dex --autostart --environment hyprland"

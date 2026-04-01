@@ -58,4 +58,7 @@
 
   # VeraCrypt disk encryption
   veracrypt.enable = lib.mkDefault true;
+
+  # Common system fonts for browsers and applications
+  fonts-config.enable = lib.mkDefault true;
 }

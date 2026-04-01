@@ -1,6 +1,7 @@
 { ... }: {
 
   imports = [
+    ./fonts.nix
     ./gamemode.nix
     ./steam.nix
     ./virtualisation.nix
