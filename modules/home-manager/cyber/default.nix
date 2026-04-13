@@ -48,6 +48,9 @@
       sshpass              # Non-interactive ssh password authentication
       sshfs                # Mount remote filesystems over SSH
 
+      # === SMB/CIFS ===
+      samba                # SMB/CIFS client (smbclient)
+
       # === FILE TRANSFER ===
       rsync                # Fast incremental file transfer
       curl                 # Command line tool for transferring data with URLs
@@ -285,6 +288,7 @@
       hashcat              # Advanced password recovery utility
       hashcat-utils        # Utilities for Hashcat
       john                 # John the Ripper password cracker
+      thc-hydra            # Fast network login cracker
       fcrackzip            # Password cracker for ZIP archives
       truecrack            # Password cracker for TrueCrypt volumes
 
