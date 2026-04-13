@@ -11,14 +11,14 @@
   gamemode.enable = true;
   minecraft.enable = true;
 
-  # Installs the libreoffice suite on the system
-  # libreoffice.enable = true;
+  zen-browser.enable = true;
 
   winbox.enable = true;
 
   rust.enable = true;
   python-dev.enable = true;
   python-dev.packages = [ "tqdm" ];
+  go.enable = true;
 
   cyber.enable = true;
 
@@ -36,6 +36,9 @@
     claude-code
     minikube
     kubectl
+    ticktick
+    ] ++ [
+    pkgs-unstable.protonmail-desktop
   ];
 
 }
