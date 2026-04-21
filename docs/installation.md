@@ -203,11 +203,20 @@ Your config should already be in your home directory:
 ls ~/nixos-config
 ```
 
-Future rebuilds:
+Future rebuilds use the shell aliases defined in `zsh.nix`:
+
+| Alias | Command |
+|-------|---------|
+| `switch` | Rebuild and switch to new configuration |
+| `test` | Test configuration without switching |
+| `dry-run` | Show what would be built |
+| `update` | Update flake inputs and rebuild |
+| `clean` | Run garbage collection |
+| `install-bootloader` | Reinstall bootloader |
 
 ```bash
-cd ~/nixos-config
-sudo nixos-rebuild switch --flake .#$HOST_NAME
+switch    # Apply changes
+update    # Update flake inputs and apply
 ```
 
 ---
