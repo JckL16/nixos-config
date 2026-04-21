@@ -1,6 +1,6 @@
 # modules/nixos/disko/default.nix
 # Shared disko configuration module for all hosts
-{ lib, config, ... }:
+{ lib, config, variables, ... }:
 
 {
   options.diskoConfig = {
@@ -31,8 +31,8 @@
 
     isBIOS = lib.mkOption {
       type = lib.types.bool;
-      default = false;
-      description = "Whether to use BIOS/MBR instead of UEFI/GPT";
+      default = variables.isBIOS;
+      description = "Whether to use BIOS/MBR instead of UEFI/GPT. Defaults to variables.isBIOS.";
     };
   };
 
@@ -41,6 +41,19 @@
     (lib.mkIf config.diskoConfig.isBIOS {
       boot.loader.grub.device = lib.mkForce config.diskoConfig.device;
       boot.loader.grub.mirroredBoots = lib.mkForce [];
+      boot.loader.grub.efiSupport = lib.mkForce false;
+      boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
+    })
+
+    # UEFI bootloader config
+    (lib.mkIf (!config.diskoConfig.isBIOS) {
+      boot.loader.grub.device = lib.mkForce "nodev";
+      boot.loader.grub.efiSupport = lib.mkForce true;
+      boot.loader.efi.canTouchEfiVariables = lib.mkForce true;
+      boot.loader.grub.mirroredBoots = lib.mkForce [{
+        devices = [ "nodev" ];
+        path = "/boot";
+      }];
     })
 
     # Disko devices config
