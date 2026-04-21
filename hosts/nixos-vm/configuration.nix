@@ -7,12 +7,12 @@
   ];
 
   # Disko disk configuration
-  # diskoConfig = {
-  #   enable = true;
-  #   device = "/dev/vda";
-  #   encryption.enable = true;
-  #   swapSize = "4G";
-  # };
+  diskoConfig = {
+    enable = true;
+    device = "/dev/vda";
+    encryption.enable = true;
+    swapSize = "4G";
+  };
 
   # Disabled as they dont work in a VM
   audio.enable = false;
