@@ -86,11 +86,10 @@ nano /tmp/nixos-config/hosts/<your-hostname>/configuration.nix
 
 Update:
 - `diskoConfig.device` - Set to your disk device
-- `diskoConfig.isBIOS` - Set to `true` for BIOS systems
 - `networking.hostName` - Set to your hostname
 - Enable desired modules (graphics drivers, desktop environment, etc.)
 
-Then register the host in `flake.nix` (see step 9).
+Then register the host in `flake.nix` (see step 9). For BIOS systems, set `isBIOS = true` in flake.nix (see step 9).
 
 ### 7. Run Disko
 
@@ -138,6 +137,7 @@ nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
   system = "x86_64-linux";
   specialArgs = {
     inherit self home-manager inputs;
+    # For BIOS systems, add: // { isBIOS = true; bootDevice = "/dev/sda"; }
     variables = import ./variables.nix;
     pkgs-unstable = import inputs.nixpkgs-unstable {
       system = "x86_64-linux";
@@ -151,6 +151,15 @@ nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
     ./modules/nixos
     home-manager.nixosModules.home-manager
   ];
+};
+```
+
+For BIOS/legacy boot systems, override variables:
+
+```nix
+variables = (import ./variables.nix) // {
+  isBIOS = true;
+  bootDevice = "/dev/sda";  # Your boot disk
 };
 ```
 
@@ -271,7 +280,7 @@ diskoConfig = {
   device = "/dev/nvme0n1";     # Your disk device
   encryption.enable = true;    # LUKS encryption
   swapSize = "16G";            # Swap partition size (optional)
-  isBIOS = false;              # Set true for BIOS/MBR systems
+  # isBIOS defaults to variables.isBIOS - only override if needed
 };
 ```
 
@@ -280,7 +289,16 @@ diskoConfig = {
 | `device` | Disk device path (from `lsblk`) |
 | `encryption.enable` | Enable LUKS encryption |
 | `swapSize` | Swap partition size (e.g., "8G", "16G"), omit for no swap |
-| `isBIOS` | Use BIOS/MBR instead of UEFI/GPT |
+| `isBIOS` | Use BIOS/MBR instead of UEFI/GPT (defaults to `variables.isBIOS`) |
+
+### BIOS vs UEFI Configuration
+
+The bootloader configuration is unified through `variables.isBIOS`:
+
+- **UEFI systems (default):** `isBIOS = false` - Creates 512MB EFI partition, enables EFI support
+- **BIOS systems:** `isBIOS = true` - Creates 1MB BIOS boot partition, installs GRUB to disk
+
+Set `isBIOS` in `flake.nix` per-host and disko will automatically use the correct partitioning and bootloader settings. You don't need to set it in both places.
 
 ---
 

@@ -11,14 +11,16 @@
     boot.loader = {
         grub = {
             enable = true;
-            # Only set device if disko is NOT enabled (disko handles this)
-            device = lib.mkIf (!config.diskoConfig.enable) variables.bootDevice;
-            efiSupport = !variables.isBIOS;
             useOSProber = true;
             configurationLimit = 5;
+        } // lib.optionalAttrs (!config.diskoConfig.enable) {
+            # Only set these if disko is NOT enabled (disko handles bootloader config)
+            device = variables.bootDevice;
+            efiSupport = !variables.isBIOS;
         };
-        efi.canTouchEfiVariables = !variables.isBIOS;
         timeout = 5;
+    } // lib.optionalAttrs (!config.diskoConfig.enable) {
+        efi.canTouchEfiVariables = !variables.isBIOS;
     };
   };
 

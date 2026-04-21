@@ -16,11 +16,11 @@
 
   system-state-version = "25.11";
 
-  # If using grub this will be used.
-  # When using a BIOS system this has to specify the drive to install GRUB to
-  # These settings are meant to be changed in flake.nix
+  # Bootloader configuration
+  # bootDevice: Drive to install GRUB to (for BIOS systems or when not using disko)
+  # isBIOS: Set to true for BIOS/legacy boot, false for UEFI
+  # Override these per-host in flake.nix. When disko is enabled, it uses these as defaults.
   bootDevice = "nodev";
-
   isBIOS = false;
 
   # Wayland compositor scale factor (e.g., 1, 1.5, 2)
