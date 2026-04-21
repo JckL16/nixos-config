@@ -1,10 +1,18 @@
 # hosts/nixos-desktop/configuration.nix
 
 { config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
-  
+
   imports = [
     home-manager.nixosModules.home-manager
   ];
+
+  # Disko disk configuration
+  diskoConfig = {
+    enable = true;
+    device = "/dev/nvme0n1";
+    encryption.enable = true;
+    swapSize = "16G";
+  };
 
   # Enable emulation of ARM systems
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];

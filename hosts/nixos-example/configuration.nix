@@ -11,6 +11,20 @@
   ];
 
   # ==========================================================================
+  # Disko Disk Configuration
+  # Declarative disk partitioning with optional LUKS encryption.
+  # Change device to match your disk (use `lsblk` to find it).
+  # See docs/disko-installation.md for the full installation guide.
+  # ==========================================================================
+  diskoConfig = {
+    enable = true;
+    device = "/dev/nvme0n1";     # Change to your disk device
+    encryption.enable = true;    # LUKS encryption (password prompted on boot)
+    swapSize = "16G";            # Optional swap partition
+    # isBIOS = true;             # Uncomment for BIOS/MBR systems
+  };
+
+  # ==========================================================================
   # Hostname — change this to match your host
   # ==========================================================================
   networking.hostName = "nixos-example";
@@ -18,7 +32,7 @@
   # ==========================================================================
   # Bootloader
   # GRUB is enabled by default and works for both EFI and BIOS systems.
-  # For BIOS, set bootDevice and isBIOS in flake.nix (see INSTALL.md).
+  # For BIOS, set isBIOS = true in diskoConfig above.
   # To use systemd-boot instead (EFI only), disable GRUB and enable it below.
   # ==========================================================================
   # grub.enable = false;
@@ -81,8 +95,6 @@
   # ==========================================================================
   # audio.enable = false;              # Disable PipeWire audio
   # bluetooth.enable = false;          # Disable Bluetooth
-  # swap-file.enable = false;          # Disable swap file
-  # swap-file.size = 8192;             # Change swap size (MiB), default 16384
   # garbage-collection.enable = false; # Disable weekly nix store cleanup
 
   # ==========================================================================

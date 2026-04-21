@@ -11,6 +11,7 @@
     ./desktop
     ./programs
     ./guest-agents
+    ./disko
     ./system-packages.nix
     ./users.nix
   ];
@@ -18,7 +19,6 @@
   # Default enables
   audio.enable = lib.mkDefault true;
   bluetooth.enable = lib.mkDefault true;
-  swap-file.enable = lib.mkDefault true;
   garbage-collection.enable = lib.mkDefault true;
 
   # Desktop environments installed system wide
