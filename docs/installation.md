@@ -61,13 +61,13 @@ nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tm
 
 #### Option A: Use an Existing Host
 
-If reinstalling an existing host (e.g., `nixos-laptop`), uncomment and verify the diskoConfig:
+If reinstalling an existing host (e.g., `nixos-laptop`), verify the diskoConfig:
 
 ```bash
 nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
 ```
 
-1. Uncomment the `diskoConfig` block
+1. Ensure `diskoConfig.enable = true`
 2. Verify `diskoConfig.device` matches your disk from `lsblk`
 
 #### Option B: Create a New Host
@@ -242,7 +242,7 @@ export HOST_NAME="nixos-vm"   # Must match a host in hosts/ directory
 # 2. Clone config to /tmp
 nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tmp/nixos-config"
 
-# 3. Uncomment diskoConfig in hosts/$HOST_NAME/configuration.nix, then run disko
+# 3. Verify diskoConfig.device in hosts/$HOST_NAME/configuration.nix, then run disko
 nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
 sudo nix --extra-experimental-features 'nix-command flakes' \
   run github:nix-community/disko/latest -- \
@@ -299,6 +299,8 @@ The bootloader configuration is unified through `variables.isBIOS`:
 - **BIOS systems:** `isBIOS = true` - Creates 1MB BIOS boot partition, installs GRUB to disk
 
 Set `isBIOS` in `flake.nix` per-host and disko will automatically use the correct partitioning and bootloader settings. You don't need to set it in both places.
+
+**Keep diskoConfig enabled after installation.** The disko module only partitions disks when you explicitly run the disko command - normal rebuilds won't touch your disk. Keeping it enabled ensures bootloader settings remain correct and documents your disk layout in the config.
 
 ---
 
