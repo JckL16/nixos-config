@@ -21,7 +21,6 @@
     device = "/dev/nvme0n1";     # Change to your disk device
     encryption.enable = true;    # LUKS encryption (password prompted on boot)
     swapSize = "16G";            # Optional swap partition
-    # isBIOS = true;             # Uncomment for BIOS/MBR systems
   };
 
   # ==========================================================================
@@ -32,7 +31,7 @@
   # ==========================================================================
   # Bootloader
   # GRUB is enabled by default and works for both EFI and BIOS systems.
-  # For BIOS, set isBIOS = true in diskoConfig above.
+  # For BIOS systems, set isBIOS = true in flake.nix for this host.
   # To use systemd-boot instead (EFI only), disable GRUB and enable it below.
   # ==========================================================================
   # grub.enable = false;

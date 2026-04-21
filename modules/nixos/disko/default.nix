@@ -28,17 +28,11 @@
       description = "Size of swap partition (e.g., '8G'). Set to null for no swap.";
       example = "8G";
     };
-
-    isBIOS = lib.mkOption {
-      type = lib.types.bool;
-      default = variables.isBIOS;
-      description = "Whether to use BIOS/MBR instead of UEFI/GPT. Defaults to variables.isBIOS.";
-    };
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
     # BIOS bootloader config
-    (lib.mkIf config.diskoConfig.isBIOS {
+    (lib.mkIf variables.isBIOS {
       boot.loader.grub.device = lib.mkForce config.diskoConfig.device;
       boot.loader.grub.mirroredBoots = lib.mkForce [];
       boot.loader.grub.efiSupport = lib.mkForce false;
@@ -46,7 +40,7 @@
     })
 
     # UEFI bootloader config
-    (lib.mkIf (!config.diskoConfig.isBIOS) {
+    (lib.mkIf (!variables.isBIOS) {
       boot.loader.grub.device = lib.mkForce "nodev";
       boot.loader.grub.efiSupport = lib.mkForce true;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce true;
@@ -66,13 +60,13 @@
           type = "gpt";
           partitions = {
             # BIOS boot partition (only for BIOS systems)
-            boot = lib.mkIf config.diskoConfig.isBIOS {
+            boot = lib.mkIf variables.isBIOS {
               size = "1M";
               type = "EF02"; # BIOS boot partition
             };
 
             # EFI System Partition (only for UEFI systems)
-            ESP = lib.mkIf (!config.diskoConfig.isBIOS) {
+            ESP = lib.mkIf (!variables.isBIOS) {
               size = "512M";
               type = "EF00";
               content = {

@@ -280,7 +280,6 @@ diskoConfig = {
   device = "/dev/nvme0n1";     # Your disk device
   encryption.enable = true;    # LUKS encryption
   swapSize = "16G";            # Swap partition size (optional)
-  # isBIOS defaults to variables.isBIOS - only override if needed
 };
 ```
 
@@ -289,16 +288,15 @@ diskoConfig = {
 | `device` | Disk device path (from `lsblk`) |
 | `encryption.enable` | Enable LUKS encryption |
 | `swapSize` | Swap partition size (e.g., "8G", "16G"), omit for no swap |
-| `isBIOS` | Use BIOS/MBR instead of UEFI/GPT (defaults to `variables.isBIOS`) |
 
 ### BIOS vs UEFI Configuration
 
-The bootloader configuration is unified through `variables.isBIOS`:
+BIOS/UEFI mode is controlled by `variables.isBIOS` (set per-host in `flake.nix`):
 
 - **UEFI systems (default):** `isBIOS = false` - Creates 512MB EFI partition, enables EFI support
 - **BIOS systems:** `isBIOS = true` - Creates 1MB BIOS boot partition, installs GRUB to disk
 
-Set `isBIOS` in `flake.nix` per-host and disko will automatically use the correct partitioning and bootloader settings. You don't need to set it in both places.
+Disko reads this value directly - no need to configure it in diskoConfig.
 
 **Keep diskoConfig enabled after installation.** The disko module only partitions disks when you explicitly run the disko command - normal rebuilds won't touch your disk. Keeping it enabled ensures bootloader settings remain correct and documents your disk layout in the config.
 
