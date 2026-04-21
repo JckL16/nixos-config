@@ -37,6 +37,13 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable {
+    # Configure bootloader to work with disko
+    boot.loader.grub.device = lib.mkForce (
+      if config.diskoConfig.isBIOS
+      then config.diskoConfig.device
+      else "nodev"
+    );
+
     disko.devices = {
       disk.main = {
         type = "disk";
