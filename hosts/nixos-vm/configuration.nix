@@ -6,11 +6,10 @@
     home-manager.nixosModules.home-manager
   ];
 
-  # Disko disk configuration (enable only during fresh install)
+  # Disko disk configuration
   # diskoConfig = {
   #   enable = true;
   #   device = "/dev/vda";
-  #   isBIOS = true;
   #   encryption.enable = true;
   #   swapSize = "4G";
   # };
