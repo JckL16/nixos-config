@@ -18,9 +18,12 @@ All module enable options at a glance.
 | `nvidia-graphics.enable` | `false` | NVIDIA GPU drivers |
 | `audio.enable` | `true` | PipeWire audio |
 | `bluetooth.enable` | `true` | Bluetooth service |
-| `swap-file.enable` | `true` | Swap file (16 GiB) |
-| `swap-file.size` | `16384` | Swap file size in MiB |
 | `garbage-collection.enable` | `true` | Weekly nix store cleanup |
+| `diskoConfig.enable` | `false` | Declarative disk partitioning |
+| `diskoConfig.device` | - | Disk device path (e.g., "/dev/nvme0n1") |
+| `diskoConfig.encryption.enable` | `false` | LUKS encryption |
+| `diskoConfig.swapSize` | `null` | Swap partition size (e.g., "16G") |
+| `diskoConfig.isBIOS` | `false` | Use BIOS/MBR instead of UEFI |
 | `steam.enable` | `false` | Steam with Proton-GE |
 | `gamemode.enable` | `false` | Feral GameMode |
 | `virtualisation.enable` | `false` | libvirt/QEMU KVM |
