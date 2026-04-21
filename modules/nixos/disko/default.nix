@@ -31,16 +31,15 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
-    # BIOS bootloader config
-    (lib.mkIf variables.isBIOS {
+    # Bootloader config based on BIOS/UEFI
+    (if variables.isBIOS then {
+      # BIOS: install GRUB directly to disk
       boot.loader.grub.device = lib.mkForce config.diskoConfig.device;
       boot.loader.grub.mirroredBoots = lib.mkForce [];
       boot.loader.grub.efiSupport = lib.mkForce false;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
-    })
-
-    # UEFI bootloader config
-    (lib.mkIf (!variables.isBIOS) {
+    } else {
+      # UEFI: use EFI system partition
       boot.loader.grub.device = lib.mkForce "nodev";
       boot.loader.grub.efiSupport = lib.mkForce true;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce true;
