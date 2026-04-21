@@ -1,10 +1,19 @@
 # hosts/nixos-vm/configuration.nix
 
 { config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
-  
+
   imports = [
     home-manager.nixosModules.home-manager
   ];
+
+  # Disko disk configuration
+  diskoConfig = {
+    enable = true;
+    device = "/dev/vda";
+    isBIOS = true;
+    encryption.enable = true;
+    swapSize = "4G";
+  };
 
   # Disabled as they dont work in a VM
   audio.enable = false;
