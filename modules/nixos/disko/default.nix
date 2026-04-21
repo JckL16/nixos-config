@@ -38,11 +38,18 @@
 
   config = lib.mkIf config.diskoConfig.enable {
     # Configure bootloader to work with disko
-    boot.loader.grub.device = lib.mkForce (
-      if config.diskoConfig.isBIOS
-      then config.diskoConfig.device
-      else "nodev"
-    );
+    boot.loader.grub = {
+      device = lib.mkForce (
+        if config.diskoConfig.isBIOS
+        then config.diskoConfig.device
+        else "nodev"
+      );
+      # For UEFI: set single mirroredBoots entry to prevent duplicates
+      mirroredBoots = lib.mkIf (!config.diskoConfig.isBIOS) (lib.mkForce [{
+        devices = [ "nodev" ];
+        path = "/boot";
+      }]);
+    };
 
     disko.devices = {
       disk.main = {
