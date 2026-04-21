@@ -58,13 +58,14 @@ sudo git clone https://github.com/JckL16/nixos-config.git /mnt/home/<username>/n
 
 #### Option A: Use an Existing Host
 
-If reinstalling an existing host (e.g., `nixos-laptop`), verify the disk device in the configuration matches your system:
+If reinstalling an existing host (e.g., `nixos-laptop`), uncomment and verify the diskoConfig:
 
 ```bash
 sudo nano /mnt/home/<username>/nixos-config/hosts/<hostname>/configuration.nix
 ```
 
-Check that `diskoConfig.device` matches your disk from `lsblk`.
+1. Uncomment the `diskoConfig` block
+2. Verify `diskoConfig.device` matches your disk from `lsblk`
 
 #### Option B: Create a New Host
 

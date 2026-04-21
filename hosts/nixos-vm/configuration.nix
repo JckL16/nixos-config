@@ -6,14 +6,14 @@
     home-manager.nixosModules.home-manager
   ];
 
-  # Disko disk configuration
-  diskoConfig = {
-    enable = true;
-    device = "/dev/vda";
-    isBIOS = true;
-    encryption.enable = true;
-    swapSize = "4G";
-  };
+  # Disko disk configuration (enable only during fresh install)
+  # diskoConfig = {
+  #   enable = true;
+  #   device = "/dev/vda";
+  #   isBIOS = true;
+  #   encryption.enable = true;
+  #   swapSize = "4G";
+  # };
 
   # Disabled as they dont work in a VM
   audio.enable = false;
