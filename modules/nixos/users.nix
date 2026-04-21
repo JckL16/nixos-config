@@ -8,6 +8,8 @@
     extraGroups = [ "networkmanager" "wheel" "input" "video" "render" "gamemode" "docker" "libvirtd" ];
     packages = [];
     shell = pkgs.zsh;
+    # Temporary password for first login - change immediately with `passwd`
+    initialPassword = "nixos";
   };
 
 }
