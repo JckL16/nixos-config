@@ -10,6 +10,7 @@
   diskoConfig = {
     enable = true;
     device = "/dev/vda";
+    isBIOS = true;
     encryption.enable = true;
     swapSize = "4G";
   };

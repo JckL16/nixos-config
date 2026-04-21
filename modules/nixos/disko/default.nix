@@ -28,18 +28,25 @@
       description = "Size of swap partition (e.g., '8G'). Set to null for no swap.";
       example = "8G";
     };
+
+    isBIOS = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Use BIOS boot instead of UEFI.";
+    };
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
-    # Bootloader config based on BIOS/UEFI
-    (if variables.isBIOS then {
-      # BIOS: install GRUB directly to disk
+    # BIOS bootloader config
+    (lib.mkIf config.diskoConfig.isBIOS {
       boot.loader.grub.device = lib.mkForce config.diskoConfig.device;
       boot.loader.grub.mirroredBoots = lib.mkForce [];
       boot.loader.grub.efiSupport = lib.mkForce false;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
-    } else {
-      # UEFI: use EFI system partition
+    })
+
+    # UEFI bootloader config
+    (lib.mkIf (!config.diskoConfig.isBIOS) {
       boot.loader.grub.device = lib.mkForce "nodev";
       boot.loader.grub.efiSupport = lib.mkForce true;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce true;
@@ -59,13 +66,13 @@
           type = "gpt";
           partitions = {
             # BIOS boot partition (only for BIOS systems)
-            boot = lib.mkIf variables.isBIOS {
+            boot = lib.mkIf config.diskoConfig.isBIOS {
               size = "1M";
               type = "EF02"; # BIOS boot partition
             };
 
             # EFI System Partition (only for UEFI systems)
-            ESP = lib.mkIf (!variables.isBIOS) {
+            ESP = lib.mkIf (!config.diskoConfig.isBIOS) {
               size = "512M";
               type = "EF00";
               content = {
