@@ -36,13 +36,15 @@
     };
   };
 
-  config = lib.mkIf config.diskoConfig.enable {
-    # Configure bootloader based on BIOS vs UEFI
-    boot.loader.grub = lib.mkIf config.diskoConfig.isBIOS {
-      device = config.diskoConfig.device;
-      mirroredBoots = lib.mkForce [];
-    };
+  config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
+    # BIOS bootloader config
+    (lib.mkIf config.diskoConfig.isBIOS {
+      boot.loader.grub.device = lib.mkForce config.diskoConfig.device;
+      boot.loader.grub.mirroredBoots = lib.mkForce [];
+    })
 
+    # Disko devices config
+    {
     disko.devices = {
       disk.main = {
         type = "disk";
@@ -101,5 +103,6 @@
         };
       };
     };
-  };
+    }
+  ]);
 }
