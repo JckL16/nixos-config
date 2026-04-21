@@ -37,8 +37,11 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable {
-    # For BIOS systems, ensure mirroredBoots is empty (no ESP)
-    boot.loader.grub.mirroredBoots = lib.mkIf config.diskoConfig.isBIOS (lib.mkForce []);
+    # Configure bootloader based on BIOS vs UEFI
+    boot.loader.grub = lib.mkIf config.diskoConfig.isBIOS {
+      device = config.diskoConfig.device;
+      mirroredBoots = lib.mkForce [];
+    };
 
     disko.devices = {
       disk.main = {
