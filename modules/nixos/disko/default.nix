@@ -37,9 +37,8 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable {
-    # Let disko handle bootloader configuration - don't set grub.device manually
-    # Only ensure grub is enabled; disko sets the rest
-    boot.loader.grub.enable = lib.mkDefault true;
+    # For BIOS systems, ensure mirroredBoots is empty (no ESP)
+    boot.loader.grub.mirroredBoots = lib.mkIf config.diskoConfig.isBIOS (lib.mkForce []);
 
     disko.devices = {
       disk.main = {
