@@ -40,28 +40,31 @@ lsblk
 
 Note your target disk (e.g., `/dev/nvme0n1`, `/dev/sda`, `/dev/vda` for VMs).
 
-### 4. Clone This Configuration
-
-> **Note:** Throughout this guide, replace `<username>` with the value of `username` in `variables.nix`.
+### 4. Set Up Environment
 
 ```bash
-# Enable flakes
-export NIX_CONFIG="experimental-features = nix-command flakes"
+# Set your username (must match 'username' in variables.nix)
+export USER_NAME="jack"
 
-# Clone the configuration to the user's home directory
-nix-shell -p git
-sudo mkdir -p /mnt/home/<username>
-sudo git clone https://github.com/JckL16/nixos-config.git /mnt/home/<username>/nixos-config
+# Set your hostname (must match a host in hosts/ directory)
+export HOST_NAME="nixos-desktop"
 ```
 
-### 5. Set Up Your Host
+### 5. Clone This Configuration
+
+```bash
+# Get git and clone to /tmp (nix-shell doesn't need flakes)
+nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tmp/nixos-config"
+```
+
+### 6. Set Up Your Host
 
 #### Option A: Use an Existing Host
 
 If reinstalling an existing host (e.g., `nixos-laptop`), uncomment and verify the diskoConfig:
 
 ```bash
-sudo nano /mnt/home/<username>/nixos-config/hosts/<hostname>/configuration.nix
+nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
 ```
 
 1. Uncomment the `diskoConfig` block
@@ -72,13 +75,13 @@ sudo nano /mnt/home/<username>/nixos-config/hosts/<hostname>/configuration.nix
 Copy the example host:
 
 ```bash
-sudo cp -r /mnt/home/<username>/nixos-config/hosts/nixos-example /mnt/home/<username>/nixos-config/hosts/<your-hostname>
+cp -r /tmp/nixos-config/hosts/nixos-example /tmp/nixos-config/hosts/<your-hostname>
 ```
 
 Edit the configuration:
 
 ```bash
-sudo nano /mnt/home/<username>/nixos-config/hosts/<your-hostname>/configuration.nix
+nano /tmp/nixos-config/hosts/<your-hostname>/configuration.nix
 ```
 
 Update:
@@ -87,49 +90,45 @@ Update:
 - `networking.hostName` - Set to your hostname
 - Enable desired modules (graphics drivers, desktop environment, etc.)
 
-Then register the host in `flake.nix` (see step 8).
+Then register the host in `flake.nix` (see step 9).
 
-### 6. Run Disko
+### 7. Run Disko
 
 This partitions and formats your disk. **All data on the disk will be erased!**
 
 ```bash
-sudo nix run github:nix-community/disko/latest -- \
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:nix-community/disko/latest -- \
   --mode destroy,format,mount \
-  --flake /mnt/home/<username>/nixos-config#<hostname>
+  --flake /tmp/nixos-config#$HOST_NAME
 ```
 
 When prompted, enter your LUKS encryption password twice. **Remember this password** - you'll need it on every boot.
 
-### 7. Restore Config and Generate Hardware Configuration
+### 8. Copy Config and Generate Hardware Configuration
 
-After disko mounts the new filesystem, restore the config and generate hardware config:
+After disko mounts the new filesystem at `/mnt`, copy the config and generate hardware config:
 
 ```bash
-# Move config back to mounted filesystem
-sudo mkdir -p /mnt/home/<username>
-sudo mv /tmp/nixos-config /mnt/home/<username>/nixos-config 2>/dev/null || true
-
-# If config was lost, re-clone it
-if [ ! -d /mnt/home/<username>/nixos-config ]; then
-  sudo git clone https://github.com/JckL16/nixos-config.git /mnt/home/<username>/nixos-config
-fi
+# Copy config to user's home directory on mounted filesystem
+sudo mkdir -p /mnt/home/$USER_NAME
+sudo cp -r /tmp/nixos-config /mnt/home/$USER_NAME/nixos-config
 
 # Generate hardware config
 sudo nixos-generate-config --no-filesystems --root /mnt
 sudo mv /mnt/etc/nixos/hardware-configuration.nix \
-        /mnt/home/<username>/nixos-config/hosts/<hostname>/hardware-configuration.nix
+        /mnt/home/$USER_NAME/nixos-config/hosts/$HOST_NAME/hardware-configuration.nix
 
 # Set correct ownership (replace 1000:1000 with your uid:gid if different)
-sudo chown -R 1000:1000 /mnt/home/<username>/nixos-config
+sudo chown -R 1000:1000 /mnt/home/$USER_NAME
 ```
 
-### 8. Register New Host in flake.nix (New Hosts Only)
+### 9. Register New Host in flake.nix (New Hosts Only)
 
 If creating a new host, add an entry to `flake.nix`:
 
 ```bash
-sudo nano /mnt/home/<username>/nixos-config/flake.nix
+sudo nano /mnt/home/$USER_NAME/nixos-config/flake.nix
 ```
 
 Add a new nixosConfigurations entry:
@@ -155,25 +154,26 @@ nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
 };
 ```
 
-### 9. Edit variables.nix (New Hosts Only)
+### 10. Edit variables.nix (New Hosts Only)
 
 Update global variables to match your setup:
 
 ```bash
-sudo nano /mnt/home/<username>/nixos-config/variables.nix
+sudo nano /mnt/home/$USER_NAME/nixos-config/variables.nix
 ```
 
 Set your username, timezone, locale, keyboard layout, and git credentials.
 
-### 10. Install NixOS
+### 11. Install NixOS
 
 ```bash
-sudo nixos-install --root /mnt --flake /mnt/home/<username>/nixos-config#<hostname>
+sudo NIX_CONFIG="experimental-features = nix-command flakes" \
+  nixos-install --root /mnt --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
 ```
 
 You'll be prompted to set the root password.
 
-### 11. Reboot
+### 12. Reboot
 
 ```bash
 sudo reboot
@@ -185,7 +185,7 @@ Remove the installation media when prompted. On boot, you'll be prompted for you
 
 ## Post-Installation
 
-### 12. Login as Your User
+### 13. Login as Your User
 
 Login with:
 - **Username:** The `username` value from `variables.nix`
@@ -195,7 +195,7 @@ Login with:
 passwd  # Change your password
 ```
 
-### 13. Verify Config Location
+### 14. Verify Config Location
 
 Your config should already be in your home directory:
 
@@ -207,39 +207,41 @@ Future rebuilds:
 
 ```bash
 cd ~/nixos-config
-sudo nixos-rebuild switch --flake .#<hostname>
+sudo nixos-rebuild switch --flake .#$HOST_NAME
 ```
 
 ---
 
 ## Quick Reference
 
-Complete installation commands for an existing host (replace `<username>` and `<hostname>`):
+Complete installation commands for an existing host (set `USER_NAME` and replace `$HOST_NAME`):
 
 ```bash
 # 1. Set up environment
-export NIX_CONFIG="experimental-features = nix-command flakes"
+export USER_NAME="jack"       # Must match 'username' in variables.nix
+export HOST_NAME="nixos-vm"   # Must match a host in hosts/ directory
 
-# 2. Clone config to user's home directory
-nix-shell -p git
-sudo mkdir -p /mnt/home/<username>
-sudo git clone https://github.com/JckL16/nixos-config.git /mnt/home/<username>/nixos-config
+# 2. Clone config to /tmp
+nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tmp/nixos-config"
 
-# 3. Run disko (enter LUKS password when prompted)
-sudo nix run github:nix-community/disko/latest -- \
+# 3. Uncomment diskoConfig in hosts/$HOST_NAME/configuration.nix, then run disko
+nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:nix-community/disko/latest -- \
   --mode destroy,format,mount \
-  --flake /mnt/home/<username>/nixos-config#<hostname>
+  --flake /tmp/nixos-config#$HOST_NAME
 
-# 4. Restore config and generate hardware config
-sudo mkdir -p /mnt/home/<username>
-sudo git clone https://github.com/JckL16/nixos-config.git /mnt/home/<username>/nixos-config
+# 4. Copy config to mounted filesystem and generate hardware config
+sudo mkdir -p /mnt/home/$USER_NAME
+sudo cp -r /tmp/nixos-config /mnt/home/$USER_NAME/nixos-config
 sudo nixos-generate-config --no-filesystems --root /mnt
 sudo mv /mnt/etc/nixos/hardware-configuration.nix \
-        /mnt/home/<username>/nixos-config/hosts/<hostname>/hardware-configuration.nix
-sudo chown -R 1000:1000 /mnt/home/<username>
+        /mnt/home/$USER_NAME/nixos-config/hosts/$HOST_NAME/hardware-configuration.nix
+sudo chown -R 1000:1000 /mnt/home/$USER_NAME
 
 # 5. Install
-sudo nixos-install --root /mnt --flake /mnt/home/<username>/nixos-config#<hostname>
+sudo NIX_CONFIG="experimental-features = nix-command flakes" \
+  nixos-install --root /mnt --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
 
 # 6. Reboot
 sudo reboot
