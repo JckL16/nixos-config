@@ -175,16 +175,27 @@ Set your username, timezone, locale, keyboard layout, and git credentials.
 
 ### 11. Install NixOS
 
-The live ISO runs entirely in RAM, so larger configurations can run out of memory. Move the nix store to the target disk:
+The live ISO runs entirely in RAM, so larger configurations can run out of memory. Create a temporary swapfile on the target disk and bind-mount `/tmp`:
 
 ```bash
-# Copy live ISO's nix store to target disk, then bind-mount
-sudo cp -a /nix /mnt/nix
-sudo mount --bind /mnt/nix /nix
+# Bind-mount /tmp to target disk
+sudo mkdir -p /mnt/tmp
+sudo mount --bind /mnt/tmp /tmp
 
-# Install NixOS
+# Create 8GB temporary swapfile
+sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=8192 status=progress
+sudo chmod 600 /mnt/swapfile
+sudo mkswap /mnt/swapfile
+sudo swapon /mnt/swapfile
+
+# Install NixOS (--max-jobs 1 reduces peak memory usage)
 sudo NIX_CONFIG="experimental-features = nix-command flakes" \
-  nixos-install --root /mnt --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
+  nixos-install --root /mnt --max-jobs 1 \
+  --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
+
+# Clean up temporary swapfile
+sudo swapoff /mnt/swapfile
+sudo rm /mnt/swapfile
 ```
 
 You'll be prompted to set the root password.
@@ -264,15 +275,18 @@ sudo mv /mnt/etc/nixos/hardware-configuration.nix \
         /mnt/home/$USER_NAME/nixos-config/hosts/$HOST_NAME/hardware-configuration.nix
 sudo chown -R 1000:1000 /mnt/home/$USER_NAME
 
-# 5. Move nix store to target disk (avoids running out of RAM)
-sudo cp -a /nix /mnt/nix
-sudo mount --bind /mnt/nix /nix
+# 5. Create temporary swap and bind-mount /tmp (avoids running out of RAM)
+sudo mkdir -p /mnt/tmp && sudo mount --bind /mnt/tmp /tmp
+sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=8192 status=progress
+sudo chmod 600 /mnt/swapfile && sudo mkswap /mnt/swapfile && sudo swapon /mnt/swapfile
 
 # 6. Install
 sudo NIX_CONFIG="experimental-features = nix-command flakes" \
-  nixos-install --root /mnt --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
+  nixos-install --root /mnt --max-jobs 1 \
+  --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
 
-# 7. Reboot
+# 7. Clean up and reboot
+sudo swapoff /mnt/swapfile && sudo rm /mnt/swapfile
 sudo reboot
 
 # 8. After reboot, login as your user (password: nixos) and change password
