@@ -31,6 +31,11 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
+    # Enable GRUB cryptodisk support when encryption is enabled
+    (lib.mkIf config.diskoConfig.encryption.enable {
+      boot.loader.grub.enableCryptodisk = true;
+    })
+
     # BIOS bootloader config
     (lib.mkIf variables.isBIOS {
       boot.loader.grub.devices = lib.mkForce [ config.diskoConfig.device ];
