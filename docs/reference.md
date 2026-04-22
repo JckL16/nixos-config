@@ -23,7 +23,6 @@ All module enable options at a glance.
 | `diskoConfig.device` | - | Disk device path (e.g., "/dev/nvme0n1") |
 | `diskoConfig.encryption.enable` | `false` | LUKS encryption |
 | `diskoConfig.swapSize` | `null` | Swap partition size (e.g., "16G") |
-| `diskoConfig.isBIOS` | `false` | Use BIOS/MBR instead of UEFI |
 | `steam.enable` | `false` | Steam with Proton-GE |
 | `gamemode.enable` | `false` | Feral GameMode |
 | `virtualisation.enable` | `false` | libvirt/QEMU KVM |
