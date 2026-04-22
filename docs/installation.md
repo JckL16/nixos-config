@@ -94,22 +94,29 @@ Then register the host in `flake.nix` (see step 9). For BIOS systems, set `isBIO
 
 This partitions and formats your disk. **All data on the disk will be erased!**
 
+#### With encryption (diskoConfig.encryption.enable = true):
+
 ```bash
-# Set your LUKS encryption password (visible, so you can verify it's correct)
-export DISKO_PASSWORD="your-password-here"
+# Write your LUKS password to a file (visible, so you can verify it's correct)
+echo -n "your-password-here" > /tmp/secret.key
 
 # Partition and format disk
-sudo --preserve-env=DISKO_PASSWORD \
-  nix --extra-experimental-features 'nix-command flakes' \
+sudo nix --extra-experimental-features 'nix-command flakes' \
   run github:nix-community/disko/latest -- \
   --mode destroy,format,mount \
   --flake /tmp/nixos-config#$HOST_NAME
-
-# Clear password from environment
-unset DISKO_PASSWORD
 ```
 
 **Remember this password** - you'll need it on every boot.
+
+#### Without encryption (diskoConfig.encryption.enable = false):
+
+```bash
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:nix-community/disko/latest -- \
+  --mode destroy,format,mount \
+  --flake /tmp/nixos-config#$HOST_NAME
+```
 
 ### 8. Copy Config and Generate Hardware Configuration
 
@@ -269,13 +276,11 @@ nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tm
 
 # 3. Verify diskoConfig.device in hosts/$HOST_NAME/configuration.nix, then run disko
 nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
-export DISKO_PASSWORD="your-password-here"
-sudo --preserve-env=DISKO_PASSWORD \
-  nix --extra-experimental-features 'nix-command flakes' \
+echo -n "your-password-here" > /tmp/secret.key  # Only if encryption.enable = true
+sudo nix --extra-experimental-features 'nix-command flakes' \
   run github:nix-community/disko/latest -- \
   --mode destroy,format,mount \
   --flake /tmp/nixos-config#$HOST_NAME
-unset DISKO_PASSWORD
 
 # 4. Copy config to mounted filesystem and generate hardware config
 sudo mkdir -p /mnt/home/$USER_NAME
