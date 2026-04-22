@@ -24,7 +24,7 @@
     (lib.mkIf (!config.diskoConfig.enable) (
       if variables.isBIOS then {
         # BIOS: install GRUB to the disk
-        boot.loader.grub.device = variables.bootDevice;
+        boot.loader.grub.devices = [ variables.bootDevice ];
         boot.loader.grub.efiSupport = false;
       } else {
         # UEFI: use mirroredBoots for EFI installation

@@ -39,8 +39,7 @@
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
     # BIOS bootloader config
     (lib.mkIf config.diskoConfig.isBIOS {
-      boot.loader.grub.device = lib.mkForce config.diskoConfig.device;
-      boot.loader.grub.mirroredBoots = lib.mkForce [];
+      boot.loader.grub.devices = lib.mkForce [ config.diskoConfig.device ];
       boot.loader.grub.efiSupport = lib.mkForce false;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
     })
