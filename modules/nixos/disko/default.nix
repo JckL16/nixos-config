@@ -97,7 +97,7 @@
                 if config.diskoConfig.encryption.enable then {
                   type = "luks";
                   name = config.diskoConfig.encryption.luksName;
-                  askPassword = true;
+                  passwordFile = "/tmp/secret.key";
                   extraOpenArgs = [ "--allow-discards" ];
                   content = {
                     type = "filesystem";
