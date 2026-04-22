@@ -175,7 +175,14 @@ Set your username, timezone, locale, keyboard layout, and git credentials.
 
 ### 11. Install NixOS
 
+The live ISO runs entirely in RAM, so larger configurations can run out of memory during installation. To avoid this, bind-mount the nix store to the target disk:
+
 ```bash
+# Use target disk for nix store instead of RAM
+sudo mkdir -p /mnt/nix
+sudo mount --bind /mnt/nix /nix
+
+# Install NixOS
 sudo NIX_CONFIG="experimental-features = nix-command flakes" \
   nixos-install --root /mnt --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
 ```
@@ -257,14 +264,18 @@ sudo mv /mnt/etc/nixos/hardware-configuration.nix \
         /mnt/home/$USER_NAME/nixos-config/hosts/$HOST_NAME/hardware-configuration.nix
 sudo chown -R 1000:1000 /mnt/home/$USER_NAME
 
-# 5. Install
+# 5. Bind-mount nix store to target disk (avoids running out of RAM)
+sudo mkdir -p /mnt/nix
+sudo mount --bind /mnt/nix /nix
+
+# 6. Install
 sudo NIX_CONFIG="experimental-features = nix-command flakes" \
   nixos-install --root /mnt --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
 
-# 6. Reboot
+# 7. Reboot
 sudo reboot
 
-# 7. After reboot, login as your user (password: nixos) and change password
+# 8. After reboot, login as your user (password: nixos) and change password
 passwd
 ```
 
