@@ -53,7 +53,6 @@ export HOST_NAME="nixos-desktop"
 ### 5. Clone This Configuration
 
 ```bash
-# Get git and clone to /tmp (nix-shell doesn't need flakes)
 nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tmp/nixos-config"
 ```
 
@@ -96,13 +95,21 @@ Then register the host in `flake.nix` (see step 9). For BIOS systems, set `isBIO
 This partitions and formats your disk. **All data on the disk will be erased!**
 
 ```bash
-sudo nix --extra-experimental-features 'nix-command flakes' \
+# Set your LUKS encryption password (visible, so you can verify it's correct)
+export DISKO_PASSWORD="your-password-here"
+
+# Partition and format disk
+sudo --preserve-env=DISKO_PASSWORD \
+  nix --extra-experimental-features 'nix-command flakes' \
   run github:nix-community/disko/latest -- \
   --mode destroy,format,mount \
   --flake /tmp/nixos-config#$HOST_NAME
+
+# Clear password from environment
+unset DISKO_PASSWORD
 ```
 
-When prompted, enter your LUKS encryption password twice. **Remember this password** - you'll need it on every boot.
+**Remember this password** - you'll need it on every boot.
 
 ### 8. Copy Config and Generate Hardware Configuration
 
@@ -262,10 +269,13 @@ nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tm
 
 # 3. Verify diskoConfig.device in hosts/$HOST_NAME/configuration.nix, then run disko
 nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
-sudo nix --extra-experimental-features 'nix-command flakes' \
+export DISKO_PASSWORD="your-password-here"
+sudo --preserve-env=DISKO_PASSWORD \
+  nix --extra-experimental-features 'nix-command flakes' \
   run github:nix-community/disko/latest -- \
   --mode destroy,format,mount \
   --flake /tmp/nixos-config#$HOST_NAME
+unset DISKO_PASSWORD
 
 # 4. Copy config to mounted filesystem and generate hardware config
 sudo mkdir -p /mnt/home/$USER_NAME
