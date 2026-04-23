@@ -1,6 +1,6 @@
 # modules/nixos/desktop/hyprland.nix
 
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, variables, ... }: {
   options = {
     hyprland.enable = lib.mkEnableOption "Enable hyprland window manager";
   };
@@ -41,5 +41,6 @@
     ];
     
     services.udisks2.enable = true;
+    users.users."${variables.username}".extraGroups = [ "input" "video" "render" ];
   };
 }

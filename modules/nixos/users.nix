@@ -5,7 +5,7 @@
   users.users."${variables.username}" = {
     isNormalUser = true;
     description = variables.description;
-    extraGroups = [ "networkmanager" "wheel" "input" "video" "render" "gamemode" "docker" "libvirtd" ];
+    extraGroups = [ "wheel" ];
     packages = [];
     shell = pkgs.zsh;
   };

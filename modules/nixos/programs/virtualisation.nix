@@ -1,6 +1,6 @@
 # modules/nixos/programs/virtualisation.nix
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, variables, ... }:
 
 {
   options = {
@@ -22,6 +22,8 @@
     # Enable default network automatically
     virtualisation.libvirtd.onBoot = "start";
     virtualisation.libvirtd.onShutdown = "shutdown";
+
+    users.users."${variables.username}".extraGroups = [ "libvirtd" ];
 
     # Ensure the default NAT network starts automatically
     systemd.services.libvirtd-default-network = {
