@@ -244,6 +244,9 @@
       
       # Resize mode using extraConfig (bypasses Nix validation)
       extraConfig = ''
+        # Monitor config managed by nwg-displays (ignored if file doesn't exist)
+        source = ~/.config/hypr/monitors.conf
+
         # Window rules (windowrulev2 syntax for stable Hyprland)
         windowrulev2 = float, class:^(org.pulseaudio.pavucontrol)$
         windowrulev2 = float, class:^(.blueman-manager-wrapped)$
@@ -284,6 +287,7 @@
     };
 
     home.packages = with pkgs; [
+      nwg-displays
       rofi
       mako
       grim
