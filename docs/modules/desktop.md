@@ -31,6 +31,19 @@ Provides:
 - SwayOSD (volume/brightness OSD)
 - Wlogout (logout menu)
 
+### Monitor Configuration
+
+Monitor layout is managed per-host using **nwg-displays**, a GUI tool for arranging monitors visually.
+
+The Hyprland config sources `~/.config/hypr/monitors.conf` on startup. If the file doesn't exist (e.g. on a new host), Hyprland falls back to the default `preferred,auto` layout.
+
+**To configure monitors:**
+1. Run `nwg-displays`
+2. Arrange monitors and set resolutions/refresh rates
+3. Click Apply — this writes `~/.config/hypr/monitors.conf`
+
+The file persists across rebuilds since it lives outside the Nix store. `nwg-displays` must be added to the host's `home.packages` to be available.
+
 ```nix
 # configuration.nix
 hyprland.enable = true;
