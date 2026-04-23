@@ -286,6 +286,15 @@
       '';
     };
 
+    # Create monitors.conf if it doesn't exist so Hyprland's source= doesn't error.
+    # nwg-displays writes here; we must not use home.file (read-only symlink).
+    home.activation.createMonitorsConf = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      if [ ! -f "$HOME/.config/hypr/monitors.conf" ]; then
+        mkdir -p "$HOME/.config/hypr"
+        touch "$HOME/.config/hypr/monitors.conf"
+      fi
+    '';
+
     home.packages = with pkgs; [
       nwg-displays
       rofi
