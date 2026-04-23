@@ -8,6 +8,8 @@
     extraGroups = [ "wheel" ];
     packages = [];
     shell = pkgs.zsh;
+    # Temporary password for first login - change immediately with `passwd`
+    initialPassword = "nixos";
   };
 
 }

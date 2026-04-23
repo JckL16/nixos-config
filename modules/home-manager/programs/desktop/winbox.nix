@@ -1,5 +1,5 @@
 # modules/home-manager/programs/winbox.nix
-{ pkgs, lib, config, ... }:
+{ pkgs, pkgs-unstable, lib, config, ... }:
 
 {
   options = {
@@ -11,7 +11,7 @@
     home.packages = with pkgs; [
       (pkgs.writeShellScriptBin "winbox" ''
         export QT_QPA_PLATFORM=xcb
-        exec ${pkgs.winbox4}/bin/WinBox "$@"
+        exec ${pkgs-unstable.winbox4}/bin/WinBox "$@"
       '')
     ];
     
