@@ -64,8 +64,18 @@ These have no enable toggle and are always imported:
 
 ### Users
 - **File:** `modules/nixos/users.nix`
-- Creates the user from `variables.username` with groups: `networkmanager`, `wheel`, `input`, `video`, `render`, `gamemode`, `docker`, `libvirtd`.
+- Creates the user from `variables.username` with only `wheel` hardcoded.
 - Sets zsh as the default shell.
+- All other group memberships are granted conditionally by the module that requires them:
+
+| Group | Granted by | Condition |
+|---|---|---|
+| `wheel` | `users.nix` | Always |
+| `networkmanager` | `core/networking.nix` | Always (core) |
+| `input`, `video`, `render` | `desktop/hyprland.nix` | `hyprland.enable` |
+| `gamemode` | `programs/gamemode.nix` | `gamemode.enable` |
+| `libvirtd` | `programs/virtualisation.nix` | `virtualisation.enable` |
+| `docker` | `programs/docker.nix` | `docker.enable` |
 
 ## Bootloader
 
