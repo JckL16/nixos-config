@@ -28,6 +28,7 @@
     openssl
     python3
     ncdu
+    rclone
   ];
 
   programs.direnv.enable = true;
