@@ -7,12 +7,12 @@
   ];
 
   # Disko disk configuration (enable only during fresh install)
-  # diskoConfig = {
-  #   enable = true;
-  #   device = "/dev/nvme0n1";
-  #   encryption.enable = true;
-  #   swapSize = "16G";
-  # };
+  diskoConfig = {
+    enable = true;
+    device = "/dev/nvme0n1";
+    encryption.enable = true;
+    swapSize = "16G";
+  };
 
   # Set the Bootloader theme (grub is enabled by default)
   grub.nordic-theme.enable = true;
