@@ -31,11 +31,6 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
-    # Enable GRUB cryptodisk support when encryption is enabled
-    (lib.mkIf config.diskoConfig.encryption.enable {
-      boot.loader.grub.enableCryptodisk = true;
-    })
-
     # BIOS bootloader config
     (lib.mkIf variables.isBIOS {
       boot.loader.grub.devices = lib.mkForce [ config.diskoConfig.device ];
@@ -69,7 +64,20 @@
               type = "EF02"; # BIOS boot partition
             };
 
+            # Separate unencrypted /boot for BIOS systems.
+            # Allows GRUB to load the kernel without unlocking LUKS,
+            # avoiding a double password prompt and slow GRUB decryption.
+            boot-fs = lib.mkIf variables.isBIOS {
+              size = "1G";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/boot";
+              };
+            };
+
             # EFI System Partition (only for UEFI systems)
+            # Acts as /boot, so GRUB never needs to unlock LUKS.
             ESP = lib.mkIf (!variables.isBIOS) {
               size = "512M";
               type = "EF00";
