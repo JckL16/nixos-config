@@ -8,11 +8,6 @@
   # Lid close does nothing
   wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];
 
-  # External monitor at native ultrawide resolution
-  wayland.windowManager.hyprland.settings.monitor = lib.mkForce [
-    ",3440x1440@100,auto,1"
-  ];
-
   # Enabled user specific configuration for gaming
   steam.enable = true;
   gamemode.enable = true;
@@ -20,7 +15,7 @@
   zen-browser.enable = true;
 
   python-dev.enable = true;
-  python-dev.packages = [ "requests" "numpy" "pandas" ];
+  python-dev.packages = [ "requests" "numpy" "pandas" "matplotlib" ];
   rust.enable = true;
   c-cpp.enable = true;
   go.enable = true;
@@ -41,9 +36,13 @@
     caligula
     ticktick
     thunderbird
+    manim
+    vscode
+    onedrive
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
+      pkgs-unstable.zoom-us
   ];
 
 }
