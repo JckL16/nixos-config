@@ -10,6 +10,10 @@
       url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +24,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, disko, ... }@inputs: {
     nixosConfigurations.nixos-laptop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
@@ -32,6 +36,7 @@
         };
       };
       modules = [
+        disko.nixosModules.disko
         ./hosts/nixos-laptop/hardware-configuration.nix
         ./hosts/nixos-laptop/configuration.nix
         ./modules/nixos
@@ -50,6 +55,7 @@
         };
       };
       modules = [
+        disko.nixosModules.disko
         ./hosts/nixos-desktop/hardware-configuration.nix
         ./hosts/nixos-desktop/configuration.nix
         ./modules/nixos
@@ -68,6 +74,7 @@
         };
       };
       modules = [
+        disko.nixosModules.disko
         ./hosts/nixos-rugged/hardware-configuration.nix
         ./hosts/nixos-rugged/configuration.nix
         ./modules/nixos
@@ -94,6 +101,7 @@
         };
       };
       modules = [
+        disko.nixosModules.disko
         ./hosts/nixos-vm/hardware-configuration.nix
         ./hosts/nixos-vm/configuration.nix
         ./modules/nixos

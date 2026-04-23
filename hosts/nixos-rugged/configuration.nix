@@ -7,6 +7,14 @@
     home-manager.nixosModules.home-manager
   ];
 
+  # Disko disk configuration (enable only during fresh install)
+  # diskoConfig = {
+  #   enable = true;
+  #   device = "/dev/nvme0n1";
+  #   encryption.enable = true;
+  #   swapSize = "16G";
+  # };
+
   networking.hostName = "nixos-rugged";
 
   grub.nordic-theme.enable = true;

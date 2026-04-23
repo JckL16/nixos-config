@@ -1,5 +1,5 @@
 # modules/nixos/programs/winbox.nix
-{ pkgs, lib, config, ... }:
+{ pkgs, pkgs-unstable, lib, config, ... }:
 
 {
   options = {
@@ -12,6 +12,7 @@
     programs.winbox = {
       enable = true;
       openFirewall = true;
+      package = pkgs-unstable.winbox4;
     };
   };
 }

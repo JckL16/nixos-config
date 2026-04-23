@@ -18,20 +18,25 @@ PipeWire-based audio stack.
 
 Bluetooth service and management. Set to `false` for VMs or systems without Bluetooth hardware.
 
-## Swap File
+## Disko (Disk Configuration)
 
-- **Option:** `swap-file.enable` (default: `true`)
-- **File:** `modules/nixos/core/swap-file.nix`
+- **Option:** `diskoConfig.enable` (default: `false`)
+- **File:** `modules/nixos/disko/default.nix`
 - **Where to set:** `configuration.nix`
 
-Creates a 16 GiB swap file at `/var/lib/swapfile`.
-
-Configurable size:
+Declarative disk partitioning with optional LUKS encryption. Replaces manual partitioning during installation.
 
 ```nix
-swap-file.enable = true;
-swap-file.size = 8192;  # Size in MiB
+diskoConfig = {
+  enable = true;
+  device = "/dev/nvme0n1";     # Your disk device
+  encryption.enable = true;    # LUKS encryption
+  swapSize = "16G";            # Optional swap partition
+  isBIOS = false;              # Set true for BIOS/MBR systems
+};
 ```
+
+See `docs/installation.md` for the full installation guide.
 
 ## Garbage Collection
 

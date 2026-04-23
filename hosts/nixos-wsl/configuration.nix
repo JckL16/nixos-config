@@ -20,7 +20,6 @@
   audio.enable = false;
   bluetooth.enable = false;
   grub.enable = false;
-  swap-file.enable = false;
   yubikey.enable = false;
 
   # Home Manager configuration

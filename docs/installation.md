@@ -1,12 +1,12 @@
 # NixOS Installation Guide
 
-This guide walks you through installing NixOS using this flake-based configuration. An example host (`hosts/nixos-example/`) is included as a starting point for your own system.
+This guide walks you through installing NixOS using this flake-based configuration with disko for declarative disk partitioning and optional LUKS encryption.
 
 ## Prerequisites
 
 - NixOS installation ISO (download from [nixos.org](https://nixos.org/download.html))
 - USB drive (for bootable media)
-- Basic knowledge of disk partitioning
+- Your disk device name (e.g., `/dev/nvme0n1`, `/dev/sda`)
 
 ---
 
@@ -14,183 +14,144 @@ This guide walks you through installing NixOS using this flake-based configurati
 
 ### 1. Boot NixOS Installation Media
 
-Boot from the NixOS ISO.
+Boot from the NixOS ISO (minimal or graphical).
 
-### 2. Partition Your Disk
-
-#### EFI
+### 2. Connect to Network
 
 ```bash
-# List available disks
+# For WiFi
+sudo systemctl start wpa_supplicant
+wpa_cli
+> add_network
+> set_network 0 ssid "YourSSID"
+> set_network 0 psk "YourPassword"
+> enable_network 0
+> quit
+
+# Verify connection
+ping -c 3 nixos.org
+```
+
+### 3. Identify Your Disk
+
+```bash
 lsblk
-
-# Open parted
-sudo parted /dev/<your-disk>
-
-# Inside parted, run:
-mklabel gpt
-mkpart ESP fat32 1MiB 512MiB
-set 1 esp on
-mkpart primary 512MiB 100%
-quit
 ```
 
-#### BIOS (VMs for example)
+Note your target disk (e.g., `/dev/nvme0n1`, `/dev/sda`, `/dev/vda` for VMs).
+
+### 4. Set Up Environment
 
 ```bash
-# List available disks
-lsblk
+# Set your username (must match 'username' in variables.nix)
+export USER_NAME="jack"
 
-# Open parted
-sudo parted /dev/<your-disk>
-
-# Inside parted, run:
-mklabel msdos
-mkpart primary 1MiB 100%
-set 1 boot on
-quit
+# Set your hostname (must match a host in hosts/ directory)
+export HOST_NAME="nixos-desktop"
 ```
 
-> **Note:** A swap file is created by default. If you prefer a separate swap partition or no swap at all, you can set `swap-file.enable = false` in your host's `configuration.nix`.
-
-### 3. Format and Mount Partitions
-
-#### EFI
+### 5. Clone This Configuration
 
 ```bash
-# Format boot partition
-sudo mkfs.fat -F 32 -n boot /dev/<your-disk>1
-
-# Format root partition
-sudo mkfs.ext4 -L nixos /dev/<your-disk>2
-
-# Mount root partition
-sudo mount /dev/disk/by-label/nixos /mnt
-
-# Mount boot partition
-sudo mkdir -p /mnt/boot
-sudo mount /dev/disk/by-label/boot /mnt/boot
+nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tmp/nixos-config"
 ```
 
-#### BIOS
+### 6. Set Up Your Host
+
+#### Option A: Use an Existing Host
+
+If reinstalling an existing host (e.g., `nixos-laptop`), verify the diskoConfig:
 
 ```bash
-# Format the root partition
-sudo mkfs.ext4 -L nixos /dev/<your-disk>1
-
-# Mount the root partition
-sudo mount /dev/disk/by-label/nixos /mnt
+nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
 ```
 
-### 4. Generate Initial Configuration
+1. Ensure `diskoConfig.enable = true`
+2. Verify `diskoConfig.device` matches your disk from `lsblk`
+
+#### Option B: Create a New Host
+
+Copy the example host:
 
 ```bash
-sudo nixos-generate-config --root /mnt
+cp -r /tmp/nixos-config/hosts/nixos-example /tmp/nixos-config/hosts/<your-hostname>
 ```
 
-### 5. Enable Flakes
-
-Edit `/mnt/etc/nixos/configuration.nix`:
+Edit the configuration:
 
 ```bash
-sudo nano /mnt/etc/nixos/configuration.nix
+nano /tmp/nixos-config/hosts/<your-hostname>/configuration.nix
 ```
 
-Add the following inside the configuration block:
+Update:
+- `diskoConfig.device` - Set to your disk device
+- `networking.hostName` - Set to your hostname
+- Enable desired modules (graphics drivers, desktop environment, etc.)
 
-```nix
-nix.settings.experimental-features = [ "nix-command" "flakes" ];
-networking.networkmanager.enable = true;
-```
+Then register the host in `flake.nix` (see step 9). For BIOS systems, set `isBIOS = true` in flake.nix (see step 9).
 
-#### BIOS Only
+### 7. Run Disko
 
-For BIOS systems, GRUB needs to know which device to install to. Add this to the same file:
+This partitions and formats your disk. **All data on the disk will be erased!**
 
-```nix
-boot.loader.grub.device = "/dev/<your-disk>";
-```
-
-### 6. Install Minimal NixOS
+#### With encryption (diskoConfig.encryption.enable = true):
 
 ```bash
-sudo nixos-install
+# Write your LUKS password to a file (visible, so you can verify it's correct)
+echo -n "your-password-here" > /tmp/secret.key
+
+# Partition and format disk
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:nix-community/disko/latest -- \
+  --mode destroy,format,mount \
+  --flake /tmp/nixos-config#$HOST_NAME
 ```
 
-You'll be prompted to set the root password.
+**Remember this password** - you'll need it on every boot.
 
-### 7. Reboot into New System
+#### Without encryption (diskoConfig.encryption.enable = false):
 
 ```bash
-reboot
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:nix-community/disko/latest -- \
+  --mode destroy,format,mount \
+  --flake /tmp/nixos-config#$HOST_NAME
 ```
 
-Remove the installation media when prompted.
+### 8. Copy Config and Generate Hardware Configuration
 
----
-
-## Post-Installation Setup
-
-### 8. Login and Connect to Network
-
-Login as **root** with the password you set during installation.
+After disko mounts the new filesystem at `/mnt`, copy the config and generate hardware config:
 
 ```bash
-nmtui
+# Copy config to user's home directory on mounted filesystem
+sudo mkdir -p /mnt/home/$USER_NAME
+sudo cp -r /tmp/nixos-config /mnt/home/$USER_NAME/nixos-config
+
+# Generate hardware config
+sudo nixos-generate-config --no-filesystems --root /mnt
+sudo mv /mnt/etc/nixos/hardware-configuration.nix \
+        /mnt/home/$USER_NAME/nixos-config/hosts/$HOST_NAME/hardware-configuration.nix
+
+# Set correct ownership (replace 1000:1000 with your uid:gid if different)
+sudo chown -R 1000:1000 /mnt/home/$USER_NAME
 ```
 
-Select "Activate a connection" and connect to your network.
+### 9. Register New Host in flake.nix (New Hosts Only)
 
-### 9. Create Your User Account
-
-> **Note:** Replace `jack` with the username you intend to set in `variables.nix`.
+If creating a new host, add an entry to `flake.nix`:
 
 ```bash
-useradd -m -G wheel jack
-passwd jack
+sudo nano /mnt/home/$USER_NAME/nixos-config/flake.nix
 ```
 
-### 10. Login as Your User
-
-```bash
-exit  # Logout from root
-```
-
-Login as the user you just created.
-
-### 11. Clone This Configuration
-
-```bash
-nix-shell -p git
-
-cd
-git clone https://github.com/JckL16/nixos-config.git
-cd nixos-config
-```
-
-### 12. Set Up Your Host Using the Example
-
-The repository includes an example host at `hosts/nixos-example/` that you can copy and customize.
-
-```bash
-cp -r hosts/nixos-example hosts/<your-hostname>
-```
-
-#### Copy your hardware configuration into the new host directory:
-
-```bash
-sudo cp /etc/nixos/hardware-configuration.nix ~/nixos-config/hosts/<your-hostname>/hardware-configuration.nix
-```
-
-### 13. Register Your Host in flake.nix
-
-Add a new entry to `flake.nix` for your host. Use the existing entries as reference:
+Add a new nixosConfigurations entry:
 
 ```nix
 nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
   system = "x86_64-linux";
   specialArgs = {
     inherit self home-manager inputs;
+    # For BIOS systems, add: // { isBIOS = true; bootDevice = "/dev/sda"; }
     variables = import ./variables.nix;
     pkgs-unstable = import inputs.nixpkgs-unstable {
       system = "x86_64-linux";
@@ -198,6 +159,7 @@ nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
     };
   };
   modules = [
+    disko.nixosModules.disko
     ./hosts/<your-hostname>/hardware-configuration.nix
     ./hosts/<your-hostname>/configuration.nix
     ./modules/nixos
@@ -206,45 +168,189 @@ nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
 };
 ```
 
-For BIOS systems or when you need to override variables per host, use the override syntax:
+For BIOS/legacy boot systems, override variables:
 
 ```nix
 variables = (import ./variables.nix) // {
-  bootDevice = "/dev/sda";
   isBIOS = true;
+  bootDevice = "/dev/sda";  # Your boot disk
 };
 ```
 
-### 14. Edit variables.nix
+### 10. Edit variables.nix (New Hosts Only)
 
-Update the global variables to match your setup:
-
-```bash
-nano ~/nixos-config/variables.nix
-```
-
-Set your username, timezone, locale, keyboard layout, and git credentials. These values are used throughout the entire configuration.
-
-### 15. Customize Your Host
-
-Edit your host's `configuration.nix` and `home.nix` to enable the features you need. The example config has comments showing available options:
+Update global variables to match your setup:
 
 ```bash
-nano ~/nixos-config/hosts/<your-hostname>/configuration.nix
-nano ~/nixos-config/hosts/<your-hostname>/home.nix
+sudo nano /mnt/home/$USER_NAME/nixos-config/variables.nix
 ```
 
-The example host comes with Hyprland enabled and graphics drivers commented out for you to choose from. Uncomment and enable modules as needed. See [modules/overview.md](modules/overview.md) for a full list of available modules and how to configure them.
+Set your username, timezone, locale, keyboard layout, and git credentials.
 
-### 16. Apply Your Configuration
+### 11. Install NixOS
+
+The live ISO runs entirely in RAM, so larger configurations can run out of memory. Create a temporary swapfile on the target disk and bind-mount `/tmp`:
 
 ```bash
-cd ~/nixos-config
-sudo nixos-rebuild switch --flake .#<your-hostname>
+# Bind-mount /tmp to target disk
+sudo mkdir -p /mnt/tmp
+sudo mount --bind /mnt/tmp /tmp
+
+# Create 8GB temporary swapfile
+sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=8192 status=progress
+sudo chmod 600 /mnt/swapfile
+sudo mkswap /mnt/swapfile
+sudo swapon /mnt/swapfile
+
+# Install NixOS (--max-jobs 1 reduces peak memory usage)
+sudo NIX_CONFIG="experimental-features = nix-command flakes" \
+  nixos-install --root /mnt --max-jobs 1 \
+  --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
+
+# Clean up temporary swapfile
+sudo swapoff /mnt/swapfile
+sudo rm /mnt/swapfile
 ```
 
-### 17. Reboot
+You'll be prompted to set the root password.
+
+### 12. Reboot
 
 ```bash
-reboot
+sudo reboot
 ```
+
+Remove the installation media when prompted. On boot, you'll be prompted for your LUKS encryption password.
+
+---
+
+## Post-Installation
+
+### 13. Login as Your User
+
+Login with:
+- **Username:** The `username` value from `variables.nix`
+- **Password:** `nixos` (initial password - change it immediately!)
+
+```bash
+passwd  # Change your password
+```
+
+### 14. Verify Config Location
+
+Your config should already be in your home directory:
+
+```bash
+ls ~/nixos-config
+```
+
+Future rebuilds use the shell aliases defined in `zsh.nix`:
+
+| Alias | Command |
+|-------|---------|
+| `switch` | Rebuild and switch to new configuration |
+| `test` | Test configuration without switching |
+| `dry-run` | Show what would be built |
+| `update` | Update flake inputs and rebuild |
+| `clean` | Run garbage collection |
+| `install-bootloader` | Reinstall bootloader |
+
+```bash
+switch    # Apply changes
+update    # Update flake inputs and apply
+```
+
+---
+
+## Quick Reference
+
+Complete installation commands for an existing host (set `USER_NAME` and replace `$HOST_NAME`):
+
+```bash
+# 1. Set up environment
+export USER_NAME="jack"       # Must match 'username' in variables.nix
+export HOST_NAME="nixos-vm"   # Must match a host in hosts/ directory
+
+# 2. Clone config to /tmp
+nix-shell -p git --run "git clone https://github.com/JckL16/nixos-config.git /tmp/nixos-config"
+
+# 3. Verify diskoConfig.device in hosts/$HOST_NAME/configuration.nix, then run disko
+nano /tmp/nixos-config/hosts/$HOST_NAME/configuration.nix
+echo -n "your-password-here" > /tmp/secret.key  # Only if encryption.enable = true
+sudo nix --extra-experimental-features 'nix-command flakes' \
+  run github:nix-community/disko/latest -- \
+  --mode destroy,format,mount \
+  --flake /tmp/nixos-config#$HOST_NAME
+
+# 4. Copy config to mounted filesystem and generate hardware config
+sudo mkdir -p /mnt/home/$USER_NAME
+sudo cp -r /tmp/nixos-config /mnt/home/$USER_NAME/nixos-config
+sudo nixos-generate-config --no-filesystems --root /mnt
+sudo mv /mnt/etc/nixos/hardware-configuration.nix \
+        /mnt/home/$USER_NAME/nixos-config/hosts/$HOST_NAME/hardware-configuration.nix
+sudo chown -R 1000:1000 /mnt/home/$USER_NAME
+
+# 5. Create temporary swap and bind-mount /tmp (avoids running out of RAM)
+sudo mkdir -p /mnt/tmp && sudo mount --bind /mnt/tmp /tmp
+sudo dd if=/dev/zero of=/mnt/swapfile bs=1M count=8192 status=progress
+sudo chmod 600 /mnt/swapfile && sudo mkswap /mnt/swapfile && sudo swapon /mnt/swapfile
+
+# 6. Install
+sudo NIX_CONFIG="experimental-features = nix-command flakes" \
+  nixos-install --root /mnt --max-jobs 1 \
+  --flake /mnt/home/$USER_NAME/nixos-config#$HOST_NAME
+
+# 7. Clean up and reboot
+sudo swapoff /mnt/swapfile && sudo rm /mnt/swapfile
+sudo reboot
+
+# 8. After reboot, login as your user (password: nixos) and change password
+passwd
+```
+
+---
+
+## Disko Configuration Options
+
+Each host's `configuration.nix` includes a `diskoConfig` block:
+
+```nix
+diskoConfig = {
+  enable = true;
+  device = "/dev/nvme0n1";     # Your disk device
+  encryption.enable = true;    # LUKS encryption
+  swapSize = "16G";            # Swap partition size (optional)
+};
+```
+
+| Option | Description |
+|--------|-------------|
+| `device` | Disk device path (from `lsblk`) |
+| `encryption.enable` | Enable LUKS encryption |
+| `swapSize` | Swap partition size (e.g., "8G", "16G"), omit for no swap |
+
+### BIOS vs UEFI Configuration
+
+BIOS/UEFI mode is controlled by `variables.isBIOS` (set per-host in `flake.nix`):
+
+- **UEFI systems (default):** `isBIOS = false` - Creates 512MB EFI partition, enables EFI support
+- **BIOS systems:** `isBIOS = true` - Creates 1MB BIOS boot partition, installs GRUB to disk
+
+Disko reads this value directly - no need to configure it in diskoConfig.
+
+**Keep diskoConfig enabled after installation.** The disko module only partitions disks when you explicitly run the disko command - normal rebuilds won't touch your disk. Keeping it enabled ensures bootloader settings remain correct and documents your disk layout in the config.
+
+---
+
+## LUKS Encryption Notes
+
+- **Password is never stored** - you must remember it
+- **Prompted on every boot** - enter password to decrypt disk
+- **Cannot be added later** - requires reinstall to enable encryption
+
+## User Account Notes
+
+- **Username:** Defined in `variables.nix` as `username`
+- **Initial password:** `nixos` - change immediately after first login with `passwd`
+- **Root password:** Set during `nixos-install`
+- The user account and home directory are created automatically based on `variables.nix`
