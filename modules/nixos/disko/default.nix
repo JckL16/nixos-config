@@ -98,6 +98,7 @@
                   type = "luks";
                   name = config.diskoConfig.encryption.luksName;
                   passwordFile = "/tmp/secret.key";
+                  extraFormatArgs = [ "--pbkdf" "pbkdf2" ];
                   extraOpenArgs = [ "--allow-discards" ];
                   content = {
                     type = "filesystem";
