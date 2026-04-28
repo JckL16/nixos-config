@@ -65,7 +65,7 @@ nix flake check
 Use `hosts/nixos-example/` as a template — it is fully commented.
 
 1. Copy `hosts/nixos-example/` to `hosts/<new-host>/`
-2. Add an entry to `flake.nix` following the existing pattern
+2. Add a `mkSystem { hostname = "<new-host>"; ... }` entry to `nixosConfigurations` in `flake.nix`; use `extraVars` for variable overrides, `extraModules` for extra NixOS modules, `withHardwareConfig = false` / `withDisko = false` if the host doesn't need them
 3. Set host-specific variables (device, bootloader type, graphics drivers, etc.)
 4. Run `disko` for disk setup, then `nixos-install`
 5. See `docs/installation.md` for full steps

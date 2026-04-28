@@ -62,18 +62,31 @@ These variables are available to all modules and control system-wide behavior.
 | `displayScale` | Wayland compositor scale factor | `1` |
 | `wallpaperPath` | Path to wallpaper image | `"~/.config/wallpapers/wallpaper.png"` |
 
-You can override any variable per-host in `flake.nix`:
+You can override any variable per-host in `flake.nix` via the `extraVars` argument to `mkSystem`:
 
 ```nix
-variables = (import ./variables.nix) // {
-  displayScale = 1.5;
-  bootDevice = "/dev/sda";
+nixos-myhost = mkSystem {
+  hostname = "nixos-myhost";
+  extraVars = { displayScale = 1.5; };
 };
 ```
 
 ## Unstable Packages (pkgs-unstable)
 
 Every host receives `pkgs-unstable` via `specialArgs` in `flake.nix`, which provides access to the `nixpkgs-unstable` channel. This is useful for packages that are not yet available or are outdated on the stable channel. It is passed through to home-manager via `extraSpecialArgs` in each host's `configuration.nix`.
+
+## Adding a Host (mkSystem)
+
+All hosts are defined in `flake.nix` using the `mkSystem` helper. The available arguments are:
+
+| Argument | Default | Description |
+|---|---|---|
+| `hostname` | required | Directory name under `hosts/` |
+| `system` | `"x86_64-linux"` | CPU architecture |
+| `extraVars` | `{}` | Merged into `variables.nix` for this host |
+| `extraModules` | `[]` | Additional NixOS modules (e.g., `nixos-wsl`) |
+| `withDisko` | `true` | Include the disko module |
+| `withHardwareConfig` | `true` | Include `hardware-configuration.nix` |
 
 Use it in `home.nix` or `configuration.nix` by adding `pkgs-unstable` to the module arguments:
 
