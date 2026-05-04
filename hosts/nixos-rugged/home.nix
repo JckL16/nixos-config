@@ -29,16 +29,13 @@
   home.packages = with pkgs; [
     obsidian
     signal-desktop-bin
-    discord-ptb
     ttyper
     qbittorrent
     claude-code
     caligula
     ticktick
     thunderbird
-    manim
     vscode
-    onedrive
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify

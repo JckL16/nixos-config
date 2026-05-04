@@ -144,38 +144,33 @@ If creating a new host, add an entry to `flake.nix`:
 sudo nano /mnt/home/$USER_NAME/nixos-config/flake.nix
 ```
 
-Add a new nixosConfigurations entry:
+Add a new entry inside `nixosConfigurations` using the `mkSystem` helper:
 
 ```nix
-nixosConfigurations.<your-hostname> = nixpkgs.lib.nixosSystem {
-  system = "x86_64-linux";
-  specialArgs = {
-    inherit self home-manager inputs;
-    # For BIOS systems, add: // { isBIOS = true; bootDevice = "/dev/sda"; }
-    variables = import ./variables.nix;
-    pkgs-unstable = import inputs.nixpkgs-unstable {
-      system = "x86_64-linux";
-      config.allowUnfree = true;
-    };
-  };
-  modules = [
-    disko.nixosModules.disko
-    ./hosts/<your-hostname>/hardware-configuration.nix
-    ./hosts/<your-hostname>/configuration.nix
-    ./modules/nixos
-    home-manager.nixosModules.home-manager
-  ];
+nixos-myhost = mkSystem {
+  hostname = "nixos-myhost";
 };
 ```
 
-For BIOS/legacy boot systems, override variables:
+For BIOS/legacy boot systems, pass variables overrides via `extraVars`:
 
 ```nix
-variables = (import ./variables.nix) // {
-  isBIOS = true;
-  bootDevice = "/dev/sda";  # Your boot disk
+nixos-myhost = mkSystem {
+  hostname = "nixos-myhost";
+  extraVars = { isBIOS = true; bootDevice = "/dev/sda"; };
 };
 ```
+
+Available `mkSystem` arguments:
+
+| Argument | Default | Description |
+|---|---|---|
+| `hostname` | required | Directory name under `hosts/` |
+| `system` | `"x86_64-linux"` | CPU architecture |
+| `extraVars` | `{}` | Merged into `variables.nix` for this host |
+| `extraModules` | `[]` | Additional NixOS modules (e.g., `nixos-wsl`) |
+| `withDisko` | `true` | Include the disko module |
+| `withHardwareConfig` | `true` | Include `hardware-configuration.nix` |
 
 ### 10. Edit variables.nix (New Hosts Only)
 
