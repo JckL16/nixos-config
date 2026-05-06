@@ -36,6 +36,7 @@
     ticktick
     thunderbird
     vscode
+    localsend
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify

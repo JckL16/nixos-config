@@ -34,6 +34,9 @@
   onlyoffice.enable = lib.mkDefault false;
   winbox.enable = lib.mkDefault false;
 
+  # Image viewer
+  imv.enable = lib.mkDefault true;
+
   # Desktop environments
   hyprland.enable = lib.mkDefault false;
 
