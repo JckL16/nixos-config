@@ -180,6 +180,7 @@
   home.sessionVariables = {
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     MANRWIDTH = "80";
+    MANROFFOPT = "-c";
   };
 
   programs.zoxide = {
