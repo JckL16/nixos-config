@@ -1,5 +1,22 @@
 # Applications
 
+## Image Viewer
+
+- **Option:** `imv.enable` in `home.nix`
+- **Default:** `true`
+
+Lightweight Wayland-native image viewer. Registered as the XDG default handler for common image types (jpeg, png, gif, webp, avif, bmp, tiff, svg).
+
+| Key | Action |
+|---|---|
+| `n` / `p` | Next / previous image |
+| `f` | Toggle fullscreen |
+| `+` / `-` | Zoom in / out |
+| Arrow keys | Pan |
+| `q` | Quit |
+
+---
+
 ## Office Suites
 
 Set in `home.nix`.
