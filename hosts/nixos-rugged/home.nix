@@ -37,10 +37,12 @@
     thunderbird
     vscode
     localsend
+    calibre
+    ventoy-full
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
       pkgs-unstable.zoom-us
-  ];
+    ];
 
 }
