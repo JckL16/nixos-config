@@ -31,7 +31,7 @@ in
       layout = [
         {
           label = "lock";
-          action = "${pkgs.swaylock-effects}/bin/swaylock -f -i ~/.config/wallpapers/wallpaper.png --effect-blur 7x5 --indicator --indicator-radius 100 --indicator-thickness 7 --ring-color 4c566aff --key-hl-color 88c0d0ff --bs-hl-color bf616aff --inside-color 2e344088 --ring-ver-color 5e81acff --inside-ver-color 2e344088 --ring-wrong-color bf616aff --inside-wrong-color 2e344088 --line-color 00000000 --separator-color 00000000 --clock --timestr '%H:%M:%S' --datestr '' --text-color eceff4ff --font 'JetBrainsMono Nerd Font' --font-size 24";
+          action = "pidof hyprlock || hyprlock";
           text = "Lock";
           keybind = "l";
         }
@@ -110,7 +110,6 @@ in
 
     home.packages = with pkgs; [
       wlogout
-      swaylock-effects
     ];
   };
 }

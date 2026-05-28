@@ -84,6 +84,7 @@
         misc = {
           disable_hyprland_logo = true;
           font_family = "JetBrains Mono";
+          focus_on_activate = true;
         };
         
         # Input configuration
@@ -191,8 +192,8 @@
           "$mod, mouse_down, workspace, e+1"
           "$mod, mouse_up, workspace, e-1"
 
-          # Restore last dismissed notification
-          "$mod, N, exec, makoctl restore"
+          # Toggle notification center
+          "$mod, N, exec, hyprpanel -t notificationsmenu"
 
           # Toggle lid suspend behavior
           ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
@@ -227,12 +228,11 @@
           "[ -f ~/.config/hypr/lid-suspend-enabled ] || echo 1 > ~/.config/hypr/lid-suspend-enabled"
           "dex --autostart --environment hyprland"
           "swaybg -i ~/.config/wallpapers/wallpaper.png -m fill"
-          "systemctl --user restart mako"
-          "waybar"
+          "hyprpanel"
           "hyprctl dispatch workspace 1"
-          "udiskie --tray --notify --automount &"
           "swayosd-server &"
-          "batsignal -b -w 20 -c 10 -d 5 -f 100"
+          "batsignal -b -w 20 -c 10 -d 5 -n BAT0"
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
         ];
         
         # Environment variables
@@ -256,10 +256,15 @@
         # Layer rules - blur and transparency
         layerrule = blur, rofi
         layerrule = ignorealpha 1, rofi
-        layerrule = blur, waybar
-        layerrule = ignorealpha 1, waybar
-        layerrule = blur, notifications
-        layerrule = ignorealpha 1, notifications
+        # HyprPanel bar layers are named bar-0, bar-1, etc.
+        layerrule = blur, bar-[0-9]+
+        layerrule = ignorealpha 0.5, bar-[0-9]+
+        # HyprPanel popup menus (networkmenu, audiomenu, mediamenu, etc.)
+        layerrule = blur, .*menu
+        layerrule = ignorealpha 0.5, .*menu
+        # HyprPanel notification center
+        layerrule = blur, notifications-window
+        layerrule = ignorealpha 0.5, notifications-window
         layerrule = blur, swayosd
         layerrule = ignorealpha 1, swayosd
         layerrule = blur, logout_dialog
@@ -300,7 +305,6 @@
     home.packages = with pkgs; [
       nwg-displays
       rofi
-      mako
       grim
       slurp
       wl-clipboard
@@ -373,6 +377,15 @@
       };
     };
 
-    services.blueman-applet.enable = true;
+    # blueman-applet disabled — HyprPanel has its own bluetooth module in the bar
+    services.blueman-applet.enable = false;
+
+    # Suppress blueman's XDG autostart entry so dex doesn't start it.
+    # The system blueman package installs /etc/xdg/autostart/blueman.desktop;
+    # a Hidden=true override in ~/.config/autostart/ prevents dex from picking it up.
+    xdg.configFile."autostart/blueman.desktop".text = ''
+      [Desktop Entry]
+      Hidden=true
+    '';
   };
 }
