@@ -41,6 +41,15 @@
     ];
     
     services.udisks2.enable = true;
+
+    # UPower — required for HyprPanel battery widget.
+    # usePercentageForPolicy makes the DisplayDevice aggregate by averaging
+    # individual battery percentages instead of summing raw energy values,
+    # which fixes the >100% display on dual-battery systems.
+    services.upower = {
+      enable = true;
+      usePercentageForPolicy = true;
+    };
     users.users."${variables.username}".extraGroups = [ "input" "video" "render" ];
   };
 }

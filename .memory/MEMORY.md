@@ -6,3 +6,4 @@
 - [project_nixos_config.md](project_nixos_config.md) — Non-obvious decisions and constraints in the NixOS flake config repo (LUKS/boot)
 - [project_host_purposes.md](project_host_purposes.md) — What each host is for and host-specific non-obvious context
 - [project_install_quirks.md](project_install_quirks.md) — Installation gotchas: RAM exhaustion, LUKS password, disko, monitor setup
+- [project_hyprpanel.md](project_hyprpanel.md) — Non-obvious HyprPanel config decisions: ELOOP fix, monochrome requirement, udiskie tray, blueman, CSS constraints

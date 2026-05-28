@@ -1,9 +1,8 @@
 { ... }: {
-  
+
   imports = [
     ./hyprland.nix
-    ./waybar-hyprland.nix
-    ./mako.nix
+    ./hyprpanel.nix
     ./clipman.nix
     ./rofi.nix
     ./nordic-theme.nix
