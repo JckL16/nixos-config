@@ -39,6 +39,7 @@ All module enable options at a glance.
 | Option | Default | Description |
 |---|---|---|
 | `hyprland.enable` | `false` | Hyprland user config (waybar, rofi, etc.) |
+| `hyprland.battery` | `false` | Include battery widget in HyprPanel bar (enable on hosts with a battery) |
 | `git.enable` | `true` | Git with configured identity |
 | `nvim.enable` | `true` | Neovim with LSP |
 | `alacritty.enable` | `true` | Alacritty terminal |

@@ -145,11 +145,9 @@ in
         bar.layouts."*" = {
           left   = [ "dashboard" "workspaces" "windowtitle" "media" ];
           middle = [ "clock" ];
-          # battery removed — UPower DisplayDevice sums both battery energies
-          # but uses only one battery's energy-full, giving 188%.
-          # batsignal monitors BAT0 directly for low-battery alerts.
-          right  = [ "volume" "network" "bluetooth"
-                     "cpu" "ram" "cpuTemp" "systray" "notifications" ];
+          right  = [ "volume" "network" "bluetooth" ]
+                  ++ lib.optional config.hyprland.battery "battery"
+                  ++ [ "cpu" "ram" "cpuTemp" "systray" "notifications" ];
         };
 
         # ─── Bar modules ────────────────────────────────────────────────────

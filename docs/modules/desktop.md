@@ -42,13 +42,13 @@ notification center, and audio mixer.
 Bar layout (left → middle → right):
 - **Left:** dashboard launcher, workspaces, active window title, media player
 - **Middle:** clock + date (`DD-MM-YYYY  HH:MM`)
-- **Right:** volume, network, bluetooth, CPU%, RAM used, CPU temp, systray, notifications
+- **Right:** volume, network, bluetooth, battery (if `hyprland.battery = true`), CPU%, RAM used, CPU temp, systray, notifications
 
 Key configuration decisions:
 - `systemd.enable = false` — started via `exec-once` in hyprland.nix, consistent with the rest of the desktop
 - `wallpaper.enable = false` — swaybg handles wallpaper
 - `theme.bar.menus.monochrome = true` — **required** for `background`/`cards`/`text` color overrides to take effect; without it per-menu Catppuccin defaults override everything
-- Battery widget removed from bar — UPower's DisplayDevice incorrectly sums dual-battery energy values giving >100%; batsignal monitors BAT0 directly instead
+- Battery widget is gated on `hyprland.battery = true` (home.nix) — set on laptop/rugged hosts only; desktop hosts omit it. UPower 1.90.10 with `usePercentageForPolicy = true` correctly reports dual-battery percentage via the DisplayDevice.
 - `bar.customModules.{cpu,ram,cpuTemp}` — correct path for custom resource modules (not `bar.{cpu,...}`)
 
 **GLib ELOOP workaround:** HyprPanel's `readFile()` follows symlinks into the nix store
@@ -113,7 +113,8 @@ The file persists across rebuilds since it lives outside the Nix store.
 hyprland.enable = true;
 
 # home.nix
-hyprland.enable = true;
+hyprland.enable  = true;
+hyprland.battery = true;   # omit on desktop hosts without a battery
 ```
 
 ## GNOME

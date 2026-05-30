@@ -25,10 +25,12 @@ CPU/RAM/cpuTemp live under `bar.customModules.{cpu,ram,cpuTemp}`, NOT `bar.{cpu,
 The `round` option controls decimals: `true` = 0 decimals, `false` = 2 decimals (no 1-decimal option).
 RAM `labelType` options: `"percentage"`, `"used"`, `"used/total"`, `"free"`.
 
-## Battery widget removed
-UPower's DisplayDevice incorrectly sums dual-battery energy values (current energy / one
-battery's full energy → 188%). `usePercentageForPolicy = true` does NOT fix this.
-Workaround: battery removed from bar layout; batsignal monitors BAT0 directly.
+## Battery widget
+Previously removed due to UPower DisplayDevice bug giving 188% on dual-battery systems
+(energy summed across both batteries but energy-full from only one). This was resolved:
+`usePercentageForPolicy = true` in `services.upower` + UPower 1.90.10 correctly computes
+DisplayDevice percentage as a weighted average of both batteries. Battery is now in the
+bar layout. batsignal still monitors BAT0 directly for low-battery alerts (separate concern).
 
 ## udiskie tray disabled
 `tray = "auto"` causes `gtk_widget_get_scale_factor` GTK assertion failures on Wayland

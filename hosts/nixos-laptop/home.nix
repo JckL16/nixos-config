@@ -4,7 +4,8 @@
 {
 
   # Enables the user level config of hyprland
-  hyprland.enable = true;
+  hyprland.enable  = true;
+  hyprland.battery = true;
 
   # Enables user level config for gaming
   steam.enable = true;
