@@ -3,7 +3,8 @@
 { config, pkgs, pkgs-unstable, lib, ... }:
 {
 
-  hyprland.enable = true;
+  hyprland.enable  = true;
+  hyprland.battery = true;
 
   # Lid close does nothing
   wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];

@@ -2,7 +2,8 @@
 { pkgs, lib, config, variables, ... }: {
 
   options = {
-    hyprland.enable = lib.mkEnableOption "Enable hyprland home-manager configuration";
+    hyprland.enable   = lib.mkEnableOption "Enable hyprland home-manager configuration";
+    hyprland.battery  = lib.mkEnableOption "Include battery module in HyprPanel bar";
   };
 
   config = lib.mkIf config.hyprland.enable {
