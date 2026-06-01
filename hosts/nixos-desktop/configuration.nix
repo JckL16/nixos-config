@@ -14,6 +14,8 @@
     swapSize = "32G";
   };
 
+  networking.firewall.allowedTCPPorts = [ 8080 8443 ];
+  
   # Enable emulation of ARM systems
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
