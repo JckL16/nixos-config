@@ -39,6 +39,9 @@
       source-sans
       source-serif
       font-awesome
+      # Microsoft fonts (unfree) — required for correct rendering on many websites
+      corefonts   # Arial, Georgia, Verdana, Trebuchet MS, Times New Roman, etc.
+      vista-fonts  # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       # X11 fonts required by legacy apps (Zoom, etc.)
       xorg.fontmiscmisc
       xorg.fontadobe75dpi

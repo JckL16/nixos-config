@@ -39,7 +39,10 @@
     minikube
     kubectl
     ticktick
-    ] ++ [
+    orca-slicer
+    putty
+  ] ++ [
+    pkgs-unstable.proton-pass
     pkgs-unstable.protonmail-desktop
   ];
 
