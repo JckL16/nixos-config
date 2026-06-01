@@ -29,20 +29,22 @@
   home.packages = with pkgs; [
     obsidian
     signal-desktop-bin
-    discord-ptb
     ttyper
     qbittorrent
     claude-code
     caligula
     ticktick
     thunderbird
-    manim
     vscode
-    onedrive
+    localsend
+    calibre
+    ventoy-full
+    vagrant
+    ansible
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
       pkgs-unstable.zoom-us
-  ];
+    ];
 
 }

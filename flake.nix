@@ -24,109 +24,65 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, disko, ... }@inputs: {
-    nixosConfigurations.nixos-laptop = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit self home-manager inputs;
-        variables = import ./variables.nix;
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
+  outputs = { self, nixpkgs, home-manager, disko, ... }@inputs:
+    let
+      mkSystem = {
+        hostname,
+        system ? "x86_64-linux",
+        extraVars ? {},
+        extraModules ? [],
+        withDisko ? true,
+        withHardwareConfig ? true
+      }:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit self inputs;
+            variables = (import ./variables.nix) // extraVars;
+            pkgs-unstable = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          };
+          modules =
+            nixpkgs.lib.optionals withDisko [ disko.nixosModules.disko ]
+            ++ nixpkgs.lib.optionals withHardwareConfig [ ./hosts/${hostname}/hardware-configuration.nix ]
+            ++ [
+              ./hosts/${hostname}/configuration.nix
+              ./modules/nixos
+              home-manager.nixosModules.home-manager
+            ]
+            ++ extraModules;
+        };
+    in
+    {
+      nixosConfigurations = {
+        nixos-laptop = mkSystem { hostname = "nixos-laptop"; };
+
+        nixos-desktop = mkSystem { hostname = "nixos-desktop"; };
+
+        nixos-rugged = mkSystem {
+          hostname = "nixos-rugged";
+          extraVars = { displayScale = 1; };
+        };
+
+        # Per-host displayScale overrides:
+        # nixos-laptop: extraVars = { displayScale = 1.5; };
+        # nixos-desktop: extraVars = { displayScale = 1; };
+
+        nixos-vm = mkSystem {
+          hostname = "nixos-vm";
+          extraVars = { bootDevice = "/dev/vda"; isBIOS = true; displayScale = 1; };
+        };
+
+        nixos-wsl = mkSystem {
+          hostname = "nixos-wsl";
+          withDisko = false;
+          withHardwareConfig = false;
+          extraModules = [ inputs.nixos-wsl.nixosModules.default ];
         };
       };
-      modules = [
-        disko.nixosModules.disko
-        ./hosts/nixos-laptop/hardware-configuration.nix
-        ./hosts/nixos-laptop/configuration.nix
-        ./modules/nixos
-        home-manager.nixosModules.home-manager
-      ];
+
+      homeManagerModules.default = ./modules/home-manager;
     };
-
-    nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit self home-manager inputs;
-        variables = import ./variables.nix;
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-      };
-      modules = [
-        disko.nixosModules.disko
-        ./hosts/nixos-desktop/hardware-configuration.nix
-        ./hosts/nixos-desktop/configuration.nix
-        ./modules/nixos
-        home-manager.nixosModules.home-manager
-      ];
-    };
-
-    nixosConfigurations.nixos-rugged = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit self home-manager inputs;
-        variables = (import ./variables.nix) // { displayScale = 1; };
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-      };
-      modules = [
-        disko.nixosModules.disko
-        ./hosts/nixos-rugged/hardware-configuration.nix
-        ./hosts/nixos-rugged/configuration.nix
-        ./modules/nixos
-        home-manager.nixosModules.home-manager
-      ];
-    };
-
-    # Per-host displayScale overrides:
-    # nixos-laptop: variables = (import ./variables.nix) // { displayScale = 1.5; };
-    # nixos-desktop: variables = (import ./variables.nix) // { displayScale = 1; };
-
-    nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit self home-manager inputs;
-        variables = (import ./variables.nix) // {
-          bootDevice = "/dev/vda";
-          isBIOS = true;
-          displayScale = 1;
-        };
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-      };
-      modules = [
-        disko.nixosModules.disko
-        ./hosts/nixos-vm/hardware-configuration.nix
-        ./hosts/nixos-vm/configuration.nix
-        ./modules/nixos
-        home-manager.nixosModules.home-manager
-      ];
-    };
-
-    nixosConfigurations.nixos-wsl = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit self home-manager inputs;
-        variables = import ./variables.nix;
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          system = "x86_64-linux";
-          config.allowUnfree = true;
-        };
-      };
-      modules = [
-        inputs.nixos-wsl.nixosModules.default
-        ./hosts/nixos-wsl/configuration.nix
-        ./modules/nixos
-        home-manager.nixosModules.home-manager
-      ];
-    };
-
-    homeManagerModules.default = ./modules/home-manager;
-  };
 }

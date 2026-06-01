@@ -65,7 +65,7 @@ nix flake check
 Use `hosts/nixos-example/` as a template — it is fully commented.
 
 1. Copy `hosts/nixos-example/` to `hosts/<new-host>/`
-2. Add an entry to `flake.nix` following the existing pattern
+2. Add a `mkSystem { hostname = "<new-host>"; ... }` entry to `nixosConfigurations` in `flake.nix`; use `extraVars` for variable overrides, `extraModules` for extra NixOS modules, `withHardwareConfig = false` / `withDisko = false` if the host doesn't need them
 3. Set host-specific variables (device, bootloader type, graphics drivers, etc.)
 4. Run `disko` for disk setup, then `nixos-install`
 5. See `docs/installation.md` for full steps
@@ -99,6 +99,9 @@ in a code block and explain what it does.
 
 When making changes to this config:
 - Update `docs/` if the change affects installation, module behaviour, or options
+  - `flake.nix` structure changes (e.g. `mkSystem` arguments, inputs) → update `docs/installation.md` step 9 and `docs/modules/overview.md` (Adding a Host / mkSystem table)
+  - New or removed module options → update `docs/reference.md` and the relevant `docs/modules/*.md`
+  - New host added → update `docs/modules/overview.md` host list if one exists
 - Update relevant memory files in `.memory/` (in this repo) if the change introduces
   a new non-obvious constraint, decision, or host purpose. Update `.memory/MEMORY.md`
   index when adding or removing memory files.

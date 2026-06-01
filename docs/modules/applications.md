@@ -1,5 +1,22 @@
 # Applications
 
+## Image Viewer
+
+- **Option:** `imv.enable` in `home.nix`
+- **Default:** `true`
+
+Lightweight Wayland-native image viewer. Registered as the XDG default handler for common image types (jpeg, png, gif, webp, avif, bmp, tiff, svg).
+
+| Key | Action |
+|---|---|
+| `n` / `p` | Next / previous image |
+| `f` | Toggle fullscreen |
+| `+` / `-` | Zoom in / out |
+| Arrow keys | Pan |
+| `q` | Quit |
+
+---
+
 ## Office Suites
 
 Set in `home.nix`.
@@ -88,13 +105,16 @@ These are enabled by default and provide the base user experience.
 
 Always active. Configured with:
 
-- **Oh-My-Zsh** with plugins: git, fzf, sudo, command-not-found, colored-man-pages, extract
+- **Starship** prompt with Nord color theme
 - **Autosuggestions** and **syntax highlighting**
 - **Zoxide** (smart `cd` replacement, aliased to `cd`)
 - **Eza** (modern `ls` replacement, aliased to `ls`, `ll`, `la`, `lt`, `tree`)
-- **Fzf** for fuzzy finding (Ctrl-R for history search)
-- **pay-respects** for command correction
-- Additional CLI tools: bat, ripgrep, fd, tldr, btop, duf, dust, procs, delta
+- **Fzf** for fuzzy finding (Ctrl-R history, Alt-C directory, Ctrl-T file widget)
+- **pay-respects** for command correction (`fuck` / `f` to retry last command)
+- **bat** with Nord theme; `man` pages render through bat automatically (`MANPAGER`)
+- Additional CLI tools: ripgrep, fd, tldr, btop, duf, dust, procs, delta
+- `ESC ESC` prepends `sudo` to the current command line
+- `extract <file>` unpacks any common archive format (tar, zip, 7z, rar, xz, …)
 
 #### NixOS Shell Aliases
 
@@ -129,6 +149,17 @@ Pre-configured with LSP support and plugins via external Lua configuration.
 - **Option:** `alacritty.enable` (default: `true`)
 
 GPU-accelerated terminal emulator.
+
+### SSH Client
+
+Always active (`modules/home-manager/programs/command-line/ssh.nix`). Configures `~/.ssh/config` with sensible defaults for all hosts (`Host *`):
+
+- `AddKeysToAgent yes` — keys are added to the agent on first use
+- 60-second keepalives (`ServerAliveInterval 60`, `ServerAliveCountMax 3`)
+- Connection compression enabled
+- `ControlMaster auto` with a 10-minute persist window (sockets in `~/.ssh/control/`)
+
+To add host-specific entries, use `programs.ssh.matchBlocks` in `home.nix`.
 
 ### Git
 

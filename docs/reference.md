@@ -47,6 +47,7 @@ All module enable options at a glance.
 | `gamemode.enable` | `false` | GameMode user config |
 | `minecraft.enable` | `false` | Minecraft launcher |
 | `virt-manager.enable` | `false` | Virtual machine manager GUI |
+| `imv.enable` | `true` | imv image viewer with MIME associations |
 | `libreoffice.enable` | `false` | LibreOffice suite |
 | `onlyoffice.enable` | `false` | OnlyOffice suite |
 | `winbox.enable` | `false` | MikroTik Winbox |

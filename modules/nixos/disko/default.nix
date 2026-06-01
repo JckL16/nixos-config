@@ -79,7 +79,7 @@
             # EFI System Partition (only for UEFI systems)
             # Acts as /boot, so GRUB never needs to unlock LUKS.
             ESP = lib.mkIf (!variables.isBIOS) {
-              size = "512M";
+              size = "1G";
               type = "EF00";
               content = {
                 type = "filesystem";

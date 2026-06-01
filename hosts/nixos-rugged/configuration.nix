@@ -1,11 +1,7 @@
 # hosts/nixos-rugged/configuration.nix
 #
 
-{ config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
-
-  imports = [
-    home-manager.nixosModules.home-manager
-  ];
+{ config, pkgs, pkgs-unstable, inputs, variables, ... }: {
 
   # Disko disk configuration (enable only during fresh install)
   diskoConfig = {
@@ -34,8 +30,12 @@
   metasploit-db.enable = true;    # PostgreSQL database for Metasploit
 
   # Firewall rules for spotify to be able to cast to google devices
-  networking.firewall.allowedTCPPorts = [ 57621 ];
+  networking.firewall.allowedTCPPorts = [ 57621 9090 ];
   networking.firewall.allowedUDPPorts = [ 5353 ];
+
+  nixpkgs.config.permittedInsecurePackages = [
+    "ventoy-1.1.10"
+  ];
 
   home-manager = {
     useGlobalPkgs = true;
