@@ -295,6 +295,8 @@
       fi
     '';
 
+    home.file.".config/wallpapers/wallpaper.png".source = ../../../../wallpaper/wallpaper.png;
+
     home.packages = with pkgs; [
       nwg-displays
       rofi

@@ -5,6 +5,7 @@
     ./zsh.nix
     ./neofetch.nix
     ./nvim
+    ./ssh.nix
   ];
 
 }

@@ -23,6 +23,9 @@
 
     home.packages = with pkgs; [
 
+      # === General use tools ===
+      cyberchef
+
       # ============================================================
       # GENERAL TOOLS & UTILITIES
       # ============================================================
@@ -107,7 +110,6 @@
       magic-wormhole       # Securely transfer files between computers
       asciinema            # Terminal session recorder
       wordlists            # Common wordlists for security testing
-      seclists             # Security assessment wordlists collection
 
       # === METASPLOIT FRAMEWORK ===
       msfpc                # Msfvenom payload creator

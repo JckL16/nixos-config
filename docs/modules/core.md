@@ -61,6 +61,8 @@ These have no enable toggle and are always imported:
 ### Nix Settings
 - **File:** `modules/nixos/core/nix-settings.nix`
 - Enables flakes, allows unfree packages.
+- Configures binary caches: `cache.nixos.org`, `nix-community.cachix.org`, `hyprland.cachix.org`.
+- Sets `trusted-users = [ "root" "@wheel" ]` so the regular user can use substituters.
 
 ### System Packages
 - **File:** `modules/nixos/system-packages.nix`
