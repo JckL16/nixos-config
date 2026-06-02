@@ -19,9 +19,16 @@
       };
     };
 
+    # vagrant-libvirt checks standard distro paths that don't exist on NixOS
+    environment.sessionVariables = {
+      VAGRANT_LIBVIRT_OVMF_CODE = "${pkgs.OVMFFull.fd}/FV/OVMF_CODE.fd";
+    };
+
     # Enable default network automatically
     virtualisation.libvirtd.onBoot = "start";
     virtualisation.libvirtd.onShutdown = "shutdown";
+
+    environment.systemPackages = with pkgs; [ vagrant ansible ];
 
     users.users."${variables.username}".extraGroups = [ "libvirtd" ];
 

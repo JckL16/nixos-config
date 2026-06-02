@@ -5,7 +5,7 @@
 - **System:** `virtualisation.enable = true;` in `configuration.nix`
 - **User:** `virt-manager.enable = true;` in `home.nix`
 
-System-level enables libvirtd with QEMU KVM, TPM emulation, and auto-start of the default NAT network.
+System-level enables libvirtd with QEMU KVM, TPM emulation, and auto-start of the default NAT network. Also installs `vagrant` and `ansible`, and sets `VAGRANT_LIBVIRT_OVMF_CODE` so that vagrant-libvirt can locate the OVMF firmware (which lives in the Nix store rather than the standard distro paths the plugin expects).
 
 User-level installs the virt-manager GUI with SPICE support for Windows VMs.
 

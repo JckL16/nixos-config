@@ -41,8 +41,7 @@
     localsend
     calibre
     ventoy-full
-    vagrant
-    ansible
+
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
