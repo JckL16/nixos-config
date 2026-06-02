@@ -13,6 +13,8 @@
 
   zen-browser.enable = true;
 
+  obsidian.enable = true;
+
   winbox.enable = true;
 
   rust.enable = true;
@@ -25,7 +27,6 @@
   virt-manager.enable = true;
 
   home.packages = with pkgs; [
-    obsidian
     spotify
     vscode
     discord-ptb

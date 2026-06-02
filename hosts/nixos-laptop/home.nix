@@ -12,6 +12,8 @@
   gamemode.enable = true;
   minecraft.enable = true;
 
+  obsidian.enable = true;
+
   # Installs the libreoffice suite for the user
   # libreoffice.enable = true;
   onlyoffice.enable = true;
@@ -27,7 +29,6 @@
   virt-manager.enable = true;
 
   home.packages = with pkgs; [
-    obsidian
     spotify
     vscode
     anki

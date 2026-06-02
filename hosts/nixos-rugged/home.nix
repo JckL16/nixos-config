@@ -15,6 +15,8 @@
 
   zen-browser.enable = true;
 
+  obsidian.enable = true;
+
   python-dev.enable = true;
   python-dev.packages = [ "requests" "numpy" "pandas" "matplotlib" ];
   rust.enable = true;
@@ -28,7 +30,6 @@
   onlyoffice.enable = true;
 
   home.packages = with pkgs; [
-    obsidian
     signal-desktop-bin
     ttyper
     qbittorrent
