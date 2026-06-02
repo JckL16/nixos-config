@@ -49,6 +49,7 @@ All module enable options at a glance.
 | `minecraft.enable` | `false` | Minecraft launcher |
 | `virt-manager.enable` | `false` | Virtual machine manager GUI |
 | `imv.enable` | `true` | imv image viewer with MIME associations |
+| `obsidian.enable` | `false` | Obsidian note-taking app (XWayland wrapper for PDF support) |
 | `libreoffice.enable` | `false` | LibreOffice suite |
 | `onlyoffice.enable` | `false` | OnlyOffice suite |
 | `winbox.enable` | `false` | MikroTik Winbox |

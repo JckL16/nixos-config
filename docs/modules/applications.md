@@ -1,5 +1,15 @@
 # Applications
 
+## Obsidian
+
+- **Option:** `obsidian.enable = true;` in `home.nix`
+- **Default:** `false`
+- **File:** `modules/home-manager/programs/desktop/obsidian.nix`
+
+Obsidian note-taking application. The module wraps the package to unset `NIXOS_OZONE_WL`, forcing Obsidian to run via XWayland rather than native Wayland. This is required because Electron's native Wayland PDF renderer produces a black screen on Hyprland.
+
+---
+
 ## Image Viewer
 
 - **Option:** `imv.enable` in `home.nix`
