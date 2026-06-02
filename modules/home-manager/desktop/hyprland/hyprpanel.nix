@@ -214,7 +214,7 @@ in
 
         # Clock — date and time in middle, no icon
         bar.clock = {
-          format   = "%Y-%m-%d  %H:%M";
+          format   = "%Y-%m-%d  V%V  %H:%M";
           showIcon = false;
         };
 
