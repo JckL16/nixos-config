@@ -169,6 +169,8 @@ Always active (`modules/home-manager/programs/command-line/ssh.nix`). Configures
 - Connection compression enabled
 - `ControlMaster auto` with a 10-minute persist window (sockets in `~/.ssh/control/`)
 
+A `github.com` matchBlock is preconfigured to use `~/.ssh/github_jckl16` exclusively (`IdentitiesOnly yes`), preventing the SSH agent from offering other keys (e.g. Vagrant keys) to GitHub.
+
 To add host-specific entries, use `programs.ssh.matchBlocks` in `home.nix`.
 
 ### Git

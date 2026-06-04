@@ -4,6 +4,10 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
+    matchBlocks."github.com" = {
+      identityFile = "~/.ssh/github_jckl16";
+      identitiesOnly = true;
+    };
     matchBlocks."*" = {
       addKeysToAgent = "yes";
       serverAliveInterval = 60;
