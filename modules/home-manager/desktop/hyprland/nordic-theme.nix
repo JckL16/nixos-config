@@ -75,6 +75,7 @@
 
     home.sessionVariables = {
       GTK_THEME = "Nordic";
+      GTK_ICON_THEME = "Papirus-Dark";
       QT_QPA_PLATFORM = "wayland";
       QT_STYLE_OVERRIDE = "adwaita-dark";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";

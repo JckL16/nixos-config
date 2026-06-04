@@ -171,13 +171,13 @@
           "$mod CTRL, Escape, layoutmsg, preselectreset"
 
           "$mod, R, submap, resize"
-          "$mod, D, exec, rofi -show combi"
-          "$mod SHIFT, D, exec, ~/.config/rofi/web-search.sh"
-          "$mod, F1, exec, ~/.config/rofi/keybinds.sh"
-          "$mod, Tab, exec, rofi -show window"
+          "$mod, D, exec, walker -p Search"
+          "$mod SHIFT, D, exec, walker -m websearch -s nord-websearch -p 'Search the web'"
+          "$mod, F1, exec, walker -m hyprland_keybinds -s nord-keybinds -p 'Search keybinds'"
+          "$mod, Tab, exec, ~/.config/walker/windows.sh"
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
-          "$mod SHIFT, V, exec, ~/.config/rofi/clipman.sh"
+          "$mod SHIFT, V, exec, ~/.config/walker/clipboard.sh"
           "$mod, T, exec, xdg-open https://"
 
           # Volume controls with swayosd
@@ -240,6 +240,7 @@
         env = [
           "XCURSOR_THEME,Nordzy-cursors"
           "XCURSOR_SIZE,24"
+          "GTK_ICON_THEME,Papirus-Dark"
         ];
       };
       
@@ -255,8 +256,8 @@
         windowrulev2 = noblur, fullscreen:1
 
         # Layer rules - blur and transparency
-        layerrule = blur, rofi
-        layerrule = ignorealpha 1, rofi
+        layerrule = blur, walker
+        layerrule = ignorealpha 0.5, walker
         # HyprPanel bar layers are named bar-0, bar-1, etc.
         layerrule = blur, bar-[0-9]+
         layerrule = ignorealpha 0.5, bar-[0-9]+
@@ -305,7 +306,6 @@
 
     home.packages = with pkgs; [
       nwg-displays
-      rofi
       grim
       slurp
       wl-clipboard

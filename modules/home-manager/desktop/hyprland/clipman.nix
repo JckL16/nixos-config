@@ -1,180 +1,39 @@
-# modules/home-manager/shared/clipman.nix
+# modules/home-manager/desktop/hyprland/clipman.nix
+# cliphist — Wayland clipboard history daemon.
+# Captures everything written via wl-copy (apps, screenshots, etc.).
+# Picker: cliphist list | walker --dmenu | cliphist decode | wl-copy
 
 { pkgs, lib, config, ... }: {
   config = lib.mkIf config.hyprland.enable {
-    # Enable clipman service
-    services.clipman = {
-      enable = true;
-      systemdTarget = "hyprland-session.target";
+    home.packages = with pkgs; [ cliphist ];
+
+    # Capture clipboard events via wl-paste --watch, store in cliphist.
+    # wl-clipboard is already in home.packages from hyprland.nix.
+    systemd.user.services.cliphist = {
+      Unit = {
+        Description = "Clipboard history daemon";
+        After       = [ "hyprland-session.target" ];
+        PartOf      = [ "hyprland-session.target" ];
+      };
+      Service = {
+        Type      = "simple";
+        ExecStart = "${pkgs.wl-clipboard}/bin/wl-paste --watch ${pkgs.cliphist}/bin/cliphist store";
+        Restart   = "on-failure";
+      };
+      Install.WantedBy = [ "hyprland-session.target" ];
     };
 
-    # Add clipman to home packages
-    home.packages = with pkgs; [
-      clipman
-    ];
-
-    # Rofi script for clipman
-    home.file.".config/rofi/clipman.sh" = {
+    # Clipboard picker: list history, pick with walker dmenu, decode and copy.
+    home.file.".config/walker/clipboard.sh" = {
+      executable = true;
       text = ''
         #!/usr/bin/env bash
-        clipman pick --tool=CUSTOM --tool-args="rofi -dmenu -theme clipman"
+        # cliphist list: "ID\tpreview" — awk reverses to "preview\tID"
+        # so walker -l 0 shows preview as label, -V 1 returns ID (same pattern as windows.sh)
+        id=$(cliphist list | awk 'BEGIN{FS=OFS="\t"} {print $2, $1}' \
+          | walker --dmenu -s nord-clipboard -p 'Paste' -t $'\t' -l 0 -V 1)
+        [ -n "$id" ] && cliphist list | grep -Pm1 "^$id\t" | cliphist decode | wl-copy
       '';
-      executable = true;
     };
-
-    # Clipman-specific Rofi theme (matched to main rofi config)
-    home.file.".config/rofi/clipman.rasi".text = ''
-      * {
-        background: #2E3440;
-        background-alt: #3B4252;
-        foreground: #D8DEE9;
-        foreground-alt: #ECEFF4;
-        accent: #88C0D0;
-        urgent: #BF616A;
-        selected: #5E81AC;
-        selected-text: #ECEFF4;
-        border-color: #4C566A;
-      }
-      
-      window {
-        background-color: @background;
-        border: 1px;
-        border-color: @border-color;
-        padding: 5px;
-        width: 600px;
-      }
-      
-      mainbox {
-        border: 0;
-        padding: 0;
-        background-color: @background;
-      }
-      
-      message {
-        border: 2px 0px 0px;
-        border-color: @border-color;
-        padding: 1px;
-        background-color: @background;
-      }
-      
-      textbox {
-        text-color: @foreground;
-        background-color: @background;
-      }
-      
-      inputbar {
-        children: [ prompt,textbox-prompt-colon,entry,case-indicator ];
-        padding: 8px 12px;
-        background-color: @background;
-      }
-      
-      textbox-prompt-colon {
-        expand: false;
-        str: ":";
-        margin: 0px 0.3em 0em 0em;
-        text-color: @foreground;
-        background-color: @background;
-      }
-      
-      entry {
-        text-color: @foreground;
-        background-color: @background;
-        placeholder: "Search clipboard...";
-        placeholder-color: @foreground-alt;
-      }
-      
-      case-indicator {
-        text-color: @foreground;
-        background-color: @background;
-      }
-      
-      prompt {
-        text-color: @accent;
-        background-color: @background;
-        str: "Clipboard";
-      }
-      
-      listview {
-        fixed-height: 0;
-        border: 2px 0px 0px;
-        border-color: @border-color;
-        spacing: 4px;
-        scrollbar: true;
-        padding: 4px 0px 0px;
-        lines: 8;
-        columns: 1;
-        cycle: false;
-        dynamic: true;
-        layout: vertical;
-        fixed-columns: true;
-        background-color: @background;
-      }
-      
-      element {
-        border: 0;
-        padding: 4px 8px;
-        background-color: @background;
-        text-color: @foreground;
-      }
-      
-      element-text {
-        text-color: inherit;
-        background-color: inherit;
-      }
-      
-      element.normal.normal {
-        background-color: @background;
-        text-color: @foreground;
-      }
-      
-      element.normal.urgent {
-        background-color: @urgent;
-        text-color: @foreground-alt;
-      }
-      
-      element.normal.active {
-        background-color: @background;
-        text-color: @foreground;
-      }
-      
-      element.selected.normal {
-        background-color: @selected;
-        text-color: @selected-text;
-      }
-      
-      element.selected.urgent {
-        background-color: @urgent;
-        text-color: @foreground-alt;
-      }
-      
-      element.selected.active {
-        background-color: @selected;
-        text-color: @selected-text;
-      }
-      
-      element.alternate.normal {
-        background-color: @background;
-        text-color: @foreground;
-      }
-      
-      element.alternate.urgent {
-        background-color: @urgent;
-        text-color: @foreground-alt;
-      }
-      
-      element.alternate.active {
-        background-color: @background;
-        text-color: @foreground;
-      }
-      
-      scrollbar {
-        width: 4px;
-        border: 0;
-        handle-color: @foreground;
-        handle-width: 8px;
-        padding: 0;
-        background-color: @background-alt;
-      }
-    '';
   };
 }

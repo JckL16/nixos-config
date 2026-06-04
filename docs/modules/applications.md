@@ -50,7 +50,7 @@ onlyoffice.enable = true;
 
 Firefox-based browser set as the XDG default for `http`, `https`, and `text/html`. Installed via the `0xc000022070/zen-browser-flake` community flake.
 
-The Rofi web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
+The Walker web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
 
 ## VeraCrypt (Disk Encryption)
 

@@ -196,20 +196,23 @@ in
         # round = true → integer percentages, no decimals
         # Note: these live under customModules, not bar directly
         bar.customModules.cpu = {
-          label = true;
-          round = true;
+          label           = true;
+          round           = true;
+          pollingInterval = 2000;
         };
 
         bar.customModules.ram = {
-          label     = true;
-          labelType = "used";   # e.g. "8.24G" (HyprPanel supports 0 or 2 decimals only)
+          label           = true;
+          labelType       = "used";
+          pollingInterval = 2000;
         };
 
         bar.customModules.cpuTemp = {
-          label  = true;
-          sensor = "auto";
-          unit   = "metric";
-          round  = true;
+          label           = true;
+          sensor          = "auto";
+          unit            = "metric";
+          round           = true;
+          pollingInterval = 2000;
         };
 
         # Clock — date and time in middle, no icon
@@ -271,7 +274,7 @@ in
             left = {
               shortcut1 = { icon = "󰍹"; tooltip = "Display Settings"; command = "nwg-displays"; };
               shortcut2 = { icon = "󰄀"; tooltip = "Screenshot";        command = "grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Region saved'"; };
-              shortcut3 = { icon = "󰍉"; tooltip = "Search Apps";       command = "rofi -show drun"; };
+              shortcut3 = { icon = "󰍉"; tooltip = "Search Apps";       command = "walker"; };
               shortcut4 = { icon = ""; tooltip = ""; command = ""; };
             };
             right = {
