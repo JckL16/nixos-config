@@ -14,7 +14,7 @@
         grub = {
           enable = true;
           useOSProber = true;
-          configurationLimit = 5;
+          configurationLimit = lib.mkDefault 5;
         };
         timeout = 5;
       };

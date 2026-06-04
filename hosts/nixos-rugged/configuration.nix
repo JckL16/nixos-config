@@ -14,6 +14,7 @@
   networking.hostName = "nixos-rugged";
 
   grub.nordic-theme.enable = true;
+  boot.loader.grub.configurationLimit = 1; # 511M /boot can't fit 2 × 210M initrds during a switch
 
   hyprland.enable = true;
 
