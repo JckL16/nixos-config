@@ -26,8 +26,8 @@ Provides:
 | `hyprland.nix` | Keybindings, window rules, layer rules, exec-once startup |
 | `hyprpanel.nix` | HyprPanel bar — replaces Waybar and Mako |
 | `nordic-theme.nix` | Nordic GTK theme, Papirus icons, Nordzy cursors, GTK popup CSS |
-| `rofi.nix` | Rofi application launcher theme |
-| `clipman.nix` | Clipboard manager |
+| `walker.nix` | Walker GTK4 app launcher — Nord theme, per-mode prompt icons, window switcher |
+| `clipman.nix` | Clipboard history via cliphist; picker via walker `--dmenu` |
 | `swayosd.nix` | Volume/brightness OSD (SwayOSD) |
 | `wlogout.nix` | Logout/shutdown/reboot/lock menu |
 
@@ -84,6 +84,40 @@ override is written to `~/.config/autostart/blueman.desktop` with `Hidden=true`.
 `services.blueman-applet.enable = false` disables the home-manager systemd service but
 does **not** stop dex from picking up the system autostart file — the override file is
 required for both.
+
+### Walker (App Launcher)
+
+**File:** `modules/home-manager/desktop/hyprland/walker.nix`
+
+Walker is a GTK4 application launcher styled with a Nord glassmorphism theme. It replaces Rofi/Fuzzel.
+
+| Keybind | Action |
+|---|---|
+| `Super+D` | App launcher |
+| `Super+Tab` | Window switcher (custom hyprctl script) |
+| `Super+Shift+D` | Web search (`=` prefix in main launcher also works) |
+| `Super+F1` | Search Hyprland keybinds (built-in `hyprland_keybinds` module) |
+| `Super+Shift+V` | Clipboard history picker |
+
+Prefix shortcuts in the main launcher:
+- `=` — web search
+- `+` — calculator (qalculate)
+
+**Theme system:** Walker 0.13.26 requires a flat `<name>.css` + `<name>.toml` pair in `~/.config/walker/themes/`. Since Walker needs to write to the themes directory, files are copied (not symlinked) via a `home.activation` script after `linkGeneration`. Each mode (`nord`, `nord-windows`, `nord-clipboard`, etc.) gets its own CSS+TOML pair.
+
+**Prompt icons:** Per-mode Nerd Font glyphs are installed as SVG files in `~/.local/share/icons/hicolor/scalable/apps/`. GTK4 resolves hicolor as a universal fallback, so the glyphs render correctly regardless of active icon theme.
+
+**`-V` flag behaviour (non-obvious):** Walker's `--dmenu` mode requires `-V N` where N ≥ 1 to produce any stdout output. `-V 0` outputs nothing; omitting `-V` also outputs nothing. Use `-V 1` to return the second tab-separated column — the same pattern used in the window switcher script.
+
+### Clipboard History (cliphist)
+
+**File:** `modules/home-manager/desktop/hyprland/clipman.nix`
+
+Clipboard history is captured by `cliphist` (via a systemd user service running `wl-paste --watch cliphist store`) and browsed with the Walker dmenu picker.
+
+The picker script (`~/.config/walker/clipboard.sh`) works around two non-obvious constraints:
+1. `cliphist list` outputs `ID\tpreview` — awk reverses this to `preview\tID` so Walker can show the content as the label (`-l 0`) and return the ID as the value (`-V 1`)
+2. `grep -Pm1 "^$id\t"` then reconstructs the full `ID\tpreview` line from cliphist list so `cliphist decode` receives the format it expects
 
 ### USB Automounting (udiskie)
 

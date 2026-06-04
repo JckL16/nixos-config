@@ -35,8 +35,6 @@
     environment.systemPackages = with pkgs; [
       wayland
       kitty
-      waybar
-      rofi
       wl-clipboard
     ];
     
