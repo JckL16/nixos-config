@@ -152,6 +152,12 @@
       zle -N sudo-command-line
       bindkey "^[^[" sudo-command-line
 
+      # Open host config dir in nvim, then rebuild
+      update-config() {
+        nvim ~/nixos-config/hosts/$(hostname)/
+        sudo nixos-rebuild switch --flake ~/nixos-config
+      }
+
       # Extract various archive formats (replaces oh-my-zsh extract plugin)
       extract() {
         if [ -f "$1" ]; then
