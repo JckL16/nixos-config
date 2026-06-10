@@ -234,6 +234,7 @@
           "swayosd-server &"
           "batsignal -b -w 20 -c 10 -d 5 -n BAT0"
           "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+          "walker --gapplication-service"
         ];
         
         # Environment variables
