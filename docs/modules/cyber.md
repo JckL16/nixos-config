@@ -71,6 +71,11 @@ Automatically installed: pwntools, unicorn, capstone, keystone-engine, ropper, p
 - JWT tools
 - Wordlists: SecLists
 
+### Git Recon & Secret Scanning
+- gitleaks — scan repos and git history for leaked secrets/credentials
+- trufflehog — find secrets using entropy analysis and regex detectors
+- Gitea REST API: curl + jq cover most recon; docs available at `<instance>/api/swagger`
+
 ## Metasploit Database
 
 For full Metasploit functionality, enable the database at system level:
