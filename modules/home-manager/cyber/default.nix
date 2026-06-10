@@ -382,6 +382,10 @@
       # === JWT TOOLS ===
       jwt-cli              # JSON Web Token command-line tool
 
+      # === GIT RECON & SECRET SCANNING ===
+      gitleaks             # Scan git repos/history for leaked secrets and credentials
+      trufflehog           # Find secrets in git history using entropy and regex detectors
+
       # === PARAMETER DISCOVERY ===
       arjun                # HTTP parameter discovery suite
 
