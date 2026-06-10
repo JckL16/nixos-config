@@ -30,6 +30,7 @@
   onlyoffice.enable = true;
 
   home.packages = with pkgs; [
+    tectonic
     signal-desktop-bin
     ttyper
     qbittorrent
