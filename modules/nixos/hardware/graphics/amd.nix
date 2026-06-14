@@ -25,7 +25,7 @@
     # AMD-specific environment variables for gaming
     environment.variables = {
       AMD_VULKAN_ICD = "RADV";
-      RADV_PERFTEST = "gpl,nggc";
+      RADV_PERFTEST = "gpl";
     };
 
     environment.systemPackages = with pkgs; [

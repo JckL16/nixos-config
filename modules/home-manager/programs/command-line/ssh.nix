@@ -5,6 +5,8 @@
     enable = true;
     enableDefaultConfig = false;
     matchBlocks."github.com" = {
+      hostname = "github.com";
+      user = "git";
       identityFile = "~/.ssh/github_jckl16";
       identitiesOnly = true;
     };
