@@ -60,9 +60,9 @@
     };
 
     home.pointerCursor = {
-      name = "Nordzy-cursors";
-      package = pkgs.nordzy-cursor-theme;
-      size = 24;
+      name = "Bibata-Modern-Classic";
+      package = pkgs.bibata-cursors;
+      size = 20;
       gtk.enable = true;
     };
 
@@ -87,7 +87,7 @@
 
     home.packages = with pkgs; [
       nordic
-      nordzy-cursor-theme
+      bibata-cursors
       papirus-icon-theme
     ];
   };
