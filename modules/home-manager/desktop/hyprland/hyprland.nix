@@ -87,7 +87,12 @@
           font_family = "JetBrains Mono";
           focus_on_activate = true;
         };
-        
+
+        cursor = {
+          no_hardware_cursors = true;
+          use_cpu_buffer = 1;
+        };
+
         # Input configuration
         input = {
           kb_layout = "${variables.keyboard-layout},us";
@@ -239,8 +244,8 @@
         
         # Environment variables
         env = [
-          "XCURSOR_THEME,Nordzy-cursors"
-          "XCURSOR_SIZE,24"
+          "XCURSOR_THEME,Bibata-Modern-Classic"
+          "XCURSOR_SIZE,20"
           "GTK_ICON_THEME,Papirus-Dark"
         ];
       };
