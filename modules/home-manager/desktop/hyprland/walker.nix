@@ -1,105 +1,273 @@
 # modules/home-manager/desktop/hyprland/walker.nix
 # Walker — GTK4 app launcher.
-# Nord theme matching HyprPanel popup menus.
-# Per-mode Nerd Font prompt icons via hicolor SVG icons.
+# Nord theme using Walker 2.x directory-based format (layout.xml + item.xml + style.css).
 
 { pkgs, lib, config, ... }:
 
 let
-  # Shared CSS for all modes.
+  # GTK4 window layout — 520px wide, 320px max list height.
+  walkerLayout = pkgs.writeText "walker-layout.xml" ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <interface>
+    <requires lib="gtk" version="4.0"></requires>
+    <object class="GtkWindow" id="Window">
+      <style><class name="window"></class></style>
+      <property name="resizable">true</property>
+      <property name="title">Walker</property>
+      <child>
+        <object class="GtkBox" id="BoxWrapper">
+          <style><class name="box-wrapper"></class></style>
+          <property name="overflow">hidden</property>
+          <property name="orientation">horizontal</property>
+          <property name="valign">center</property>
+          <property name="halign">center</property>
+          <property name="width-request">520</property>
+          <property name="height-request">480</property>
+          <child>
+            <object class="GtkBox" id="Box">
+              <style><class name="box"></class></style>
+              <property name="orientation">vertical</property>
+              <property name="hexpand-set">true</property>
+              <property name="hexpand">true</property>
+              <property name="spacing">8</property>
+              <child>
+                <object class="GtkBox" id="SearchContainer">
+                  <style><class name="search-container"></class></style>
+                  <property name="overflow">hidden</property>
+                  <property name="orientation">horizontal</property>
+                  <property name="halign">fill</property>
+                  <property name="hexpand-set">true</property>
+                  <property name="hexpand">true</property>
+                  <child>
+                    <object class="GtkEntry" id="Input">
+                      <style><class name="input"></class></style>
+                      <property name="halign">fill</property>
+                      <property name="hexpand-set">true</property>
+                      <property name="hexpand">true</property>
+                    </object>
+                  </child>
+                </object>
+              </child>
+              <child>
+                <object class="GtkBox" id="ContentContainer">
+                  <style><class name="content-container"></class></style>
+                  <property name="orientation">horizontal</property>
+                  <property name="spacing">10</property>
+                  <child>
+                    <object class="GtkLabel" id="ElephantHint">
+                      <style><class name="elephant-hint"></class></style>
+                      <property name="label">Waiting for elephant...</property>
+                      <property name="hexpand">true</property>
+                      <property name="vexpand">true</property>
+                      <property name="visible">false</property>
+                      <property name="valign">0.5</property>
+                    </object>
+                  </child>
+                  <child>
+                    <object class="GtkLabel" id="Placeholder">
+                      <style><class name="placeholder"></class></style>
+                      <property name="label">No Results</property>
+                      <property name="hexpand">true</property>
+                      <property name="vexpand">true</property>
+                      <property name="valign">0.5</property>
+                    </object>
+                  </child>
+                  <child>
+                    <object class="GtkScrolledWindow" id="Scroll">
+                      <style><class name="scroll"></class></style>
+                      <property name="can_focus">false</property>
+                      <property name="overlay-scrolling">true</property>
+                      <property name="hexpand">true</property>
+                      <property name="vexpand">true</property>
+                      <property name="max-content-width">500</property>
+                      <property name="min-content-width">500</property>
+                      <property name="max-content-height">320</property>
+                      <property name="propagate-natural-height">true</property>
+                      <property name="propagate-natural-width">true</property>
+                      <property name="hscrollbar-policy">automatic</property>
+                      <property name="vscrollbar-policy">automatic</property>
+                      <child>
+                        <object class="GtkGridView" id="List">
+                          <style><class name="list"></class></style>
+                          <property name="max_columns">1</property>
+                          <property name="min_columns">1</property>
+                          <property name="can_focus">false</property>
+                        </object>
+                      </child>
+                    </object>
+                  </child>
+                  <child>
+                    <object class="GtkBox" id="Preview">
+                      <style><class name="preview"></class></style>
+                    </object>
+                  </child>
+                </object>
+              </child>
+              <child>
+                <object class="GtkBox" id="Keybinds">
+                  <property name="hexpand">true</property>
+                  <property name="margin-top">10</property>
+                  <style><class name="keybinds"></class></style>
+                  <child>
+                    <object class="GtkBox" id="GlobalKeybinds">
+                      <property name="spacing">10</property>
+                      <style><class name="global-keybinds"></class></style>
+                    </object>
+                  </child>
+                  <child>
+                    <object class="GtkBox" id="ItemKeybinds">
+                      <property name="hexpand">true</property>
+                      <property name="halign">end</property>
+                      <property name="spacing">10</property>
+                      <style><class name="item-keybinds"></class></style>
+                    </object>
+                  </child>
+                </object>
+              </child>
+              <child>
+                <object class="GtkLabel" id="Error">
+                  <style><class name="error"></class></style>
+                  <property name="xalign">0</property>
+                  <property name="visible">false</property>
+                </object>
+              </child>
+            </object>
+          </child>
+        </object>
+      </child>
+    </object>
+    </interface>
+  '';
+
+  # Item template — Walker 2.x default structure.
+  walkerItem = pkgs.writeText "walker-item.xml" ''
+    <?xml version="1.0" encoding="UTF-8"?>
+    <interface>
+    <requires lib="gtk" version="4.0"></requires>
+    <object class="GtkBox" id="ItemBox">
+      <style><class name="item-box"></class></style>
+      <property name="orientation">horizontal</property>
+      <property name="spacing">10</property>
+      <child>
+        <object class="GtkLabel" id="ItemImageFont">
+          <style><class name="item-image-text"></class></style>
+          <property name="width-chars">2</property>
+        </object>
+      </child>
+      <child>
+        <object class="GtkImage" id="ItemImage">
+          <style><class name="item-image"></class></style>
+          <property name="icon-size">large</property>
+        </object>
+      </child>
+      <child>
+        <object class="GtkBox" id="ItemTextBox">
+          <style><class name="item-text-box"></class></style>
+          <property name="orientation">vertical</property>
+          <property name="vexpand">true</property>
+          <property name="hexpand">true</property>
+          <property name="vexpand-set">true</property>
+          <property name="spacing">0</property>
+          <child>
+            <object class="GtkLabel" id="ItemText">
+              <style><class name="item-text"></class></style>
+              <property name="ellipsize">end</property>
+              <property name="vexpand_set">true</property>
+              <property name="vexpand">true</property>
+              <property name="xalign">0</property>
+            </object>
+          </child>
+          <child>
+            <object class="GtkLabel" id="ItemSubtext">
+              <style><class name="item-subtext"></class></style>
+              <property name="ellipsize">end</property>
+              <property name="vexpand_set">true</property>
+              <property name="vexpand">true</property>
+              <property name="xalign">0</property>
+              <property name="yalign">0</property>
+            </object>
+          </child>
+        </object>
+      </child>
+      <child>
+        <object class="GtkLabel" id="QuickActivation">
+          <style><class name="item-quick-activation"></class></style>
+          <property name="wrap">false</property>
+          <property name="valign">center</property>
+          <property name="xalign">0</property>
+          <property name="yalign">0.5</property>
+        </object>
+      </child>
+    </object>
+    </interface>
+  '';
+
+  # Nord CSS using Walker 2.x class names.
+  # Icons hidden to preserve the text-only look from the previous Walker 0.x theme.
   walkerCss = pkgs.writeText "walker-nord.css" ''
     @define-color foreground #ECEFF4;
     @define-color background rgba(46, 52, 64, 0.92);
     @define-color selection rgba(59, 66, 82, 0.85);
     @define-color border rgba(76, 86, 106, 0.5);
     @define-color dimtext rgba(216, 222, 233, 0.6);
-
-    #window,
-    #box,
-    #aiScroll,
-    #aiList,
-    #search,
-    #password,
-    #input,
-    #prompt,
-    #clear,
-    #typeahead,
-    #list,
-    child,
-    scrollbar,
-    slider,
-    #item,
-    #text,
-    #label,
-    #bar,
-    #sub,
-    #activationlabel {
-      all: unset;
-    }
+    @define-color accent #88C0D0;
 
     * {
+      all: unset;
       font-family: "JetBrainsMono Nerd Font";
       font-size: 14px;
       color: @foreground;
     }
 
-    #window {
-      color: @foreground;
+    .window {
+      background-color: transparent;
     }
 
-    #box {
+    .box-wrapper {
       background-color: @background;
       border: 1px solid @border;
       border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .box {
       padding: 10px;
     }
 
-    #search {
+    .search-container {
       background-color: rgba(59, 66, 82, 0.5);
       border: 1px solid @border;
       border-radius: 6px;
-      padding: 6px;
-      margin-bottom: 6px;
     }
 
-    #input {
+    .input {
+      background: transparent;
       color: @foreground;
-      padding: 4px 8px;
+      caret-color: @accent;
+      padding: 6px 8px;
     }
 
-    #prompt {
-      opacity: 0.55;
-      color: @foreground;
-      margin-left: 4px;
-      margin-right: 8px;
-      font-size: 16px;
-    }
-
-    #clear {
-      opacity: 0.6;
-      color: @foreground;
-      margin-right: 4px;
-    }
-
-    #input placeholder {
+    .input placeholder {
       color: @dimtext;
     }
 
-    #list {
-      color: @foreground;
+    .input selection {
+      background: rgba(136, 192, 208, 0.3);
     }
 
-    child {
+    .item-box {
       padding: 8px 12px;
       border-radius: 4px;
     }
 
-    child:selected,
-    child:hover {
+    child:selected .item-box,
+    child:hover .item-box,
+    row:selected .item-box {
       background-color: @selection;
     }
 
-    #icon {
+    #ItemImage,
+    .item-image {
       -gtk-icon-size: 0px;
       min-width: 0;
       min-height: 0;
@@ -108,119 +276,72 @@ let
       opacity: 0;
     }
 
-    #label {
+    #ItemImageFont,
+    .item-image-text {
+      font-size: 0;
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      opacity: 0;
+    }
+
+    .item-text {
       font-weight: 500;
     }
 
-    #sub {
-      opacity: 0.6;
+    .item-subtext {
       font-size: 0.85em;
+      color: @dimtext;
+    }
+
+    .item-quick-activation {
+      color: @dimtext;
+      font-size: 0.8em;
     }
 
     scrollbar {
       opacity: 0;
     }
 
-    #spinner {
-      padding: 8px;
+    .placeholder,
+    .elephant-hint {
+      color: @dimtext;
+      padding: 20px;
     }
 
-    #cfgerr {
+    .error {
       background-color: rgba(191, 97, 106, 0.85);
-      margin-top: 10px;
       padding: 8px;
       border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    .keybinds {
+      padding-top: 8px;
+      border-top: 1px solid @border;
+      font-size: 12px;
+      color: @dimtext;
+    }
+
+    .keybind-label {
+      padding: 2px 4px;
+      border-radius: 4px;
+      border: 1px solid @dimtext;
+    }
+
+    .keybind-bind {
+      opacity: 0.5;
     }
   '';
-
-  # Per-mode TOML — only the prompt icon name differs.
-  # icon names resolve to Nerd Font SVGs installed in hicolor (see activation script).
-  makeToml = icon: pkgs.writeText "walker-nord-${icon}.toml" ''
-    [ui.anchors]
-    bottom = true
-    left = true
-    right = true
-    top = true
-
-    [ui.window]
-    h_align = "fill"
-    v_align = "fill"
-
-    [ui.window.box]
-    h_align = "center"
-    v_align = "center"
-    width = 520
-
-    [ui.window.box.bar]
-    orientation = "horizontal"
-    position = "end"
-
-    [ui.window.box.bar.entry]
-    h_align = "fill"
-    h_expand = true
-
-    [ui.window.box.bar.entry.icon]
-    h_align = "center"
-    h_expand = true
-    pixel_size = 24
-    theme = ""
-
-    [ui.window.box.scroll.list]
-    max_height = 320
-    max_width = 500
-    min_width = 500
-    width = 500
-
-    [ui.window.box.scroll.list.item.activation_label]
-    h_align = "fill"
-    v_align = "fill"
-    width = 20
-    x_align = 0.5
-    y_align = 0.5
-
-    [ui.window.box.scroll.list.item.icon]
-    hide = true
-    theme = ""
-
-    [ui.window.box.scroll.list.margins]
-    top = 8
-
-    [ui.window.box.search.prompt]
-    name = "prompt"
-    icon = "${icon}"
-    theme = "hicolor"
-    pixel_size = 16
-    h_align = "center"
-    v_align = "center"
-
-    [ui.window.box.search.clear]
-    name = "clear"
-    icon = "edit-clear"
-    theme = ""
-    pixel_size = 16
-    h_align = "center"
-    v_align = "center"
-
-    [ui.window.box.search.input]
-    h_align = "fill"
-    h_expand = true
-    v_align = "center"
-    icons = true
-
-    [ui.window.box.search.spinner]
-    hide = true
-  '';
-
-  tomlApps      = makeToml "walker-apps";
-  tomlWindows   = makeToml "walker-windows";
-  tomlClipboard = makeToml "walker-clipboard";
-  tomlWebsearch = makeToml "walker-websearch";
-  tomlKeybinds  = makeToml "walker-keybinds";
 
 in {
 
   config = lib.mkIf config.hyprland.enable {
     home.packages = with pkgs; [ walker qalculate-qt libqalculate ];
+
+    # Elephant is the data provider backend for Walker 2.x.
+    # Using the HM module so it runs as a systemd user service (graphical-session.target).
+    services.elephant.enable = true;
 
     home.file.".config/walker/config.toml".text = ''
       theme = "nord"
@@ -230,6 +351,7 @@ in {
       hide_action_hints = true
       hide_return_action = true
       hide_action_hints_dmenu = true
+      hide_quick_activation = true
 
       [shell]
       exclusive_zone = -1
@@ -239,8 +361,11 @@ in {
       anchor_left = true
       anchor_right = true
 
+      [placeholders]
+      "default" = { input = "Search", list = "No Results" }
+
       [providers]
-      default = ["desktopapplications"]
+      default = ["desktopapplications", "runner"]
       empty = ["desktopapplications"]
       max_results = 8
 
@@ -251,47 +376,23 @@ in {
       [[providers.prefixes]]
       prefix = "+"
       provider = "calc"
+
+      [[providers.prefixes]]
+      prefix = ">"
+      provider = "runner"
     '';
 
-    # Walker 0.13.26 theme system:
-    #   - Flat files in ~/.config/walker/themes/: nord.css + per-mode *.toml
-    #   - Copied (not symlinked) so Walker can write to the themes dir
-    #   - Nerd Font prompt icons: SVGs installed to hicolor scalable/apps
-    #     GTK finds hicolor icons as the universal fallback regardless of active theme
+    # Walker 2.x theme system:
+    #   - Theme directory: ~/.config/walker/themes/nord/
+    #   - layout.xml: GTK4 window/widget layout definition
+    #   - item.xml: list item template
+    #   - style.css: Nord colours
+    #   - Copied (not symlinked) so Walker can write to the themes dir.
     home.activation.copyWalkerTheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      mkdir -p "$HOME/.config/walker/themes"
-      mkdir -p "$HOME/.local/share/icons/hicolor/scalable/apps"
-
-      # Install Nerd Font SVG icons for Walker mode prompt indicators.
-      # SVG text rendered by librsvg using the installed JetBrainsMono Nerd Font.
-      # fill="#ECEFF4" = Nord Snow Storm (Walker foreground colour).
-      install_nf_icon() {
-        local name="$1" glyph="$2"
-        printf '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><text x="8" y="14" font-family="JetBrainsMono Nerd Font" font-size="14" text-anchor="middle" fill="#ECEFF4">%s</text></svg>' \
-          "$glyph" > "$HOME/.local/share/icons/hicolor/scalable/apps/$name.svg"
-      }
-
-      install_nf_icon "walker-apps"      "󰍉"
-      install_nf_icon "walker-windows"   "󱂬"
-      install_nf_icon "walker-clipboard" "󰅎"
-      install_nf_icon "walker-websearch" "󰖟"
-      install_nf_icon "walker-keybinds"  "󰌌"
-
-      # Walker loads <theme-name>.css alongside each TOML.
-      # The CSS is identical for all modes — copy it once per theme name.
-      for theme in nord nord-windows nord-clipboard nord-websearch nord-keybinds; do
-        cp --no-preserve=all "${walkerCss}" "$HOME/.config/walker/themes/$theme.css"
-      done
-
-      # Per-mode TOMLs — default (apps) must be named "nord" to match config.toml theme
-      cp --no-preserve=all "${tomlApps}"      "$HOME/.config/walker/themes/nord.toml"
-      cp --no-preserve=all "${tomlWindows}"   "$HOME/.config/walker/themes/nord-windows.toml"
-      cp --no-preserve=all "${tomlClipboard}" "$HOME/.config/walker/themes/nord-clipboard.toml"
-      cp --no-preserve=all "${tomlWebsearch}" "$HOME/.config/walker/themes/nord-websearch.toml"
-      cp --no-preserve=all "${tomlKeybinds}"  "$HOME/.config/walker/themes/nord-keybinds.toml"
-
-      # Rebuild icon cache so GTK4 picks up the new hicolor SVGs immediately
-      gtk4-update-icon-cache "$HOME/.local/share/icons/hicolor" 2>/dev/null || true
+      mkdir -p "$HOME/.config/walker/themes/nord"
+      cp --no-preserve=all "${walkerLayout}" "$HOME/.config/walker/themes/nord/layout.xml"
+      cp --no-preserve=all "${walkerItem}"   "$HOME/.config/walker/themes/nord/item.xml"
+      cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/nord/style.css"
     '';
 
     # Window switcher: list all Hyprland clients, focus the selected one.
@@ -301,7 +402,7 @@ in {
         #!/usr/bin/env bash
         address=$(hyprctl clients -j | jq -r \
           '.[] | .title + " [" + .class + "]" + "\t" + .address' \
-          | walker --dmenu -s nord-windows -t $'\t' -l 0 -V 1 -p 'Switch window')
+          | walker --dmenu -t $'\t' -l 0 -V 1 -p 'Switch window')
         [ -n "$address" ] && hyprctl dispatch focuswindow "address:$address"
       '';
     };

@@ -171,7 +171,7 @@ Always active (`modules/home-manager/programs/command-line/ssh.nix`). Configures
 
 A `github.com` matchBlock is preconfigured to use `~/.ssh/github_jckl16` exclusively (`IdentitiesOnly yes`), preventing the SSH agent from offering other keys (e.g. Vagrant keys) to GitHub.
 
-To add host-specific entries, use `programs.ssh.matchBlocks` in `home.nix`.
+To add host-specific entries, use `programs.ssh.settings` in `home.nix`.
 
 ### Git
 

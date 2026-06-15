@@ -31,7 +31,7 @@
         # cliphist list: "ID\tpreview" — awk reverses to "preview\tID"
         # so walker -l 0 shows preview as label, -V 1 returns ID (same pattern as windows.sh)
         id=$(cliphist list | awk 'BEGIN{FS=OFS="\t"} {print $2, $1}' \
-          | walker --dmenu -s nord-clipboard -p 'Paste' -t $'\t' -l 0 -V 1)
+          | walker --dmenu -p 'Paste' -t $'\t' -l 0 -V 1)
         [ -n "$id" ] && cliphist list | grep -Pm1 "^$id\t" | cliphist decode | wl-copy
       '';
     };

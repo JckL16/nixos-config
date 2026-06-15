@@ -93,19 +93,20 @@ Walker is a GTK4 application launcher styled with a Nord glassmorphism theme. It
 
 | Keybind | Action |
 |---|---|
-| `Super+D` | App launcher |
+| `Super+D` | App launcher (desktop apps + shell runner) |
 | `Super+Tab` | Window switcher (custom hyprctl script) |
 | `Super+Shift+D` | Web search (`=` prefix in main launcher also works) |
-| `Super+F1` | Search Hyprland keybinds (built-in `hyprland_keybinds` module) |
+| `Super+F1` | Search Hyprland keybinds (`hyprlandkeybinds` module) |
 | `Super+Shift+V` | Clipboard history picker |
 
 Prefix shortcuts in the main launcher:
 - `=` — web search
 - `+` — calculator (qalculate)
+- `>` — shell command runner
 
-**Theme system:** Walker 0.13.26 requires a flat `<name>.css` + `<name>.toml` pair in `~/.config/walker/themes/`. Since Walker needs to write to the themes directory, files are copied (not symlinked) via a `home.activation` script after `linkGeneration`. Each mode (`nord`, `nord-windows`, `nord-clipboard`, etc.) gets its own CSS+TOML pair.
+**Services:** Walker 2.x requires the `elephant` data provider backend. Enabled via `services.elephant.enable = true` in walker.nix, which creates a systemd user service (`WantedBy=graphical-session.target`). The `walker --gapplication-service` daemon is started via Hyprland's `exec-once`. **After a theme change, restart the Walker daemon** (`pkill walker && walker --gapplication-service &`) since it caches the theme at startup.
 
-**Prompt icons:** Per-mode Nerd Font glyphs are installed as SVG files in `~/.local/share/icons/hicolor/scalable/apps/`. GTK4 resolves hicolor as a universal fallback, so the glyphs render correctly regardless of active icon theme.
+**Theme system:** Walker 2.x uses a directory-based theme format: `~/.config/walker/themes/nord/` containing `layout.xml` (GTK4 interface definition), `item.xml` (list item template), and `style.css` (Nord colours). Files are copied via `home.activation.copyWalkerTheme` (not symlinked) because Walker needs write access to the themes directory. The `-s` flag in Walker 2.x means "provider set", not style — never use `-s` for theme selection.
 
 **`-V` flag behaviour (non-obvious):** Walker's `--dmenu` mode requires `-V N` where N ≥ 1 to produce any stdout output. `-V 0` outputs nothing; omitting `-V` also outputs nothing. Use `-V 1` to return the second tab-separated column — the same pattern used in the window switcher script.
 

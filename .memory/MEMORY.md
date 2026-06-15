@@ -8,3 +8,4 @@
 - [project_install_quirks.md](project_install_quirks.md) — Installation gotchas: RAM exhaustion, LUKS password, disko, monitor setup
 - [project_hyprpanel.md](project_hyprpanel.md) — Non-obvious HyprPanel config decisions: ELOOP fix, monochrome requirement, udiskie tray, blueman, CSS constraints
 - [project_walker.md](project_walker.md) — Walker launcher: -V flag quirks, clipboard awk workaround, theme copy requirement, hicolor SVG icons
+- [feedback_use_web_search.md](feedback_use_web_search.md) — Use web search for package behaviour research, not nix store inspection or binary execution
