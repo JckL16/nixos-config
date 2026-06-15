@@ -5,17 +5,46 @@ metadata:
   type: project
 ---
 
-Walker 0.13.26 GTK4 app launcher replaces Rofi/Fuzzel. Config in
+Walker 2.x GTK4 app launcher replaces Rofi/Fuzzel. Config in
 `modules/home-manager/desktop/hyprland/walker.nix`.
 Clipboard history in `modules/home-manager/desktop/hyprland/clipman.nix`.
 
-## Theme system requires copied files, not symlinks
-Walker needs to write to its themes directory. `home.file` (read-only symlinks) breaks this.
-Fix: `home.activation.copyWalkerTheme` runs after `linkGeneration`, uses `cp --no-preserve=all`
-to copy CSS and TOML files. Each mode needs its own `<name>.css` AND `<name>.toml` pair —
-missing CSS causes the mode to fall back to white GTK defaults.
+## Walker 2.x requires elephant (data provider backend)
+Walker was split in 2.x: `walker` (GTK4 UI, `--gapplication-service` daemon) and `elephant`
+(data provider backend). Without `elephant`, walker crashes with "Please install elephant."
+Enabled via `services.elephant.enable = true` in walker.nix (systemd user service,
+`WantedBy=graphical-session.target`). Do NOT add `elephant` to `home.packages` manually.
 
-**Why:** Walker modifies themes dir at runtime; symlinks into nix store are read-only.
+**Why:** Walker 2.x delegates all provider data to the elephant daemon.
+**How to apply:** Always ensure `services.elephant.enable = true` is present in walker.nix.
+
+## Theme system changed completely in 2.x (TOML → directory of XML+CSS)
+Walker 0.x used flat `<name>.css` + `<name>.toml` pairs.
+Walker 2.x uses a directory `~/.config/walker/themes/<name>/` containing:
+- `layout.xml` — GTK4 GtkBuilder interface definition for window/widget layout
+- `item.xml` — GTK4 interface definition for each list item
+- `style.css` — CSS targeting the new class names (`.box-wrapper`, `.item-box`, etc.)
+
+No TOML files anywhere in the 2.x theme system. Per-mode themes no longer exist.
+Files are copied (not symlinked) via `home.activation.copyWalkerTheme` because Walker
+needs write access to the themes directory.
+
+**Why:** Complete theme architecture rewrite in Walker 2.x.
+**How to apply:** CSS class names reference: `.window`, `.box-wrapper`, `.box`,
+`.search-container`, `.input`, `.item-box`, `.item-text`, `.item-subtext`,
+`.item-image-text`, `.item-image`, `.item-quick-activation`. Selection:
+`child:selected .item-box, row:selected .item-box`.
+
+## -s flag meaning changed in 2.x
+In Walker 0.x: `-s <name>` specified a style/theme name.
+In Walker 2.x: `-s <name>` specifies a PROVIDER SET (defined in config.toml `[providers.sets]`).
+Never use `-s` to set a theme. Never use `-s nord-*` flags.
+
+**How to apply:** Strip all `-s` flags from walker invocations in keybinds and scripts.
+
+## Module name changed: hyprland_keybinds → hyprlandkeybinds
+Walker 2.x uses `hyprlandkeybinds` (no underscore). Old `hyprland_keybinds` is invalid.
+Use `walker -m hyprlandkeybinds` for the keybinds browser.
 
 ## -V flag is 1-indexed; 0 and omitted both output nothing
 Walker `--dmenu` mode requires `-V N` where N ≥ 1 to produce stdout output.
@@ -36,20 +65,14 @@ reverse the columns with awk before piping to walker.
 **Why:** `cliphist decode` requires the full `ID\tpreview` line from stdin;
 just the ID alone does not work. Walker's -V 0 limitation forces the awk workaround.
 
-## Prompt icons via hicolor SVG
-GTK4 cannot render Nerd Font glyphs as icon names directly. Workaround: install SVG files
-with `<text font-family="JetBrainsMono Nerd Font">glyph</text>` to
-`~/.local/share/icons/hicolor/scalable/apps/<name>.svg`. hicolor is the universal fallback
-GTK searches regardless of active theme.
-
-## No built-in window switcher module
-Walker has no Hyprland window switcher module. `walker -m windows` opens Walker's own
-module picker. Custom script at `~/.config/walker/windows.sh` uses
-`hyprctl clients -j | jq | walker --dmenu` with `-t $'\t' -l 0 -V 1` to switch windows.
-
 ## Calculator prefix must be + not =
 Walker passes the FULL input string (including prefix character) to qalc.
 `=1+1` → qalc receives `=1+1` → evaluates as `(0 = (1+1)) = false`.
 `+` is safe as unary plus. Use `+` for calc prefix, `=` for websearch.
+
+## No built-in window switcher script
+Walker 2.x has a `windows` provider, but the custom `~/.config/walker/windows.sh` uses
+`hyprctl clients -j | jq | walker --dmenu` with `-t $'\t' -l 0 -V 1` to switch windows.
+Kept as custom script for reliable window focus via `hyprctl dispatch focuswindow`.
 
 [[project_hyprpanel]]

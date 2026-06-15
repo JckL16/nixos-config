@@ -107,7 +107,6 @@
         
         # Dwindle layout
         dwindle = {
-          pseudotile = true;
           preserve_split = true;
         };
         
@@ -138,11 +137,11 @@
           "$mod SHIFT, Up, movewindow, u"
           "$mod SHIFT, Right, movewindow, r"
           
-          "$mod, V, togglesplit"
+          "$mod, V, layoutmsg, togglesplit"
           "$mod, F, fullscreen, 0"
           "$mod, S, togglegroup"
           "$mod, W, changegroupactive, f"
-          "$mod, E, togglesplit"
+          "$mod, E, layoutmsg, togglesplit"
           
           "$mod SHIFT, Space, togglefloating"
           "$mod, Space, focuscurrentorlast"
@@ -177,9 +176,9 @@
           "$mod CTRL, Escape, layoutmsg, preselectreset"
 
           "$mod, R, submap, resize"
-          "$mod, D, exec, walker -p Search"
-          "$mod SHIFT, D, exec, walker -m websearch -s nord-websearch -p 'Search the web'"
-          "$mod, F1, exec, walker -m hyprland_keybinds -s nord-keybinds -p 'Search keybinds'"
+          "$mod, D, exec, walker"
+          "$mod SHIFT, D, exec, walker -m websearch"
+          "$mod, F1, exec, walker -m hyprlandkeybinds"
           "$mod, Tab, exec, ~/.config/walker/windows.sh"
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
@@ -256,28 +255,22 @@
         # Monitor config managed by nwg-displays (ignored if file doesn't exist)
         source = ~/.config/hypr/monitors.conf
 
-        # Window rules (windowrulev2 syntax for stable Hyprland)
-        windowrulev2 = float, class:^(org.pulseaudio.pavucontrol)$
-        windowrulev2 = float, class:^(.blueman-manager-wrapped)$
-        windowrulev2 = float, class:^(nm-connection-editor)$
-        windowrulev2 = noblur, fullscreen:1
+        # Window rules
+        windowrule = float on class:^(org.pulseaudio.pavucontrol)$
+        windowrule = float on class:^(.blueman-manager-wrapped)$
+        windowrule = float on class:^(nm-connection-editor)$
+        windowrule = no_blur on fullscreen:1
 
         # Layer rules - blur and transparency
-        layerrule = blur, walker
-        layerrule = ignorealpha 0.5, walker
+        layerrule = blur on, ignore_alpha 0.5, match:namespace walker
         # HyprPanel bar layers are named bar-0, bar-1, etc.
-        layerrule = blur, bar-[0-9]+
-        layerrule = ignorealpha 0.5, bar-[0-9]+
+        layerrule = blur on, ignore_alpha 0.5, match:namespace bar-[0-9]+
         # HyprPanel popup menus (networkmenu, audiomenu, mediamenu, etc.)
-        layerrule = blur, .*menu
-        layerrule = ignorealpha 0.5, .*menu
+        layerrule = blur on, ignore_alpha 0.5, match:namespace .*menu
         # HyprPanel notification center
-        layerrule = blur, notifications-window
-        layerrule = ignorealpha 0.5, notifications-window
-        layerrule = blur, swayosd
-        layerrule = ignorealpha 1, swayosd
-        layerrule = blur, logout_dialog
-        layerrule = ignorealpha 1, logout_dialog
+        layerrule = blur on, ignore_alpha 0.5, match:namespace notifications-window
+        layerrule = blur on, ignore_alpha 1, match:namespace swayosd
+        layerrule = blur on, ignore_alpha 1, match:namespace logout_dialog
 
         # Resize submap
         bind = $mod, R, submap, resize

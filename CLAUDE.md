@@ -96,6 +96,13 @@ Do not run nix or nixos-rebuild commands (e.g. `nixos-rebuild switch`, `nix flak
 `nix build`, `nix run`, `disko`). Instead, output the exact command for the user to run
 in a code block and explain what it does.
 
+## Researching Package Behaviour
+
+When investigating how a package works (CLI flags, config schema, available modules, etc.),
+**use web search** rather than poking at binaries or source in the nix store. Do not run
+`--help`, inspect `/nix/store/...`, or read package source to reverse-engineer behaviour.
+Look up the project's documentation, GitHub README, or wiki instead.
+
 ## Keeping Docs and Memory Up to Date
 
 When making changes to this config:
