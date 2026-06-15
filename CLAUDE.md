@@ -50,7 +50,7 @@ nix flake check
 - **Modules** use `lib.mkEnableOption` + `lib.mkIf config.<module>.enable` for optional features
 - **Defaults** use `lib.mkDefault` so hosts can override without conflicts
 - **Variables** from `variables.nix` are available everywhere via `specialArgs`; use them instead of hardcoding username, timezone, etc.
-- **Stable vs unstable**: use `pkgs` (nixpkgs 25.11) by default; use `pkgs-unstable` only when a package is unavailable or too old in stable
+- **Stable vs unstable**: use `pkgs` (nixpkgs 26.05) by default; use `pkgs-unstable` only when a package is unavailable or too old in stable
 - **No formatter is configured** — keep existing indentation style (2 spaces) when editing Nix files
 - Module files live under `modules/nixos/` or `modules/home-manager/` and must be imported in the relevant `default.nix`
 

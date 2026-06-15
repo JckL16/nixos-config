@@ -31,7 +31,7 @@
 
   home.packages = with pkgs; [
     tectonic
-    signal-desktop-bin
+    signal-desktop
     ttyper
     qbittorrent
     claude-code

@@ -10,6 +10,7 @@
     wayland.windowManager.hyprland = {
       enable = true;
       package = pkgs.hyprland;
+      configType = "hyprlang";
       
       settings = {
         # Modifier key

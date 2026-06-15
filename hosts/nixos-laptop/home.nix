@@ -32,7 +32,7 @@
     spotify
     vscode
     anki
-    signal-desktop-bin
+    signal-desktop
     discord-ptb
     ttyper
     cmatrix

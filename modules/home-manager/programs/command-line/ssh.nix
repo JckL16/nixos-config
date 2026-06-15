@@ -4,20 +4,22 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    matchBlocks."github.com" = {
-      hostname = "github.com";
-      user = "git";
-      identityFile = "~/.ssh/github_jckl16";
-      identitiesOnly = true;
-    };
-    matchBlocks."*" = {
-      addKeysToAgent = "yes";
-      serverAliveInterval = 60;
-      serverAliveCountMax = 3;
-      compression = true;
-      controlMaster = "auto";
-      controlPath = "~/.ssh/control/%r@%h:%p";
-      controlPersist = "10m";
+    settings = {
+      "github.com" = {
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = "~/.ssh/github_jckl16";
+        IdentitiesOnly = true;
+      };
+      "*" = {
+        AddKeysToAgent = "yes";
+        ServerAliveInterval = 60;
+        ServerAliveCountMax = 3;
+        Compression = true;
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/control/%r@%h:%p";
+        ControlPersist = "10m";
+      };
     };
   };
 

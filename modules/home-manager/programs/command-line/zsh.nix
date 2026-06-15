@@ -6,7 +6,7 @@
     eza
     ripgrep
     fd
-    tldr
+    tealdeer
     btop
     duf
     dust

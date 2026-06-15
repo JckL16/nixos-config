@@ -371,7 +371,7 @@
       assetfinder          # Find domains and subdomains
 
       # === WEB FRAMEWORK TOOLS ===
-      wapiti               # Web application vulnerability scanner
+      # wapiti             # Broken in 26.05: wapiti-arsenic pins packaging<26.0 but nixpkgs ships 26.1
       nuclei               # Fast vulnerability scanner based on templates
 
       # === API TESTING ===

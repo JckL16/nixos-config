@@ -35,7 +35,7 @@
   networking.firewall.allowedUDPPorts = [ 5353 ];
 
   nixpkgs.config.permittedInsecurePackages = [
-    "ventoy-1.1.10"
+    "ventoy-1.1.12"
   ];
 
   home-manager = {

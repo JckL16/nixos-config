@@ -12,6 +12,7 @@
   config = lib.mkIf config.nvim.enable {
     programs.nixvim = {
       enable = true;
+      nixpkgs.source = inputs.nixpkgs;
       viAlias = true;
       vimAlias = true;
       vimdiffAlias = true;

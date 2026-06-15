@@ -34,7 +34,7 @@
     nmap
     nixos-anywhere
     jq
-    signal-desktop-bin
+    signal-desktop
     qbittorrent
     claude-code
     minikube
