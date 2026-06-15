@@ -84,7 +84,7 @@ All hosts are defined in `flake.nix` using the `mkSystem` helper. The available 
 | `hostname` | required | Directory name under `hosts/` |
 | `system` | `"x86_64-linux"` | CPU architecture |
 | `extraVars` | `{}` | Merged into `variables.nix` for this host |
-| `extraModules` | `[]` | Additional NixOS modules (e.g., `nixos-wsl`) |
+| `extraModules` | `[]` | Additional NixOS modules to include |
 | `withDisko` | `true` | Include the disko module |
 | `withHardwareConfig` | `true` | Include `hardware-configuration.nix` |
 
