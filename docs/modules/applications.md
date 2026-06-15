@@ -122,7 +122,7 @@ Always active. Configured with:
 - **Fzf** for fuzzy finding (Ctrl-R history, Alt-C directory, Ctrl-T file widget)
 - **pay-respects** for command correction (`fuck` / `f` to retry last command)
 - **bat** with Nord theme; `man` pages render through bat automatically (`MANPAGER`)
-- Additional CLI tools: ripgrep, fd, tldr, btop, duf, dust, procs, delta
+- Additional CLI tools: ripgrep, fd, tealdeer, btop, duf, dust, procs, delta
 - `ESC ESC` prepends `sudo` to the current command line
 - `extract <file>` unpacks any common archive format (tar, zip, 7z, rar, xz, …)
 

@@ -15,7 +15,7 @@
     man-pages
     procps
     texinfo
-    tldr
+    tealdeer
     tree
     unzip
     util-linux
