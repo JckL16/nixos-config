@@ -18,13 +18,13 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    nixvim = {
+      url = "github:nix-community/nixvim/nixos-25.11";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -79,14 +79,8 @@
           extraVars = { bootDevice = "/dev/vda"; isBIOS = true; displayScale = 1; };
         };
 
-        nixos-wsl = mkSystem {
-          hostname = "nixos-wsl";
-          withDisko = false;
-          withHardwareConfig = false;
-          extraModules = [ inputs.nixos-wsl.nixosModules.default ];
-        };
       };
 
-      homeManagerModules.default = ./modules/home-manager;
+      homeModules.default = ./modules/home-manager;
     };
 }

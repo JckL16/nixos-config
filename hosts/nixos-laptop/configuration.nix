@@ -47,7 +47,7 @@
     users."${variables.username}" = {
       imports = [
         ./home.nix
-        inputs.self.outputs.homeManagerModules.default
+        inputs.self.outputs.homeModules.default
       ];
     };
   };
