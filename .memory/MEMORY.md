@@ -9,3 +9,4 @@
 - [project_hyprpanel.md](project_hyprpanel.md) — Non-obvious HyprPanel config decisions: ELOOP fix, monochrome requirement, udiskie tray, blueman, CSS constraints
 - [project_walker.md](project_walker.md) — Walker launcher: -V flag quirks, clipboard awk workaround, theme copy requirement, hicolor SVG icons
 - [feedback_use_web_search.md](feedback_use_web_search.md) — Use web search for package behaviour research, not nix store inspection or binary execution
+- [project_mesa_workaround.md](project_mesa_workaround.md) — Temporary RADV_DEBUG=nogpl in amd.nix for Mesa 26.1.2 Unity crash — remove once Mesa 26.1.3+ ships
