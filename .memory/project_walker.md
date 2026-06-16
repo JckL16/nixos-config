@@ -46,33 +46,32 @@ Never use `-s` to set a theme. Never use `-s nord-*` flags.
 Walker 2.x uses `hyprlandkeybinds` (no underscore). Old `hyprland_keybinds` is invalid.
 Use `walker -m hyprlandkeybinds` for the keybinds browser.
 
-## -V flag is 1-indexed; 0 and omitted both output nothing
-Walker `--dmenu` mode requires `-V N` where N ≥ 1 to produce stdout output.
-`-V 0` outputs nothing. Omitting `-V` also outputs nothing.
-`-V 1` returns the second tab-separated column (same pattern as windows.sh).
+## Walker 2.x dmenu API: no column selection
+Walker 2.x removed `-t` (tab delimiter), `-l` (label column), and `-V` (value column) from dmenu.
+`-t` in 2.x means `--theme`. The old column-selection dmenu API is gone entirely.
+Walker 2.x dmenu just reads stdin lines and outputs the selected line unchanged to stdout.
 
-**Why:** Confirmed via debug logging. `-V 0` evaluated as falsy/null by walker.
-**How to apply:** Always use `-V 1` for dmenu value return. If you need column 0 (first field),
-reverse the columns with awk before piping to walker.
+**How to apply:** Never use `-t $'\t' -l N -V N` in Walker invocations — they are invalid.
+For scripts that need to extract a field from the selected line, use `awk`/`cut` on Walker's output.
 
-## Clipboard picker: awk reversal + grep reconstruction
-`cliphist list` outputs `ID\tpreview`. To show preview as label and return ID as value:
-1. `awk 'BEGIN{FS=OFS="\t"} {print $2, $1}'` reverses to `preview\tID`
-2. Walker: `-t $'\t' -l 0 -V 1` — shows column 0 (preview), returns column 1 (ID)
-3. `grep -Pm1 "^$id\t"` reconstructs full `ID\tpreview` line from cliphist list
-4. Full line piped to `cliphist decode` which needs the tab-separated format
+## Clipboard picker: simple pipe
+`cliphist list` outputs `ID\tpreview` lines. Walker dmenu shows them and outputs the selected line.
+`cliphist decode` accepts the full `ID\tpreview` line from stdin — so the script is a direct pipe:
+```bash
+entry=$(cliphist list | walker -d -p "Paste...")
+[ -n "$entry" ] && printf '%s' "$entry" | cliphist decode | wl-copy
+```
+Script lives at `~/.config/walker/clipboard.sh` (defined in walker.nix).
 
-**Why:** `cliphist decode` requires the full `ID\tpreview` line from stdin;
-just the ID alone does not work. Walker's -V 0 limitation forces the awk workaround.
+**Why:** Walker 2.x dmenu passes through the whole selected line; cliphist decode expects exactly that format.
+
+## Window switcher: use native provider
+`walker -m windows` uses Walker's built-in Hyprland window provider. The old custom `windows.sh`
+used `-t $'\t' -l 0 -V 1` flags that no longer exist in 2.x. Keybind: `$mod, Tab, exec, walker -m windows`.
 
 ## Calculator prefix must be + not =
 Walker passes the FULL input string (including prefix character) to qalc.
 `=1+1` → qalc receives `=1+1` → evaluates as `(0 = (1+1)) = false`.
 `+` is safe as unary plus. Use `+` for calc prefix, `=` for websearch.
-
-## No built-in window switcher script
-Walker 2.x has a `windows` provider, but the custom `~/.config/walker/windows.sh` uses
-`hyprctl clients -j | jq | walker --dmenu` with `-t $'\t' -l 0 -V 1` to switch windows.
-Kept as custom script for reliable window focus via `hyprctl dispatch focuswindow`.
 
 [[project_hyprpanel]]

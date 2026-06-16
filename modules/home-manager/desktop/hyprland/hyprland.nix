@@ -179,7 +179,7 @@
           "$mod, D, exec, walker"
           "$mod SHIFT, D, exec, walker -m websearch"
           "$mod, F1, exec, walker -m hyprlandkeybinds"
-          "$mod, Tab, exec, ~/.config/walker/windows.sh"
+          "$mod, Tab, exec, walker -m windows"
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
           "$mod SHIFT, V, exec, ~/.config/walker/clipboard.sh"
