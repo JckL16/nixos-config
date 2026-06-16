@@ -176,11 +176,11 @@
         { mode = "n"; key = "<leader>w"; action = ":w<CR>"; options.desc = "Save"; }
         { mode = "n"; key = "<leader>q"; action = ":q<CR>"; options.desc = "Quit"; }
         { mode = "n"; key = "<leader>Q"; action = ":qa<CR>"; options.desc = "Quit all"; }
-        # Window navigation
-        { mode = "n"; key = "<C-h>"; action = "<C-w>h"; options.desc = "Window left"; }
-        { mode = "n"; key = "<C-j>"; action = "<C-w>j"; options.desc = "Window down"; }
-        { mode = "n"; key = "<C-k>"; action = "<C-w>k"; options.desc = "Window up"; }
-        { mode = "n"; key = "<C-l>"; action = "<C-w>l"; options.desc = "Window right"; }
+        # Window / pane navigation (handled by tmux-navigator; works across nvim splits and tmux panes)
+        { mode = "n"; key = "<C-h>"; action = "<cmd>TmuxNavigateLeft<cr>"; options.desc = "Navigate left"; }
+        { mode = "n"; key = "<C-j>"; action = "<cmd>TmuxNavigateDown<cr>"; options.desc = "Navigate down"; }
+        { mode = "n"; key = "<C-k>"; action = "<cmd>TmuxNavigateUp<cr>"; options.desc = "Navigate up"; }
+        { mode = "n"; key = "<C-l>"; action = "<cmd>TmuxNavigateRight<cr>"; options.desc = "Navigate right"; }
         # Resize windows
         { mode = "n"; key = "<C-Up>"; action = ":resize -2<CR>"; options.desc = "Decrease height"; }
         { mode = "n"; key = "<C-Down>"; action = ":resize +2<CR>"; options.desc = "Increase height"; }
@@ -445,6 +445,7 @@
 
         nvim-surround.enable = true;
         web-devicons.enable = true;
+        tmux-navigator.enable = true;
 
         colorizer = {
           enable = true;

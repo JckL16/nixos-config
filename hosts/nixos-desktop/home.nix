@@ -6,6 +6,8 @@
   # Enabled the hyprland config for this user
   hyprland.enable = true;
 
+  tmux.enable = true;
+
   # Enabled user specific configuration for gaming
   steam.enable = true;
   gamemode.enable = true;

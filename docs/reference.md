@@ -43,6 +43,7 @@ All module enable options at a glance.
 | `git.enable` | `true` | Git with configured identity |
 | `nvim.enable` | `true` | Neovim with LSP |
 | `alacritty.enable` | `true` | Alacritty terminal |
+| `tmux.enable` | `false` | tmux with Nord theme and vim-tmux-navigator |
 | `zen-browser.enable` | `true` | Zen Browser (default browser) |
 | `steam.enable` | `false` | Steam user tools (MangoHUD, etc.) |
 | `gamemode.enable` | `false` | GameMode user config |
