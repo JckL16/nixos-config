@@ -395,15 +395,13 @@ in {
       cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/nord/style.css"
     '';
 
-    # Window switcher: list all Hyprland clients, focus the selected one.
-    home.file.".config/walker/windows.sh" = {
+    # Clipboard picker: show cliphist entries in walker dmenu, decode and copy selected.
+    home.file.".config/walker/clipboard.sh" = {
       executable = true;
       text = ''
         #!/usr/bin/env bash
-        address=$(hyprctl clients -j | jq -r \
-          '.[] | .title + " [" + .class + "]" + "\t" + .address' \
-          | walker --dmenu -t $'\t' -l 0 -V 1 -p 'Switch window')
-        [ -n "$address" ] && hyprctl dispatch focuswindow "address:$address"
+        entry=$(cliphist list | walker -d -p "Paste...")
+        [ -n "$entry" ] && printf '%s' "$entry" | cliphist decode | wl-copy
       '';
     };
   };
