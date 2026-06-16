@@ -6,6 +6,8 @@
   hyprland.enable  = true;
   hyprland.battery = true;
 
+  tmux.enable = true;
+
   # Lid close does nothing
   wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];
 

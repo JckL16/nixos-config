@@ -158,7 +158,36 @@ Pre-configured with LSP support and plugins via external Lua configuration.
 
 - **Option:** `alacritty.enable` (default: `true`)
 
-GPU-accelerated terminal emulator.
+GPU-accelerated terminal emulator. When `tmux.enable` is also true, Alacritty launches directly into a tmux session instead of a plain shell.
+
+### Tmux
+
+- **Option:** `tmux.enable` (default: `false`)
+- **File:** `modules/home-manager/programs/terminals/tmux.nix`
+
+Persistent terminal multiplexer with a Nord-themed status bar, vi key mode, and seamless nvim split / tmux pane navigation via vim-tmux-navigator.
+
+**Session persistence:** Alacritty auto-attaches to a session named `main` on launch (`tmux new-session -A -s main`). Closing the Alacritty window disconnects the client but leaves the session running. Reopening Alacritty reattaches to the same session — window layout and running processes are preserved.
+
+**Prefix key:** `Ctrl+Space`
+
+| Action | Key |
+|---|---|
+| **Panes** | |
+| Split vertical | `Ctrl+Space %` |
+| Split horizontal | `Ctrl+Space "` |
+| Navigate panes / nvim splits | `Ctrl+h` / `j` / `k` / `l` |
+| Close pane | `Ctrl+Space x` |
+| **Windows** | |
+| New window | `Ctrl+Space c` |
+| Next / previous window | `Ctrl+Space n` / `p` |
+| Jump to window by number | `Ctrl+Space 0–9` |
+| Rename window | `Ctrl+Space ,` |
+| **Sessions** | |
+| New named session | `Ctrl+Space :new -s <name>` |
+| Session + window picker | `Ctrl+Space s` |
+| Rename session | `Ctrl+Space $` |
+| Detach (session stays alive) | `Ctrl+Space d` |
 
 ### SSH Client
 

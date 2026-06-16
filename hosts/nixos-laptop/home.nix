@@ -7,6 +7,8 @@
   hyprland.enable  = true;
   hyprland.battery = true;
 
+  tmux.enable = true;
+
   # Enables user level config for gaming
   steam.enable = true;
   gamemode.enable = true;
