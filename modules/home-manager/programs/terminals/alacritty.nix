@@ -11,10 +11,6 @@
     programs.alacritty = {
       enable = true;
       settings = {
-        terminal.shell = lib.mkIf config.tmux.enable {
-          program = "${pkgs.tmux}/bin/tmux";
-          args = [ "new-session" "-A" "-s" "main" ];
-        };
         colors = {
           bright = {
             black = "#4C566A";
