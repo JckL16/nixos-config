@@ -38,8 +38,16 @@
     
     # Load NVIDIA driver early
     boot.initrd.kernelModules = [ "nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" ];
-    
+
     # Ensure nvidia-drm.modeset=1 is set
     boot.kernelParams = [ "nvidia-drm.modeset=1" ];
+
+    # Required for NVIDIA + Wayland: makes XWayland properly expose all monitors
+    # via RandR so Proton/Wine games enumerate the correct display set.
+    environment.sessionVariables = {
+      LIBVA_DRIVER_NAME = "nvidia";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      NVD_BACKEND = "direct";
+    };
   };
 }
