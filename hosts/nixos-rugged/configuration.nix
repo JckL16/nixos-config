@@ -31,7 +31,7 @@
   metasploit-db.enable = true;    # PostgreSQL database for Metasploit
 
   # Firewall rules for spotify to be able to cast to google devices
-  networking.firewall.allowedTCPPorts = [ 57621 9090 ];
+  networking.firewall.allowedTCPPorts = [ 57621 9090 1337 ];
   networking.firewall.allowedUDPPorts = [ 5353 ];
 
   nixpkgs.config.permittedInsecurePackages = [
