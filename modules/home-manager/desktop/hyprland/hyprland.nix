@@ -97,7 +97,7 @@
         # Input configuration
         input = {
           kb_layout = "${variables.keyboard-layout},us";
-          kb_options = "grp:alt_shift_toggle";
+          kb_options = "grp:alt_shift_toggle,caps:escape";
           follow_mouse = 1;
           
           touchpad = {
