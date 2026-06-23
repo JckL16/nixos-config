@@ -72,6 +72,17 @@
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
+    defaultKeymap = "viins";
+
+    history = {
+      size = 50000;
+      save = 50000;
+      ignoreDups = true;
+      ignoreSpace = true;
+      share = true;
+      extended = true;
+      expireDuplicatesFirst = true;
+    };
 
     shellAliases = {
       # Nixos aliases
@@ -180,10 +191,40 @@
           echo "'$1' is not a valid file"
         fi
       }
+
+      # Reduce ESC delay for vi mode switching
+      KEYTIMEOUT=1
+
+      # Vi mode - cursor shape (beam in insert, block in normal)
+      zle-keymap-select() {
+        if [[ $KEYMAP == vicmd ]]; then
+          echo -ne '\e[2 q'
+        else
+          echo -ne '\e[6 q'
+        fi
+      }
+      zle -N zle-keymap-select
+      zle-line-init() { echo -ne '\e[6 q'; }
+      zle -N zle-line-init
+
+      # Edit current command in nvim (v in normal mode)
+      autoload -Uz edit-command-line
+      zle -N edit-command-line
+      bindkey -M vicmd 'v' edit-command-line
+
+      # Ctrl+A/E in vi insert mode
+      bindkey '^A' beginning-of-line
+      bindkey '^E' end-of-line
+
+      # Ctrl+Arrow for word-by-word navigation
+      bindkey '^[[1;5C' forward-word
+      bindkey '^[[1;5D' backward-word
     '';
   };
 
   home.sessionVariables = {
+    EDITOR = "nvim";
+    VISUAL = "nvim";
     MANPAGER = "sh -c 'col -bx | bat -l man -p'";
     MANRWIDTH = "80";
     MANROFFOPT = "-c";

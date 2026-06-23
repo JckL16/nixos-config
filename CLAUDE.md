@@ -36,6 +36,23 @@ Defined in `modules/home-manager/programs/command-line/zsh.nix`.
 | `rm` / `cp` / `mv` | safety variants (`-i` flag) |
 | `open` | `xdg-open` |
 
+## Shell Keybindings
+
+Defined in `modules/home-manager/programs/command-line/zsh.nix`. Zsh runs in vi-mode (`viins` by default).
+
+| Keybind | Action |
+|---|---|
+| `ESC` | Switch to vi normal mode |
+| `v` (normal mode) | Edit current command in nvim |
+| `ESC ESC` | Prepend `sudo` to current command |
+| `Ctrl+A` | Jump to beginning of line |
+| `Ctrl+E` | Jump to end of line |
+| `Ctrl+←` / `Ctrl+→` | Move word by word |
+| `Ctrl+R` | FZF history search |
+
+Cursor shape changes automatically: beam in insert mode, block in normal mode.
+Caps Lock is remapped to Escape system-wide (via Hyprland `kb_options`).
+
 ## Key Commands (without aliases)
 
 ```bash

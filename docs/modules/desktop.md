@@ -23,7 +23,7 @@ Provides:
 
 | File | Purpose |
 |---|---|
-| `hyprland.nix` | Keybindings, window rules, layer rules, exec-once startup |
+| `hyprland.nix` | Keybindings, window rules, layer rules, exec-once startup, keyboard input options |
 | `hyprpanel.nix` | HyprPanel bar — replaces Waybar and Mako |
 | `nordic-theme.nix` | Nordic GTK theme, Papirus icons, Nordzy cursors, GTK popup CSS |
 | `walker.nix` | Walker GTK4 app launcher — Nord theme, per-mode prompt icons, window switcher |
@@ -84,6 +84,12 @@ override is written to `~/.config/autostart/blueman.desktop` with `Hidden=true`.
 `services.blueman-applet.enable = false` disables the home-manager systemd service but
 does **not** stop dex from picking up the system autostart file — the override file is
 required for both.
+
+### Keyboard Input
+
+Configured in `hyprland.nix` under `input`:
+- `kb_layout` — primary layout from `variables.keyboard-layout` with `,us` fallback; switched with `Alt+Shift`
+- `kb_options = "grp:alt_shift_toggle,caps:escape"` — Caps Lock acts as Escape system-wide
 
 ### Walker (App Launcher)
 
