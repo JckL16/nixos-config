@@ -59,6 +59,9 @@
   # VeraCrypt disk encryption
   veracrypt.enable = lib.mkDefault true;
 
+  # Ventoy bootable USB drive tool
+  ventoy.enable = lib.mkDefault false;
+
   # Common system fonts for browsers and applications
   fonts-config.enable = lib.mkDefault true;
 }
