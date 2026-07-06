@@ -33,6 +33,7 @@ All module enable options at a glance.
 | `metasploit-db.enable` | `false` | PostgreSQL database for Metasploit |
 | `yubikey.enable` | `true` | YubiKey support |
 | `veracrypt.enable` | `true` | VeraCrypt disk encryption |
+| `ventoy.enable` | `false` | Ventoy bootable USB drive tool (permits insecure package automatically) |
 
 ## User Level (home.nix)
 
