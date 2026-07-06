@@ -37,6 +37,7 @@
   metasploit-db.enable = true;
 
   winbox.enable = true;
+  ventoy.enable = true;
 
   virtualisation.enable = true;   # libvirt/QEMU KVM
   docker.enable = true;
