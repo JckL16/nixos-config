@@ -38,8 +38,6 @@
 
   winbox.enable = true;
   ventoy.enable = true;
-  # ventoy uses binary blobs flagged as insecure; explicitly opt in
-  nixpkgs.config.permittedInsecurePackages = [ "ventoy-1.1.12" ];
 
   virtualisation.enable = true;   # libvirt/QEMU KVM
   docker.enable = true;
