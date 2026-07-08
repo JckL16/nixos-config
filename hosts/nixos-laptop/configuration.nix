@@ -13,6 +13,9 @@
   # Set the Bootloader theme (grub is enabled by default)
   grub.nordic-theme.enable = true;
 
+  # Fingerprint reader (06cb:00bd Synaptics Prometheus — built-in libfprint driver, no TOD needed)
+  services.fprintd.enable = true;
+
   # Ryzen 3000 APU quirks
   boot.kernelParams = [ "idle=nomwait" "iommu=soft" ];
 
