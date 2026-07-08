@@ -56,6 +56,9 @@
   # Enableing the system to work with a yubikey
   yubikey.enable = lib.mkDefault true;
 
+  # TPM2-backed automatic LUKS unlock (requires one-time systemd-cryptenroll enrolment)
+  tpm2Unlock.enable = lib.mkDefault false;
+
   # VeraCrypt disk encryption
   veracrypt.enable = lib.mkDefault true;
 
