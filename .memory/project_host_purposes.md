@@ -4,7 +4,7 @@ description: What each host is for and non-obvious host-specific context
 type: project
 ---
 
-- **nixos-laptop**: Daily driver. Intel graphics, latest kernel, development + CTF prep.
+- **nixos-laptop**: ThinkPad X395. AMD Ryzen APU (Vega integrated graphics), LTS kernel, development + CTF prep. Fingerprint reader (Synaptics 06cb:009a) not yet configured — needs open-fprintd + python-validity (not in nixpkgs).
 - **nixos-desktop**: AMD graphics, gaming + networking + security research. ARM emulation enabled. Winbox for MikroTik devices. GameMode GPU override (device 1, not auto).
 - **nixos-rugged**: NVIDIA graphics. Portable/hardened machine. Similar toolset to desktop.
 - **nixos-vm**: CTF/malware analysis VM — specifically designed around snapshot support. Uses GNOME (not Hyprland) because VirGL 3D acceleration breaks QEMU snapshots and live migration. BIOS boot, /dev/vda, small 4G swap.
