@@ -5,7 +5,7 @@ type: project
 ---
 
 Multi-host NixOS flake config managing: nixos-laptop, nixos-desktop, nixos-rugged,
-nixos-vm, nixos-wsl. Primary desktop is Hyprland. Stable channel: nixos-25.11.
+nixos-vm. Primary desktop is Hyprland. Stable channel: nixos-26.05.
 
 Key non-obvious decisions:
 - PBKDF2 used for LUKS instead of default Argon2 because GRUB cannot handle Argon2

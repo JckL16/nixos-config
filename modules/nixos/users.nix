@@ -5,7 +5,7 @@
   users.users."${variables.username}" = {
     isNormalUser = true;
     description = variables.description;
-    extraGroups = [ "wheel" ];
+    extraGroups = [ "wheel" "dialout" ];
     packages = [];
     shell = pkgs.zsh;
     # Temporary password for first login - change immediately with `passwd`

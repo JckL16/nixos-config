@@ -6,12 +6,16 @@
   # Enabled the hyprland config for this user
   hyprland.enable = true;
 
+  tmux.enable = true;
+
   # Enabled user specific configuration for gaming
   steam.enable = true;
   gamemode.enable = true;
   minecraft.enable = true;
 
   zen-browser.enable = true;
+
+  obsidian.enable = true;
 
   winbox.enable = true;
 
@@ -25,7 +29,6 @@
   virt-manager.enable = true;
 
   home.packages = with pkgs; [
-    obsidian
     spotify
     vscode
     discord-ptb
@@ -33,13 +36,16 @@
     nmap
     nixos-anywhere
     jq
-    signal-desktop-bin
+    signal-desktop
     qbittorrent
     claude-code
     minikube
     kubectl
     ticktick
-    ] ++ [
+    orca-slicer
+    putty
+  ] ++ [
+    pkgs-unstable.proton-pass
     pkgs-unstable.protonmail-desktop
   ];
 

@@ -19,9 +19,25 @@
       };
     };
 
+    # vagrant-libvirt checks standard distro paths that don't exist on NixOS.
+    # OVMF_CODE satisfies the validation check and injects OVMF as pflash unit=0.
+    # /run/libvirt/nix-ovmf/ is a stable symlink managed by NixOS — survives rebuilds.
+    environment.sessionVariables = {
+      VAGRANT_LIBVIRT_OVMF_CODE = "/run/libvirt/nix-ovmf/edk2-x86_64-code.fd";
+    };
+
     # Enable default network automatically
     virtualisation.libvirtd.onBoot = "start";
     virtualisation.libvirtd.onShutdown = "shutdown";
+
+    programs.virt-manager.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      vagrant
+      (ansible.overridePythonAttrs (old: {
+        propagatedBuildInputs = (old.propagatedBuildInputs or []) ++ [ python313Packages.pywinrm ];
+      }))
+    ];
 
     users.users."${variables.username}".extraGroups = [ "libvirtd" ];
 

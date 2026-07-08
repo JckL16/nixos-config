@@ -63,13 +63,18 @@ Automatically installed: pwntools, unicorn, capstone, keystone-engine, ropper, p
 
 ### Web Exploitation
 - Proxies: Burp Suite, OWASP ZAP, mitmproxy
-- Scanners: nikto, wpscan, nuclei, wapiti
+- Scanners: nikto, wpscan, nuclei (wapiti disabled, broken in 26.05)
 - Fuzzers: ffuf, wfuzz, feroxbuster, gobuster
 - SQL injection: sqlmap
 - Subdomain enumeration: amass, subfinder
 - API testing: Postman, Insomnia, HTTPie
 - JWT tools
 - Wordlists: SecLists
+
+### Git Recon & Secret Scanning
+- gitleaks — scan repos and git history for leaked secrets/credentials
+- trufflehog — find secrets using entropy analysis and regex detectors
+- Gitea REST API: curl + jq cover most recon; docs available at `<instance>/api/swagger`
 
 ## Metasploit Database
 

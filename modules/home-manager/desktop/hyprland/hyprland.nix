@@ -2,13 +2,15 @@
 { pkgs, lib, config, variables, ... }: {
 
   options = {
-    hyprland.enable = lib.mkEnableOption "Enable hyprland home-manager configuration";
+    hyprland.enable   = lib.mkEnableOption "Enable hyprland home-manager configuration";
+    hyprland.battery  = lib.mkEnableOption "Include battery module in HyprPanel bar";
   };
 
   config = lib.mkIf config.hyprland.enable {
     wayland.windowManager.hyprland = {
       enable = true;
       package = pkgs.hyprland;
+      configType = "hyprlang";
       
       settings = {
         # Modifier key
@@ -84,12 +86,18 @@
         misc = {
           disable_hyprland_logo = true;
           font_family = "JetBrains Mono";
+          focus_on_activate = true;
         };
-        
+
+        cursor = {
+          no_hardware_cursors = true;
+          use_cpu_buffer = 1;
+        };
+
         # Input configuration
         input = {
           kb_layout = "${variables.keyboard-layout},us";
-          kb_options = "grp:alt_shift_toggle";
+          kb_options = "grp:alt_shift_toggle,caps:escape";
           follow_mouse = 1;
           
           touchpad = {
@@ -99,7 +107,6 @@
         
         # Dwindle layout
         dwindle = {
-          pseudotile = true;
           preserve_split = true;
         };
         
@@ -130,11 +137,11 @@
           "$mod SHIFT, Up, movewindow, u"
           "$mod SHIFT, Right, movewindow, r"
           
-          "$mod, V, togglesplit"
+          "$mod, V, layoutmsg, togglesplit"
           "$mod, F, fullscreen, 0"
           "$mod, S, togglegroup"
           "$mod, W, changegroupactive, f"
-          "$mod, E, togglesplit"
+          "$mod, E, layoutmsg, togglesplit"
           
           "$mod SHIFT, Space, togglefloating"
           "$mod, Space, focuscurrentorlast"
@@ -169,13 +176,13 @@
           "$mod CTRL, Escape, layoutmsg, preselectreset"
 
           "$mod, R, submap, resize"
-          "$mod, D, exec, rofi -show combi"
-          "$mod SHIFT, D, exec, ~/.config/rofi/web-search.sh"
-          "$mod, F1, exec, ~/.config/rofi/keybinds.sh"
-          "$mod, Tab, exec, rofi -show window"
+          "$mod, D, exec, walker"
+          "$mod SHIFT, D, exec, walker -m websearch"
+          "$mod, F1, exec, walker -m hyprlandkeybinds"
+          "$mod, Tab, exec, walker -m windows"
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
-          "$mod SHIFT, V, exec, ~/.config/rofi/clipman.sh"
+          "$mod SHIFT, V, exec, ~/.config/walker/clipboard.sh"
           "$mod, T, exec, xdg-open https://"
 
           # Volume controls with swayosd
@@ -191,8 +198,8 @@
           "$mod, mouse_down, workspace, e+1"
           "$mod, mouse_up, workspace, e-1"
 
-          # Restore last dismissed notification
-          "$mod, N, exec, makoctl restore"
+          # Toggle notification center
+          "$mod, N, exec, hyprpanel -t notificationsmenu"
 
           # Toggle lid suspend behavior
           ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
@@ -227,18 +234,19 @@
           "[ -f ~/.config/hypr/lid-suspend-enabled ] || echo 1 > ~/.config/hypr/lid-suspend-enabled"
           "dex --autostart --environment hyprland"
           "swaybg -i ~/.config/wallpapers/wallpaper.png -m fill"
-          "systemctl --user restart mako"
-          "waybar"
+          "hyprpanel"
           "hyprctl dispatch workspace 1"
-          "udiskie --tray --notify --automount &"
           "swayosd-server &"
-          "batsignal -b -w 20 -c 10 -d 5 -f 100"
+          "batsignal -b -w 20 -c 10 -d 5 -n BAT0"
+          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+          "walker --gapplication-service"
         ];
         
         # Environment variables
         env = [
-          "XCURSOR_THEME,Nordzy-cursors"
-          "XCURSOR_SIZE,24"
+          "XCURSOR_THEME,Bibata-Modern-Classic"
+          "XCURSOR_SIZE,20"
+          "GTK_ICON_THEME,Papirus-Dark"
         ];
       };
       
@@ -247,23 +255,22 @@
         # Monitor config managed by nwg-displays (ignored if file doesn't exist)
         source = ~/.config/hypr/monitors.conf
 
-        # Window rules (windowrulev2 syntax for stable Hyprland)
-        windowrulev2 = float, class:^(org.pulseaudio.pavucontrol)$
-        windowrulev2 = float, class:^(.blueman-manager-wrapped)$
-        windowrulev2 = float, class:^(nm-connection-editor)$
-        windowrulev2 = noblur, fullscreen:1
+        # Window rules
+        windowrule = float on class:^(org.pulseaudio.pavucontrol)$
+        windowrule = float on class:^(.blueman-manager-wrapped)$
+        windowrule = float on class:^(nm-connection-editor)$
+        windowrule = no_blur on fullscreen:1
 
         # Layer rules - blur and transparency
-        layerrule = blur, rofi
-        layerrule = ignorealpha 1, rofi
-        layerrule = blur, waybar
-        layerrule = ignorealpha 1, waybar
-        layerrule = blur, notifications
-        layerrule = ignorealpha 1, notifications
-        layerrule = blur, swayosd
-        layerrule = ignorealpha 1, swayosd
-        layerrule = blur, logout_dialog
-        layerrule = ignorealpha 1, logout_dialog
+        layerrule = blur on, ignore_alpha 0.5, match:namespace walker
+        # HyprPanel bar layers are named bar-0, bar-1, etc.
+        layerrule = blur on, ignore_alpha 0.5, match:namespace bar-[0-9]+
+        # HyprPanel popup menus (networkmenu, audiomenu, mediamenu, etc.)
+        layerrule = blur on, ignore_alpha 0.5, match:namespace .*menu
+        # HyprPanel notification center
+        layerrule = blur on, ignore_alpha 0.5, match:namespace notifications-window
+        layerrule = blur on, ignore_alpha 1, match:namespace swayosd
+        layerrule = blur on, ignore_alpha 1, match:namespace logout_dialog
 
         # Resize submap
         bind = $mod, R, submap, resize
@@ -295,10 +302,10 @@
       fi
     '';
 
+    home.file.".config/wallpapers/wallpaper.png".source = ../../../../wallpaper/wallpaper.png;
+
     home.packages = with pkgs; [
       nwg-displays
-      rofi
-      mako
       grim
       slurp
       wl-clipboard
@@ -371,6 +378,15 @@
       };
     };
 
-    services.blueman-applet.enable = true;
+    # blueman-applet disabled — HyprPanel has its own bluetooth module in the bar
+    services.blueman-applet.enable = false;
+
+    # Suppress blueman's XDG autostart entry so dex doesn't start it.
+    # The system blueman package installs /etc/xdg/autostart/blueman.desktop;
+    # a Hidden=true override in ~/.config/autostart/ prevents dex from picking it up.
+    xdg.configFile."autostart/blueman.desktop".text = ''
+      [Desktop Entry]
+      Hidden=true
+    '';
   };
 }

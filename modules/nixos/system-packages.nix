@@ -6,7 +6,6 @@
     acpi
     curl
     dex
-    direnv
     dosfstools
     e2fsprogs
     git
@@ -15,7 +14,7 @@
     man-pages
     procps
     texinfo
-    tldr
+    tealdeer
     tree
     unzip
     util-linux
@@ -31,7 +30,10 @@
     rclone
   ];
 
-  programs.direnv.enable = true;
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
 
   programs.zsh.enable = true;
   programs.bash.enable = true;

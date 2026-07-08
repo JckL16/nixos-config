@@ -31,6 +31,18 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
+    # Force disko's device paths to win over the UUIDs in hardware-configuration.nix.
+    # Both sources define fileSystems at the same priority, causing a conflict.
+    (lib.mkIf config.diskoConfig.encryption.enable {
+      fileSystems."/".device = lib.mkForce "/dev/mapper/${config.diskoConfig.encryption.luksName}";
+    })
+    (lib.mkIf (!variables.isBIOS) {
+      fileSystems."/boot".device = lib.mkForce "/dev/disk/by-partlabel/disk-main-ESP";
+    })
+    (lib.mkIf variables.isBIOS {
+      fileSystems."/boot".device = lib.mkForce "/dev/disk/by-partlabel/disk-main-boot-fs";
+    })
+
     # BIOS bootloader config
     (lib.mkIf variables.isBIOS {
       boot.loader.grub.devices = lib.mkForce [ config.diskoConfig.device ];
@@ -79,7 +91,7 @@
             # EFI System Partition (only for UEFI systems)
             # Acts as /boot, so GRUB never needs to unlock LUKS.
             ESP = lib.mkIf (!variables.isBIOS) {
-              size = "512M";
+              size = "1G";
               type = "EF00";
               content = {
                 type = "filesystem";

@@ -33,20 +33,25 @@ All module enable options at a glance.
 | `metasploit-db.enable` | `false` | PostgreSQL database for Metasploit |
 | `yubikey.enable` | `true` | YubiKey support |
 | `veracrypt.enable` | `true` | VeraCrypt disk encryption |
+| `ventoy.enable` | `false` | Ventoy bootable USB drive tool (permits insecure package automatically) |
 
 ## User Level (home.nix)
 
 | Option | Default | Description |
 |---|---|---|
-| `hyprland.enable` | `false` | Hyprland user config (waybar, rofi, etc.) |
+| `hyprland.enable` | `false` | Hyprland user config (HyprPanel bar, Walker launcher, cliphist, etc.) |
+| `hyprland.battery` | `false` | Include battery widget in HyprPanel bar (enable on hosts with a battery) |
 | `git.enable` | `true` | Git with configured identity |
 | `nvim.enable` | `true` | Neovim with LSP |
 | `alacritty.enable` | `true` | Alacritty terminal |
+| `tmux.enable` | `false` | tmux with Nord theme and vim-tmux-navigator |
 | `zen-browser.enable` | `true` | Zen Browser (default browser) |
 | `steam.enable` | `false` | Steam user tools (MangoHUD, etc.) |
 | `gamemode.enable` | `false` | GameMode user config |
 | `minecraft.enable` | `false` | Minecraft launcher |
 | `virt-manager.enable` | `false` | Virtual machine manager GUI |
+| `imv.enable` | `true` | imv image viewer with MIME associations |
+| `obsidian.enable` | `false` | Obsidian note-taking app (XWayland wrapper for PDF support) |
 | `libreoffice.enable` | `false` | LibreOffice suite |
 | `onlyoffice.enable` | `false` | OnlyOffice suite |
 | `winbox.enable` | `false` | MikroTik Winbox |

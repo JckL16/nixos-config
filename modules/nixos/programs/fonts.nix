@@ -21,7 +21,7 @@
     };
 
     # X11 font path for XWayland (needed for legacy apps like Zoom)
-    environment.systemPackages = [ pkgs.xorg.xset ];
+    environment.systemPackages = [ pkgs.xset ];
     environment.sessionVariables = {
       XFONTSEL_FONT = "-*-helvetica-medium-r-*-*-14-*-*-*-*-*-*-*";
     };
@@ -39,10 +39,13 @@
       source-sans
       source-serif
       font-awesome
+      # Microsoft fonts (unfree) — required for correct rendering on many websites
+      corefonts   # Arial, Georgia, Verdana, Trebuchet MS, Times New Roman, etc.
+      vista-fonts  # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
       # X11 fonts required by legacy apps (Zoom, etc.)
-      xorg.fontmiscmisc
-      xorg.fontadobe75dpi
-      xorg.fontadobe100dpi
+      font-misc-misc
+      font-adobe-75dpi
+      font-adobe-100dpi
     ];
   };
 

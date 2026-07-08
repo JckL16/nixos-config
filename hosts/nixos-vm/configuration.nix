@@ -1,10 +1,6 @@
 # hosts/nixos-vm/configuration.nix
 
-{ config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
-
-  imports = [
-    home-manager.nixosModules.home-manager
-  ];
+{ config, pkgs, pkgs-unstable, inputs, variables, ... }: {
 
   # Disko disk configuration
   diskoConfig = {
@@ -45,7 +41,7 @@
     users."${variables.username}" = {
       imports = [
         ./home.nix
-        inputs.self.outputs.homeManagerModules.default
+        inputs.self.outputs.homeModules.default
       ];
     };
   };

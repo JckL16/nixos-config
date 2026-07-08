@@ -4,12 +4,17 @@
 {
 
   # Enables the user level config of hyprland
-  hyprland.enable = true;
+  hyprland.enable  = true;
+  hyprland.battery = true;
+
+  tmux.enable = true;
 
   # Enables user level config for gaming
   steam.enable = true;
   gamemode.enable = true;
   minecraft.enable = true;
+
+  obsidian.enable = true;
 
   # Installs the libreoffice suite for the user
   # libreoffice.enable = true;
@@ -26,11 +31,10 @@
   virt-manager.enable = true;
 
   home.packages = with pkgs; [
-    obsidian
     spotify
     vscode
     anki
-    signal-desktop-bin
+    signal-desktop
     discord-ptb
     ttyper
     cmatrix

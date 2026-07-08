@@ -1,10 +1,6 @@
 # hosts/nixos-desktop/configuration.nix
 
-{ config, pkgs, pkgs-unstable, home-manager, inputs, variables, ... }: {
-
-  imports = [
-    home-manager.nixosModules.home-manager
-  ];
+{ config, pkgs, pkgs-unstable, inputs, variables, ... }: {
 
   # Disko disk configuration (enable only during fresh install)
   diskoConfig = {
@@ -14,6 +10,8 @@
     swapSize = "32G";
   };
 
+  networking.firewall.allowedTCPPorts = [ 8080 8443 ];
+  
   # Enable emulation of ARM systems
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
@@ -39,6 +37,7 @@
   metasploit-db.enable = true;
 
   winbox.enable = true;
+  ventoy.enable = true;
 
   virtualisation.enable = true;   # libvirt/QEMU KVM
   docker.enable = true;
@@ -53,7 +52,7 @@
     users."${variables.username}" = {
       imports = [
         ./home.nix
-        inputs.self.outputs.homeManagerModules.default
+        inputs.self.outputs.homeModules.default
       ];
     };
   };

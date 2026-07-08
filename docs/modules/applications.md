@@ -1,5 +1,32 @@
 # Applications
 
+## Obsidian
+
+- **Option:** `obsidian.enable = true;` in `home.nix`
+- **Default:** `false`
+- **File:** `modules/home-manager/programs/desktop/obsidian.nix`
+
+Obsidian note-taking application. The module wraps the package to unset `NIXOS_OZONE_WL`, forcing Obsidian to run via XWayland rather than native Wayland. This is required because Electron's native Wayland PDF renderer produces a black screen on Hyprland.
+
+---
+
+## Image Viewer
+
+- **Option:** `imv.enable` in `home.nix`
+- **Default:** `true`
+
+Lightweight Wayland-native image viewer. Registered as the XDG default handler for common image types (jpeg, png, gif, webp, avif, bmp, tiff, svg).
+
+| Key | Action |
+|---|---|
+| `n` / `p` | Next / previous image |
+| `f` | Toggle fullscreen |
+| `+` / `-` | Zoom in / out |
+| Arrow keys | Pan |
+| `q` | Quit |
+
+---
+
 ## Office Suites
 
 Set in `home.nix`.
@@ -23,7 +50,7 @@ onlyoffice.enable = true;
 
 Firefox-based browser set as the XDG default for `http`, `https`, and `text/html`. Installed via the `0xc000022070/zen-browser-flake` community flake.
 
-The Rofi web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
+The Walker web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
 
 ## VeraCrypt (Disk Encryption)
 
@@ -88,13 +115,16 @@ These are enabled by default and provide the base user experience.
 
 Always active. Configured with:
 
-- **Oh-My-Zsh** with plugins: git, fzf, sudo, command-not-found, colored-man-pages, extract
+- **Starship** prompt with Nord color theme
 - **Autosuggestions** and **syntax highlighting**
 - **Zoxide** (smart `cd` replacement, aliased to `cd`)
 - **Eza** (modern `ls` replacement, aliased to `ls`, `ll`, `la`, `lt`, `tree`)
-- **Fzf** for fuzzy finding (Ctrl-R for history search)
-- **pay-respects** for command correction
-- Additional CLI tools: bat, ripgrep, fd, tldr, btop, duf, dust, procs, delta
+- **Fzf** for fuzzy finding (Ctrl-R history, Alt-C directory, Ctrl-T file widget)
+- **pay-respects** for command correction (`fuck` / `f` to retry last command)
+- **bat** with Nord theme; `man` pages render through bat automatically (`MANPAGER`)
+- Additional CLI tools: ripgrep, fd, tealdeer, btop, duf, dust, procs, delta
+- `ESC ESC` prepends `sudo` to the current command line
+- `extract <file>` unpacks any common archive format (tar, zip, 7z, rar, xz, …)
 
 #### NixOS Shell Aliases
 
@@ -128,7 +158,49 @@ Pre-configured with LSP support and plugins via external Lua configuration.
 
 - **Option:** `alacritty.enable` (default: `true`)
 
-GPU-accelerated terminal emulator.
+GPU-accelerated terminal emulator. When `tmux.enable` is also true, Alacritty launches directly into a tmux session instead of a plain shell.
+
+### Tmux
+
+- **Option:** `tmux.enable` (default: `false`)
+- **File:** `modules/home-manager/programs/terminals/tmux.nix`
+
+Persistent terminal multiplexer with a Nord-themed status bar, vi key mode, and seamless nvim split / tmux pane navigation via vim-tmux-navigator.
+
+**Session persistence:** Alacritty auto-attaches to a session named `main` on launch (`tmux new-session -A -s main`). Closing the Alacritty window disconnects the client but leaves the session running. Reopening Alacritty reattaches to the same session — window layout and running processes are preserved.
+
+**Prefix key:** `Ctrl+Space`
+
+| Action | Key |
+|---|---|
+| **Panes** | |
+| Split vertical | `Ctrl+Space %` |
+| Split horizontal | `Ctrl+Space "` |
+| Navigate panes / nvim splits | `Ctrl+h` / `j` / `k` / `l` |
+| Close pane | `Ctrl+Space x` |
+| **Windows** | |
+| New window | `Ctrl+Space c` |
+| Next / previous window | `Ctrl+Space n` / `p` |
+| Jump to window by number | `Ctrl+Space 0–9` |
+| Rename window | `Ctrl+Space ,` |
+| **Sessions** | |
+| New named session | `Ctrl+Space :new -s <name>` |
+| Session + window picker | `Ctrl+Space s` |
+| Rename session | `Ctrl+Space $` |
+| Detach (session stays alive) | `Ctrl+Space d` |
+
+### SSH Client
+
+Always active (`modules/home-manager/programs/command-line/ssh.nix`). Configures `~/.ssh/config` with sensible defaults for all hosts (`Host *`):
+
+- `AddKeysToAgent yes` — keys are added to the agent on first use
+- 60-second keepalives (`ServerAliveInterval 60`, `ServerAliveCountMax 3`)
+- Connection compression enabled
+- `ControlMaster auto` with a 10-minute persist window (sockets in `~/.ssh/control/`)
+
+A `github.com` matchBlock is preconfigured to use `~/.ssh/github_jckl16` exclusively (`IdentitiesOnly yes`), preventing the SSH agent from offering other keys (e.g. Vagrant keys) to GitHub.
+
+To add host-specific entries, use `programs.ssh.settings` in `home.nix`.
 
 ### Git
 

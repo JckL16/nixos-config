@@ -23,6 +23,9 @@
 
     home.packages = with pkgs; [
 
+      # === General use tools ===
+      cyberchef
+
       # ============================================================
       # GENERAL TOOLS & UTILITIES
       # ============================================================
@@ -107,7 +110,6 @@
       magic-wormhole       # Securely transfer files between computers
       asciinema            # Terminal session recorder
       wordlists            # Common wordlists for security testing
-      seclists             # Security assessment wordlists collection
 
       # === METASPLOIT FRAMEWORK ===
       msfpc                # Msfvenom payload creator
@@ -369,7 +371,7 @@
       assetfinder          # Find domains and subdomains
 
       # === WEB FRAMEWORK TOOLS ===
-      wapiti               # Web application vulnerability scanner
+      # wapiti             # Broken in 26.05: wapiti-arsenic pins packaging<26.0 but nixpkgs ships 26.1
       nuclei               # Fast vulnerability scanner based on templates
 
       # === API TESTING ===
@@ -379,6 +381,10 @@
 
       # === JWT TOOLS ===
       jwt-cli              # JSON Web Token command-line tool
+
+      # === GIT RECON & SECRET SCANNING ===
+      gitleaks             # Scan git repos/history for leaked secrets and credentials
+      trufflehog           # Find secrets in git history using entropy and regex detectors
 
       # === PARAMETER DISCOVERY ===
       arjun                # HTTP parameter discovery suite

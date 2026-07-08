@@ -29,11 +29,29 @@ Defined in `modules/home-manager/programs/command-line/zsh.nix`.
 | `clean` | `nix-collect-garbage` |
 | `install-bootloader` | `sudo nixos-rebuild boot --install-bootloader --flake ~/nixos-config` |
 | `nix-search` | `nix search nixpkgs` |
+| `update-config` | `nvim ~/nixos-config/hosts/$(hostname)/` then auto-runs `switch` on exit |
 | `ls` / `ll` / `la` / `lt` / `tree` | eza (replacement for ls) |
 | `cd` | zoxide (`z`) |
 | `gst` / `gco` / `gp` / `gl` | git shortcuts |
 | `rm` / `cp` / `mv` | safety variants (`-i` flag) |
 | `open` | `xdg-open` |
+
+## Shell Keybindings
+
+Defined in `modules/home-manager/programs/command-line/zsh.nix`. Zsh runs in vi-mode (`viins` by default).
+
+| Keybind | Action |
+|---|---|
+| `ESC` | Switch to vi normal mode |
+| `v` (normal mode) | Edit current command in nvim |
+| `ESC ESC` | Prepend `sudo` to current command |
+| `Ctrl+A` | Jump to beginning of line |
+| `Ctrl+E` | Jump to end of line |
+| `Ctrl+←` / `Ctrl+→` | Move word by word |
+| `Ctrl+R` | FZF history search |
+
+Cursor shape changes automatically: beam in insert mode, block in normal mode.
+Caps Lock is remapped to Escape system-wide (via Hyprland `kb_options`).
 
 ## Key Commands (without aliases)
 
@@ -49,7 +67,7 @@ nix flake check
 - **Modules** use `lib.mkEnableOption` + `lib.mkIf config.<module>.enable` for optional features
 - **Defaults** use `lib.mkDefault` so hosts can override without conflicts
 - **Variables** from `variables.nix` are available everywhere via `specialArgs`; use them instead of hardcoding username, timezone, etc.
-- **Stable vs unstable**: use `pkgs` (nixpkgs 25.11) by default; use `pkgs-unstable` only when a package is unavailable or too old in stable
+- **Stable vs unstable**: use `pkgs` (nixpkgs 26.05) by default; use `pkgs-unstable` only when a package is unavailable or too old in stable
 - **No formatter is configured** — keep existing indentation style (2 spaces) when editing Nix files
 - Module files live under `modules/nixos/` or `modules/home-manager/` and must be imported in the relevant `default.nix`
 
@@ -65,7 +83,7 @@ nix flake check
 Use `hosts/nixos-example/` as a template — it is fully commented.
 
 1. Copy `hosts/nixos-example/` to `hosts/<new-host>/`
-2. Add an entry to `flake.nix` following the existing pattern
+2. Add a `mkSystem { hostname = "<new-host>"; ... }` entry to `nixosConfigurations` in `flake.nix`; use `extraVars` for variable overrides, `extraModules` for extra NixOS modules, `withHardwareConfig = false` / `withDisko = false` if the host doesn't need them
 3. Set host-specific variables (device, bootloader type, graphics drivers, etc.)
 4. Run `disko` for disk setup, then `nixos-install`
 5. See `docs/installation.md` for full steps
@@ -95,10 +113,20 @@ Do not run nix or nixos-rebuild commands (e.g. `nixos-rebuild switch`, `nix flak
 `nix build`, `nix run`, `disko`). Instead, output the exact command for the user to run
 in a code block and explain what it does.
 
+## Researching Package Behaviour
+
+When investigating how a package works (CLI flags, config schema, available modules, etc.),
+**use web search** rather than poking at binaries or source in the nix store. Do not run
+`--help`, inspect `/nix/store/...`, or read package source to reverse-engineer behaviour.
+Look up the project's documentation, GitHub README, or wiki instead.
+
 ## Keeping Docs and Memory Up to Date
 
 When making changes to this config:
 - Update `docs/` if the change affects installation, module behaviour, or options
+  - `flake.nix` structure changes (e.g. `mkSystem` arguments, inputs) → update `docs/installation.md` step 9 and `docs/modules/overview.md` (Adding a Host / mkSystem table)
+  - New or removed module options → update `docs/reference.md` and the relevant `docs/modules/*.md`
+  - New host added → update `docs/modules/overview.md` host list if one exists
 - Update relevant memory files in `.memory/` (in this repo) if the change introduces
   a new non-obvious constraint, decision, or host purpose. Update `.memory/MEMORY.md`
   index when adding or removing memory files.

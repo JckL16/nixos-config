@@ -10,6 +10,8 @@
   #   ];
   # };
 
+  tmux.enable = true;
+
   cyber.enable = true;
 
   home.packages = with pkgs; [

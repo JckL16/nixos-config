@@ -10,7 +10,8 @@
   # Desktop Environment
   # Must match what you enabled in configuration.nix.
   # ==========================================================================
-  hyprland.enable = true;
+  hyprland.enable  = true;
+  # hyprland.battery = true;   # uncomment on hosts that have a battery
 
   # ==========================================================================
   # Gaming

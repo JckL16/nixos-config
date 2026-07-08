@@ -12,14 +12,19 @@
       inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
+    home.sessionVariables = {
+      MOZ_ENABLE_WAYLAND = "1";
+    };
+
     xdg.mimeApps = {
       enable = true;
       defaultApplications = {
-        "text/html" = "zen-browser.desktop";
-        "x-scheme-handler/http" = "zen-browser.desktop";
-        "x-scheme-handler/https" = "zen-browser.desktop";
-        "x-scheme-handler/about" = "zen-browser.desktop";
-        "x-scheme-handler/unknown" = "zen-browser.desktop";
+        "text/html" = "zen-beta.desktop";
+        "x-scheme-handler/http" = "zen-beta.desktop";
+        "x-scheme-handler/https" = "zen-beta.desktop";
+        "x-scheme-handler/about" = "zen-beta.desktop";
+        "x-scheme-handler/unknown" = "zen-beta.desktop";
+        "application/pdf" = "zen-beta.desktop";
       };
     };
   };

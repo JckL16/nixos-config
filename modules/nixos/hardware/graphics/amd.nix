@@ -25,7 +25,10 @@
     # AMD-specific environment variables for gaming
     environment.variables = {
       AMD_VULKAN_ICD = "RADV";
-      RADV_PERFTEST = "gpl,nggc";
+      # Mesa 26.1.2 RADV regression: Unity games crash (SIGSEGV) in Vulkan
+      # pipeline creation. nodcc (Delta Color Compression) + nogpl (Graphics
+      # Pipeline Library) together fix it. Remove once NixOS ships Mesa 26.1.3+.
+      RADV_DEBUG = "nodcc,nogpl";
     };
 
     environment.systemPackages = with pkgs; [

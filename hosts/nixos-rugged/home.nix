@@ -3,7 +3,10 @@
 { config, pkgs, pkgs-unstable, lib, ... }:
 {
 
-  hyprland.enable = true;
+  hyprland.enable  = true;
+  hyprland.battery = true;
+
+  tmux.enable = true;
 
   # Lid close does nothing
   wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];
@@ -13,6 +16,8 @@
   gamemode.enable = true;
 
   zen-browser.enable = true;
+
+  obsidian.enable = true;
 
   python-dev.enable = true;
   python-dev.packages = [ "requests" "numpy" "pandas" "matplotlib" ];
@@ -27,22 +32,23 @@
   onlyoffice.enable = true;
 
   home.packages = with pkgs; [
-    obsidian
-    signal-desktop-bin
-    discord-ptb
+    tectonic
+    signal-desktop
     ttyper
     qbittorrent
     claude-code
     caligula
     ticktick
     thunderbird
-    manim
     vscode
-    onedrive
+    localsend
+    calibre
+    ventoy-full
+    tea
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
       pkgs-unstable.zoom-us
-  ];
+    ];
 
 }

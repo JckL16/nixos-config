@@ -10,6 +10,7 @@
     ./metasploit-db.nix
     ./yubikey.nix
     ./veracrypt.nix
+    ./ventoy.nix
   ];
 
 }
