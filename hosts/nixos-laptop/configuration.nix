@@ -40,6 +40,17 @@
   # Metasploit database (used with cyber.enable)
   metasploit-db.enable = true;
 
+  # Battery charge thresholds — keeps battery between 80–90% when plugged in.
+  # START=80 ensures the EC starts a charge cycle at 79%, so UPower reports
+  # 'charging' (not 'pending-charge') and HyprPanel shows the charging icon.
+  services.tlp = {
+    enable = true;
+    settings = {
+      START_CHARGE_THRESH_BAT0 = 80;
+      STOP_CHARGE_THRESH_BAT0  = 90;
+    };
+  };
+
   # Home Manager configuration
   home-manager = {
     useGlobalPkgs = true;
