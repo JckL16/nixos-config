@@ -44,6 +44,7 @@
     localsend
     calibre
     ventoy-full
+    tea
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
