@@ -106,7 +106,7 @@
               size = config.diskoConfig.swapSize;
               content = {
                 type = "swap";
-                randomEncryption = config.diskoConfig.encryption.enable;
+                randomEncryption = false;
               };
             };
 
