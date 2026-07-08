@@ -16,6 +16,9 @@
   # Fingerprint reader (06cb:00bd Synaptics Prometheus — built-in libfprint driver, no TOD needed)
   services.fprintd.enable = true;
 
+  # TPM2 LUKS unlock (see docs/installation.md for one-time enrolment)
+  tpm2Unlock.enable = true;
+
   # Ryzen 3000 APU quirks
   boot.kernelParams = [ "idle=nomwait" "iommu=soft" ];
 

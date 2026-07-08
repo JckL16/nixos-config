@@ -33,6 +33,7 @@ All module enable options at a glance.
 | `metasploit-db.enable` | `false` | PostgreSQL database for Metasploit |
 | `yubikey.enable` | `true` | YubiKey support |
 | `veracrypt.enable` | `true` | VeraCrypt disk encryption |
+| `tpm2Unlock.enable` | `false` | TPM2-backed automatic LUKS unlock (requires one-time enrolment, see installation guide) |
 | `ventoy.enable` | `false` | Ventoy bootable USB drive tool (permits insecure package automatically) |
 
 ## User Level (home.nix)
