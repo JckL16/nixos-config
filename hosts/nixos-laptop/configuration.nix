@@ -13,11 +13,8 @@
   # Set the Bootloader theme (grub is enabled by default)
   grub.nordic-theme.enable = true;
 
-  # Set to newest kernel to get the samsung-galaxy kernel working
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.initrd.systemd.enable = true;  # Use systemd in initrd for better compatibility
-  boot.initrd.compressor = "zstd";
-  boot.initrd.compressorArgs = [ "-19" "-T0" ];
+  # Ryzen 3000 APU quirks
+  boot.kernelParams = [ "idle=nomwait" "iommu=soft" ];
 
   # Hostname
   networking.hostName = "nixos-laptop";
@@ -30,7 +27,7 @@
   docker.enable = true;
 
   # Graphics drivers
-  intel-graphics.enable = true;
+  amd-graphics.enable = true;
   steam.enable = true;
   gamemode.enable = true;
 
