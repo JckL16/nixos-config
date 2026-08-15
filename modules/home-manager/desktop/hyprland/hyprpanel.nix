@@ -10,6 +10,9 @@
 { pkgs, lib, config, variables, ... }:
 
 let
+  c = config.theme.colors;
+  f = config.theme.font;
+
   # modules.scss is loaded by HyprPanel after its main SCSS for user overrides.
   # Using pkgs.writeText + activation-script copy avoids the GLib ELOOP that
   # occurs when HyprPanel's readFile() follows multi-level nix-store symlinks.
@@ -22,8 +25,8 @@ let
        to get an underline that stays centred under the number. */
     .calendar-menu-widget:selected {
       background-color: transparent;
-      border-bottom: 2px solid #88C0D0;
-      color: #88C0D0;
+      border-bottom: 2px solid ${c.accent};
+      color: ${c.accent};
       font-weight: bold;
       border-radius: 0;
     }
@@ -36,18 +39,18 @@ let
     }
 
     window.popup menu {
-      background-color: rgba(46, 52, 64, 0.92);
+      background-color: rgba(${c.backgroundRgb}, 0.92);
       border-radius: 6px;
-      border: 1px solid rgba(76, 86, 106, 0.5);
+      border: 1px solid rgba(${c.borderRgb}, 0.5);
       padding: 4px;
-      color: #ECEFF4;
+      color: ${c.textBright};
       font-size: 12px;
     }
 
     window.popup menu menuitem {
       border-radius: 4px;
       padding: 5px 12px;
-      color: #ECEFF4;
+      color: ${c.textBright};
       font-size: 12px;
     }
 
@@ -56,15 +59,15 @@ let
     }
 
     window.popup menu menuitem:hover {
-      background-color: rgba(59, 66, 82, 0.85);
+      background-color: rgba(${c.backgroundAltRgb}, 0.85);
     }
 
     window.popup menu menuitem:disabled {
-      color: rgba(216, 222, 233, 0.4);
+      color: rgba(${c.textDimRgb}, 0.4);
     }
 
     window.popup menu separator {
-      background-color: rgba(76, 86, 106, 0.4);
+      background-color: rgba(${c.borderRgb}, 0.4);
       min-height: 1px;
       margin: 3px 6px;
     }
@@ -85,14 +88,14 @@ let
 
     /* Media controls: active state for shuffle/loop.
        HyprPanel's monochrome SCSS uses the same colour for active and inactive,
-       so we override it here with a Nord frost tint. */
+       so we override it here with the accent tint. */
     .media-indicator-control-button.enabled.active {
-      background-color: rgba(136, 192, 208, 0.25);
-      color: #88C0D0;
+      background-color: rgba(${c.accentRgb}, 0.25);
+      color: ${c.accent};
     }
 
     .media-indicator-control-button.enabled.active:hover {
-      background-color: rgba(136, 192, 208, 0.4);
+      background-color: rgba(${c.accentRgb}, 0.4);
     }
 
     /* Notification popups: gap from floating bar and right screen edge */
@@ -275,7 +278,7 @@ in
               shortcut1 = { icon = "󰍹"; tooltip = "Display Settings"; command = "nwg-displays"; };
               shortcut2 = { icon = "󰄀"; tooltip = "Screenshot";        command = "grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Region saved'"; };
               shortcut3 = { icon = "󰍉"; tooltip = "Search Apps";       command = "walker"; };
-              shortcut4 = { icon = ""; tooltip = ""; command = ""; };
+              shortcut4 = { icon = "󰑩"; tooltip = "Toggle Hotspot"; command = "bash -c 'if nmcli -t -f NAME connection show --active | grep -q Hotspot; then nmcli connection down Hotspot; else nmcli connection up Hotspot; fi'"; };
             };
             right = {
               shortcut1 = { icon = ""; tooltip = ""; command = ""; };
@@ -294,18 +297,13 @@ in
           active_monitor = true;
         };
 
-        # ─── Nord theme ─────────────────────────────────────────────────────
-        #
-        # Nord palette:
-        #   Polar Night: #2E3440  #3B4252  #434C5E  #4C566A
-        #   Snow Storm:  #D8DEE9  #E5E9F0  #ECEFF4
-        #   Frost:       #8FBCBB  #88C0D0  #81A1C1  #5E81AC
-        #   Aurora:      #BF616A  #D08770  #EBCB8B  #A3BE8C  #B48EAD
+        # ─── Theme ──────────────────────────────────────────────────────────
+        # Colors sourced from config.theme.colors (see modules/home-manager/theme/).
 
         theme.font = {
-          name   = "JetBrainsMono Nerd Font";
-          size   = "0.9rem";
-          weight = 600;
+          name   = f.name;
+          size   = f.size;
+          weight = f.weight;
         };
 
         theme.bar = {
@@ -316,27 +314,26 @@ in
           margin_sides  = "0.3em";
           background    = "rgba(0, 0, 0, 0)";
           border.location = "none";
-          border.color    = "#4C566A";
+          border.color    = c.border;
 
           buttons = {
             style              = "default";
             enableBorders      = false;
             background         = "rgba(0,0,0,0)";
             background_opacity = 0;
-            hover              = "#3B4252";
+            hover              = c.backgroundAlt;
             radius             = "0.4em";
             padding_x          = "0.4rem";
-            spacing            = "0.4em";   # wider gap between right-side modules
-            text               = "#ECEFF4";
-            icon               = "#88C0D0";
+            spacing            = "0.4em";
+            text               = c.textBright;
+            icon               = c.accent;
 
-            # Clock text matches the popup clock time colour ($bar-menus-label)
-            clock.text = "#88C0D0";
+            clock.text = c.accent;
 
             workspaces = {
-              active   = "#88C0D0";   # Nord Frost — active workspace
-              occupied = "#EBCB8B";   # Nord Aurora yellow — has windows
-              hover    = "#3B4252";
+              active   = c.accent;
+              occupied = c.warning;
+              hover    = c.backgroundAlt;
             };
           };
         };
@@ -346,28 +343,28 @@ in
           # monochrome = true forces all menus to use background/cards/text
           # instead of per-menu Catppuccin defaults
           monochrome  = true;
-          background  = "rgba(46, 52, 64, 0.55)";   # Nord Polar Night, glassy
-          cards       = "rgba(46, 52, 64, 0)";       # fully transparent — no pill boxes
+          background  = "rgba(${c.backgroundRgb}, 0.55)";
+          cards       = "rgba(${c.backgroundRgb}, 0)";   # transparent — no pill boxes
           card_radius = "0.4em";
-          text        = "#ECEFF4";
-          dimtext     = "#D8DEE9";
-          label       = "#88C0D0";
+          text        = c.textBright;
+          dimtext     = c.textDim;
+          label       = c.accent;
         };
 
         theme.notification = {
-          background = "rgba(46, 52, 64, 0.75)";   # glassy, same as menus
-          label      = "#ECEFF4";
-          border     = "#4C566A";
-          time       = "#D8DEE9";
-          text       = "#ECEFF4";
-          labelicon  = "#88C0D0";
+          background = "rgba(${c.backgroundRgb}, 0.75)";
+          label      = c.textBright;
+          border     = c.border;
+          time       = c.textDim;
+          text       = c.textBright;
+          labelicon  = c.accent;
           actions = {
-            background = "#3B4252";
-            text       = "#ECEFF4";
+            background = c.backgroundAlt;
+            text       = c.textBright;
           };
           close_button = {
-            background = "#BF616A";
-            label      = "#ECEFF4";
+            background = c.urgent;
+            label      = c.textBright;
           };
         };
 
@@ -375,10 +372,10 @@ in
           enable         = false;
           orientation    = "vertical";
           location       = "right";
-          bar_color      = "#88C0D0";
-          icon_container = "#4C566A";
-          icon           = "#ECEFF4";
-          label          = "#ECEFF4";
+          bar_color      = c.accent;
+          icon_container = c.border;
+          icon           = c.textBright;
+          label          = c.textBright;
         };
       };
     };

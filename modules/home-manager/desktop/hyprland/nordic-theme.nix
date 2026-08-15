@@ -1,16 +1,19 @@
 # modules/home-manager/shared/nordic-theme.nix
 
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, ... }:
+let
+  c = config.theme.colors;
+in {
 
   config = lib.mkIf config.hyprland.enable {
     gtk = {
       enable = true;
-      
+
       theme = {
         name = "Nordic";
         package = pkgs.nordic;
       };
-      
+
       iconTheme = {
         name = "Papirus-Dark";
         package = pkgs.papirus-icon-theme;
@@ -21,34 +24,34 @@
       };
 
       # Override popup/context menu styling globally so systray right-click
-      # menus match the HyprPanel dropdown look (Nord colors, rounded, glassy).
+      # menus match the HyprPanel dropdown look (rounded, glassy).
       gtk3.extraCss = ''
         menu {
-          background-color: rgba(46, 52, 64, 0.92);
+          background-color: rgba(${c.backgroundRgb}, 0.92);
           border-radius: 6px;
-          border: 1px solid rgba(76, 86, 106, 0.5);
+          border: 1px solid rgba(${c.borderRgb}, 0.5);
           padding: 4px;
-          color: #ECEFF4;
+          color: ${c.textBright};
         }
 
         menuitem {
           border-radius: 4px;
           padding: 5px 12px;
-          color: #ECEFF4;
+          color: ${c.textBright};
         }
 
         menuitem:hover {
-          background-color: rgba(59, 66, 82, 0.85);
-          color: #ECEFF4;
+          background-color: rgba(${c.backgroundAltRgb}, 0.85);
+          color: ${c.textBright};
         }
 
         menuitem:disabled,
         menuitem:disabled label {
-          color: rgba(216, 222, 233, 0.4);
+          color: rgba(${c.textDimRgb}, 0.4);
         }
 
         menu separator {
-          background-color: rgba(76, 86, 106, 0.4);
+          background-color: rgba(${c.borderRgb}, 0.4);
           min-height: 1px;
           margin: 3px 6px;
         }
