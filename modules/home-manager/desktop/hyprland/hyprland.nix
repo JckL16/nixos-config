@@ -1,5 +1,11 @@
 # modules/home-manager/desktop/hyprland/hyprland.nix
-{ pkgs, lib, config, variables, ... }: {
+{ pkgs, lib, config, variables, ... }:
+let
+  c = config.theme.colors;
+  f = config.theme.font;
+  # Hyprland color format: rgba(RRGGBBAA) without leading #
+  hyprHex = hex: builtins.substring 1 6 hex;
+in {
 
   options = {
     hyprland.enable   = lib.mkEnableOption "Enable hyprland home-manager configuration";
@@ -25,8 +31,8 @@
           gaps_in = 4;
           gaps_out = 6;
           border_size = 2;
-          "col.active_border" = "rgba(4C566Aee)";
-          "col.inactive_border" = "rgba(4C566Aaa)";
+          "col.active_border" = "rgba(${hyprHex c.border}ee)";
+          "col.inactive_border" = "rgba(${hyprHex c.border}aa)";
           layout = "dwindle";
         };
         
@@ -339,14 +345,14 @@
           {
             size = "300, 50";
             outline_thickness = 7;
-            outer_color = "rgb(4c566a)";
-            inner_color = "rgba(2e344088)";
-            font_color = "rgb(eceff4)";
-            check_color = "rgb(5e81ac)";
-            fail_color = "rgb(bf616a)";
+            outer_color = "rgb(${hyprHex c.border})";
+            inner_color = "rgba(${hyprHex c.background}88)";
+            font_color = "rgb(${hyprHex c.textBright})";
+            check_color = "rgb(${hyprHex c.accentDark})";
+            fail_color = "rgb(${hyprHex c.urgent})";
             fade_on_empty = false;
             placeholder_text = "";
-            font_family = "JetBrainsMono Nerd Font";
+            font_family = f.name;
             halign = "center";
             valign = "center";
             position = "0, -80";
@@ -357,8 +363,8 @@
           {
             text = ''cmd[update:1000] echo "$(date +'%H:%M:%S')"'';
             font_size = 24;
-            font_family = "JetBrainsMono Nerd Font";
-            color = "rgb(eceff4)";
+            font_family = f.name;
+            color = "rgb(${hyprHex c.textBright})";
             halign = "center";
             valign = "center";
             position = "0, 80";
