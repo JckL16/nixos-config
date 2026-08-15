@@ -36,7 +36,7 @@
   # ==========================================================================
   # grub.enable = false;
   # systemd-boot.enable = true;
-  # grub.nordic-theme.enable = true;
+  # grub.theme.enable = true;
 
   # ==========================================================================
   # Desktop Environment — pick one

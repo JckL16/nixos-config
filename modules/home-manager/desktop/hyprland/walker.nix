@@ -1,13 +1,14 @@
 # modules/home-manager/desktop/hyprland/walker.nix
 # Walker — GTK4 app launcher.
-# Theme driven by config.theme.colors; uses Walker 2.x directory-based format
-# (layout.xml + item.xml + style.css).
+# Theme driven by config.theme.colors and variables.theme; uses Walker 2.x
+# directory-based format (layout.xml + item.xml + style.css).
 
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, variables, ... }:
 
 let
   c = config.theme.colors;
   f = config.theme.font;
+  themeName = variables.theme or "nord";
   # GTK4 window layout — 520px wide, 320px max list height.
   walkerLayout = pkgs.writeText "walker-layout.xml" ''
     <?xml version="1.0" encoding="UTF-8"?>
@@ -269,21 +270,16 @@ let
 
     #ItemImage,
     .item-image {
-      -gtk-icon-size: 0px;
-      min-width: 0;
-      min-height: 0;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
+      min-width: 28px;
+      min-height: 28px;
+      margin-right: 2px;
     }
 
     #ItemImageFont,
     .item-image-text {
-      font-size: 0;
-      min-width: 0;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
+      font-size: 18px;
+      min-width: 28px;
+      margin-right: 2px;
     }
 
     .item-text {
@@ -345,7 +341,7 @@ in {
     services.elephant.enable = true;
 
     home.file.".config/walker/config.toml".text = ''
-      theme = "nord"
+      theme = "${themeName}"
       close_when_open = true
       click_to_close = true
       single_click_activation = false
@@ -390,10 +386,10 @@ in {
     #   - style.css: Nord colours
     #   - Copied (not symlinked) so Walker can write to the themes dir.
     home.activation.copyWalkerTheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      mkdir -p "$HOME/.config/walker/themes/nord"
-      cp --no-preserve=all "${walkerLayout}" "$HOME/.config/walker/themes/nord/layout.xml"
-      cp --no-preserve=all "${walkerItem}"   "$HOME/.config/walker/themes/nord/item.xml"
-      cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/nord/style.css"
+      mkdir -p "$HOME/.config/walker/themes/${themeName}"
+      cp --no-preserve=all "${walkerLayout}" "$HOME/.config/walker/themes/${themeName}/layout.xml"
+      cp --no-preserve=all "${walkerItem}"   "$HOME/.config/walker/themes/${themeName}/item.xml"
+      cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/${themeName}/style.css"
     '';
 
     # Clipboard picker: show cliphist entries in walker dmenu, decode and copy selected.
