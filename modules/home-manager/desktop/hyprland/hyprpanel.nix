@@ -17,7 +17,7 @@ let
   # Using pkgs.writeText + activation-script copy avoids the GLib ELOOP that
   # occurs when HyprPanel's readFile() follows multi-level nix-store symlinks.
   hyprpanelModulesScss = pkgs.writeText "hyprpanel-modules.scss" ''
-    /* Systray popup menus are styled via gtk3.extraCss in nordic-theme.nix
+    /* Systray popup menus are styled via gtk3.extraCss in gtk-theme.nix
        since they belong to external GTK apps, not HyprPanel itself. */
 
     /* Calendar: today marker as bottom border + no background.

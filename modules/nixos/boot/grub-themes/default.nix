@@ -1,7 +1,7 @@
 { ... }: {
-  
+
   imports = [
-    ./nordic-theme.nix
+    ./themed.nix
   ];
 
 }

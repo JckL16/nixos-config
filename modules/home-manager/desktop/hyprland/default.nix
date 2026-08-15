@@ -5,7 +5,7 @@
     ./hyprpanel.nix
     ./clipman.nix
     ./walker.nix
-    ./nordic-theme.nix
+    ./gtk-theme.nix
     ./swayosd.nix
     ./wlogout.nix
   ];
