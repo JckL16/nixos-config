@@ -1,17 +1,20 @@
 # modules/nixos/desktop/display-managers/greetd.nix
 
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, variables, ... }:
 
 let
+  presets = import ../../../home-manager/theme/presets.nix;
+  c       = (presets.${variables.theme or "nord"}).colors;
+
   theme = builtins.concatStringsSep ";" [
-    "border=#4C566A"
-    "text=#D8DEE9"
-    "prompt=#88C0D0"
-    "time=#88C0D0"
-    "action=#81A1C1"
-    "button=#88C0D0"
-    "container=#3B4252"
-    "input=#D8DEE9"
+    "border=${c.border}"
+    "text=${c.textBright}"
+    "prompt=${c.accent}"
+    "time=${c.accent}"
+    "action=${c.accentBlue}"
+    "button=${c.accent}"
+    "container=${c.backgroundAlt}"
+    "input=${c.textBright}"
   ];
 
   sessions = "${config.services.displayManager.sessionData.desktops}/share";
