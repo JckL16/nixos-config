@@ -1,8 +1,9 @@
 # modules/home-manager/desktop/hyprland/hyprland.nix
-{ pkgs, lib, config, variables, ... }:
+{ pkgs, lib, config, variables, pkgs-unstable,  ... }:
 let
   c = config.theme.colors;
   f = config.theme.font;
+  g = config.theme.gtk;
   # Hyprland color format: rgba(RRGGBBAA) without leading #
   hyprHex = hex: builtins.substring 1 6 hex;
 in {
@@ -207,6 +208,8 @@ in {
           # Toggle notification center
           "$mod, N, exec, hyprpanel -t notificationsmenu"
 
+          "$mod, C, exec, proton-mail"
+
           # Toggle lid suspend behavior
           ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
         ];
@@ -250,9 +253,9 @@ in {
         
         # Environment variables
         env = [
-          "XCURSOR_THEME,Bibata-Modern-Classic"
-          "XCURSOR_SIZE,20"
-          "GTK_ICON_THEME,Papirus-Dark"
+          "XCURSOR_THEME,${g.cursorName}"
+          "XCURSOR_SIZE,${toString g.cursorSize}"
+          "GTK_ICON_THEME,${g.iconThemeName}"
         ];
       };
       
@@ -322,7 +325,10 @@ in {
       libnotify
       batsignal
       jq
+    ] ++ [
+      pkgs-unstable.protonmail-desktop
     ];
+
 
     programs.hyprlock = {
       enable = true;

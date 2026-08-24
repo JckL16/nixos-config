@@ -99,6 +99,7 @@ in {
       QT_QPA_PLATFORM        = "wayland";
       QT_STYLE_OVERRIDE      = "adwaita-dark";
       ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+      MOZ_ENABLE_WAYLAND     = "1";
     };
 
     # Wallpaper generated from theme colors; swaybg and hyprlock both read this path.

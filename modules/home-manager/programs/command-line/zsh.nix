@@ -1,6 +1,15 @@
 # modules/home-manager/programs/command-line/zsh.nix
 
-{ pkgs, lib, config, variables, ... }: {
+{ pkgs, lib, config, variables, ... }:
+let
+  c = config.theme.colors;
+  batTheme = {
+    "nord"        = "Nord";
+    "gruvbox"     = "gruvbox-dark";
+    "dracula"     = "Dracula";
+    "tokyo-night" = "base16";
+  }.${variables.theme} or "Nord";
+in {
   home.packages = with pkgs; [
     pay-respects
     eza
@@ -25,7 +34,7 @@
   programs.bat = {
     enable = true;
     config = {
-      theme = "Nord";
+      theme = batTheme;
       pager = "less -FR";
     };
   };
@@ -35,33 +44,33 @@
     enableZshIntegration = true;
     settings = {
       character = {
-        success_symbol = "[❯](bold #A3BE8C)";
-        error_symbol = "[❯](bold #BF616A)";
+        success_symbol = "[❯](bold ${c.success})";
+        error_symbol   = "[❯](bold ${c.urgent})";
       };
       directory = {
-        style = "bold #81A1C1";
+        style = "bold ${c.accentBlue}";
         truncation_length = 4;
         truncate_to_repo = false;
       };
       git_branch = {
         symbol = " ";
-        style = "bold #88C0D0";
+        style  = "bold ${c.accent}";
       };
       git_status = {
-        style = "bold #BF616A";
+        style = "bold ${c.urgent}";
       };
       cmd_duration = {
         min_time = 2000;
-        style = "bold #EBCB8B";
+        style    = "bold ${c.warning}";
       };
       username = {
-        format = "[$user]($style)@";
-        style_user = "bold #8FBCBB";
+        format     = "[$user]($style)@";
+        style_user = "bold ${c.nord7}";
         show_always = false;
       };
       hostname = {
         format = "[$hostname]($style) ";
-        style = "bold #A3BE8C";
+        style  = "bold ${c.success}";
         ssh_only = true;
       };
     };
