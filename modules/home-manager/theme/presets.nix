@@ -70,8 +70,8 @@
     font = { name = "JetBrainsMono Nerd Font"; size = "0.9rem"; weight = 600; };
 
     gtk = {
-      themeName        = "Gruvbox-Dark-B";
-      themePackage     = "gruvbox-dark-gtk";
+      themeName        = "adw-gtk3-dark";
+      themePackage     = "adw-gtk3";
       iconThemeName    = "Papirus-Dark";
       iconThemePackage = "papirus-icon-theme";
       # Amber cursor matches Gruvbox's warm orange tones

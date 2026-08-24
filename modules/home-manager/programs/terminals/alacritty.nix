@@ -1,9 +1,13 @@
 # modules/home-manager/programs/alacritty.nix
 
-{ pkgs, lib, config, variables, ... }: {
-  
+{ pkgs, lib, config, variables, ... }:
+let
+  c = config.theme.colors;
+  f = config.theme.font;
+in {
+
   options = {
-    alacritty.enable = 
+    alacritty.enable =
       lib.mkEnableOption "Enable alacritty terminal";
   };
 
@@ -12,37 +16,39 @@
       enable = true;
       settings = {
         colors = {
-          bright = {
-            black = "#4C566A";
-            blue = "#81A1C1";
-            cyan = "#8FBCBB";
-            green = "#A3BE8C";
-            magenta = "#B48EAD";
-            red = "#BF616A";
-            white = "#ECEFF4";
-            yellow = "#EBCB8B";
-          };
-          cursor = {
-            cursor = "#D8DEE9";
-            text = "#2E3440";
-          };
+          # 16-color palette mapped through the nord0-nord15 theme slots.
+          # Each theme preset assigns these to its closest palette equivalents.
           normal = {
-            black = "#3B4252";
-            blue = "#81A1C1";
-            cyan = "#88C0D0";
-            green = "#A3BE8C";
-            magenta = "#B48EAD";
-            red = "#BF616A";
-            white = "#E5E9F0";
-            yellow = "#EBCB8B";
+            black   = c.nord1;   # slightly-lighter background
+            red     = c.nord11;
+            green   = c.nord14;
+            yellow  = c.nord13;
+            blue    = c.nord9;
+            magenta = c.nord15;
+            cyan    = c.nord7;
+            white   = c.nord5;
+          };
+          bright = {
+            black   = c.nord3;   # visible-but-muted (borders/comments)
+            red     = c.nord11;
+            green   = c.nord14;
+            yellow  = c.nord13;
+            blue    = c.nord9;
+            magenta = c.nord15;
+            cyan    = c.nord8;   # primary accent as bright cyan
+            white   = c.nord6;
           };
           primary = {
-            background = "#2E3440";
-            foreground = "#D8DEE9";
+            background = c.background;
+            foreground = c.textDim;
+          };
+          cursor = {
+            cursor = c.textDim;
+            text   = c.background;
           };
           selection = {
-            background = "#D8DEE9";
-            text = "#2E3440";
+            background = c.textDim;
+            text       = c.background;
           };
         };
         cursor = {
@@ -56,15 +62,15 @@
         font = {
           size = 11.0;
           bold = {
-            family = "JetBrainsMono Nerd Font Mono";
+            family = "${f.name} Mono";
             style = "Bold";
           };
           italic = {
-            family = "JetBrainsMono Nerd Font Mono";
+            family = "${f.name} Mono";
             style = "Italic";
           };
           normal = {
-            family = "JetBrainsMono Nerd Font Mono";
+            family = "${f.name} Mono";
             style = "Regular";
           };
           offset = {

@@ -32,5 +32,5 @@
 
   # Active theme — drives colors, wallpaper, GRUB, GTK, and Walker across the entire system.
   # Options: "nord"  "gruvbox"  "dracula"  "tokyo-night"
-  theme = "nord";
+  theme = "gruvbox";
 }
