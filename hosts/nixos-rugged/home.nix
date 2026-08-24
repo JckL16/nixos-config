@@ -39,7 +39,6 @@
     claude-code
     caligula
     ticktick
-    thunderbird
     vscode
     localsend
     calibre
