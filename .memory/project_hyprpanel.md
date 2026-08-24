@@ -32,6 +32,12 @@ Previously removed due to UPower DisplayDevice bug giving 188% on dual-battery s
 DisplayDevice percentage as a weighted average of both batteries. Battery is now in the
 bar layout. batsignal still monitors BAT0 directly for low-battery alerts (separate concern).
 
+**Charging indicator**: AstalBattery only treats UPower states CHARGING and FULLY_CHARGED
+as `charging = true` — PENDING_CHARGE (state 5) is excluded. ThinkPad BIOS charge thresholds
+cause `pending-charge` whenever AC is connected but battery is above the start threshold.
+Fix: `services.tlp` in `hosts/nixos-laptop/configuration.nix` with START=80/STOP=90, so the
+EC always starts a charge cycle below 80%, keeping UPower in `charging` state.
+
 ## udiskie tray disabled
 `tray = "auto"` causes `gtk_widget_get_scale_factor` GTK assertion failures on Wayland
 that crash the daemon via "Broken pipe". `tray = "never"` is stable; `notify = true`
