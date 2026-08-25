@@ -41,10 +41,10 @@
     ticktick
     thunderbird
     vscode
-    localsend
     calibre
     ventoy-full
     tea
+    readest
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.spotify
