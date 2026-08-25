@@ -131,7 +131,7 @@
       radare2              # Reverse engineering framework
       rizin                # Fork of radare2 with better structure
       cutter               # Free reverse engineering platform (GUI for rizin)
-      iaito                # GUI for radare2
+      # iaito                # GUI for radare2
       ghidra               # NSA's software reverse engineering framework
       # ida-free             # IDA Free - freeware disassembler
 

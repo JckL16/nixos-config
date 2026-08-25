@@ -38,6 +38,8 @@
     "ventoy-1.1.12"
   ];
 
+  programs.localsend.enable = true;
+
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
