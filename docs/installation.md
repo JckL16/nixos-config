@@ -337,10 +337,34 @@ Disko reads this value directly - no need to configure it in diskoConfig.
 
 ---
 
+---
+
+## TPM2 Automatic LUKS Unlock
+
+If `tpm2Unlock.enable = true` is set in your host config, the system will attempt to unlock LUKS automatically at boot using the TPM2 chip, falling back to your passphrase if the TPM check fails (e.g. after a firmware update).
+
+This requires a **one-time enrolment** after the first boot on the new system:
+
+```bash
+sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/disk/by-partlabel/disk-main-root
+```
+
+You will be prompted for your existing LUKS passphrase to authorise adding the new TPM2 key slot. After that, subsequent boots will unlock automatically without a passphrase prompt.
+
+**PCR bindings:** PCR 0 covers UEFI firmware code and PCR 7 covers Secure Boot state. The TPM will refuse to release the key if either changes — a firmware update will trigger a fallback to the passphrase, after which you should re-run the enrolment command above to re-seal the key against the new firmware measurements.
+
+**To remove the TPM2 slot** (e.g. before transferring the disk to another machine):
+
+```bash
+sudo systemd-cryptenroll --wipe-slot=tpm2 /dev/disk/by-partlabel/disk-main-root
+```
+
+---
+
 ## LUKS Encryption Notes
 
 - **Password is never stored** - you must remember it
-- **Prompted on every boot** - enter password to decrypt disk
+- **Prompted on every boot** (unless TPM2 unlock is configured) - enter password to decrypt disk
 - **Cannot be added later** - requires reinstall to enable encryption
 
 ## User Account Notes

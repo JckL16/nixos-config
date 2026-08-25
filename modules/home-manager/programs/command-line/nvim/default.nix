@@ -1,7 +1,21 @@
 # modules/home-manager/programs/command-line/nvim/default.nix
 
-{ pkgs, lib, config, inputs, ... }:
+{ pkgs, lib, config, inputs, variables, ... }:
+let
+  nvimColorscheme = {
+    "nord"        = "nord";
+    "gruvbox"     = "gruvbox";
+    "dracula"     = "dracula-nvim";
+    "tokyo-night" = "tokyonight";
+  }.${variables.theme} or "nord";
 
+  nvimLualineTheme = {
+    "nord"        = "nord";
+    "gruvbox"     = "gruvbox";
+    "dracula"     = "dracula";
+    "tokyo-night" = "tokyonight";
+  }.${variables.theme} or "nord";
+in
 {
   imports = [ inputs.nixvim.homeModules.nixvim ];
 
@@ -72,7 +86,10 @@
         }
       ];
 
-      colorschemes.nord.enable = true;
+      colorschemes.nord.enable         = nvimColorscheme == "nord";
+      colorschemes.gruvbox.enable      = nvimColorscheme == "gruvbox";
+      colorschemes.dracula-nvim.enable = nvimColorscheme == "dracula-nvim";
+      colorschemes.tokyonight.enable   = nvimColorscheme == "tokyonight";
 
       extraPackages = with pkgs; [
         wl-clipboard
@@ -295,7 +312,7 @@
         lualine = {
           enable = true;
           settings.options = {
-            theme = "nord";
+            theme = nvimLualineTheme;
             component_separators = { left = "|"; right = "|"; };
             section_separators = { left = " "; right = " "; };
           };

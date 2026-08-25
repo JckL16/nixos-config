@@ -8,6 +8,7 @@
   programs.home-manager.enable = true;
 
   imports = [
+    ./theme
     ./programs
     ./services
     ./desktop

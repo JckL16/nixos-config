@@ -15,8 +15,8 @@
   # Enable emulation of ARM systems
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  # Set the bootloader theme (grub is enabled by default)
-  grub.nordic-theme.enable = true;
+  # GRUB theme (colors driven by variables.theme)
+  grub.theme.enable = true;
 
   # Hostname
   networking.hostName = "nixos-desktop";
