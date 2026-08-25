@@ -10,11 +10,14 @@
 { pkgs, lib, config, variables, ... }:
 
 let
+  c = config.theme.colors;
+  f = config.theme.font;
+
   # modules.scss is loaded by HyprPanel after its main SCSS for user overrides.
   # Using pkgs.writeText + activation-script copy avoids the GLib ELOOP that
   # occurs when HyprPanel's readFile() follows multi-level nix-store symlinks.
   hyprpanelModulesScss = pkgs.writeText "hyprpanel-modules.scss" ''
-    /* Systray popup menus are styled via gtk3.extraCss in nordic-theme.nix
+    /* Systray popup menus are styled via gtk3.extraCss in gtk-theme.nix
        since they belong to external GTK apps, not HyprPanel itself. */
 
     /* Calendar: today marker as bottom border + no background.
@@ -22,8 +25,8 @@ let
        to get an underline that stays centred under the number. */
     .calendar-menu-widget:selected {
       background-color: transparent;
-      border-bottom: 2px solid #88C0D0;
-      color: #88C0D0;
+      border-bottom: 2px solid ${c.accent};
+      color: ${c.accent};
       font-weight: bold;
       border-radius: 0;
     }
@@ -36,18 +39,18 @@ let
     }
 
     window.popup menu {
-      background-color: rgba(46, 52, 64, 0.92);
+      background-color: rgba(${c.backgroundRgb}, 0.92);
       border-radius: 6px;
-      border: 1px solid rgba(76, 86, 106, 0.5);
+      border: 1px solid rgba(${c.borderRgb}, 0.5);
       padding: 4px;
-      color: #ECEFF4;
+      color: ${c.textBright};
       font-size: 12px;
     }
 
     window.popup menu menuitem {
       border-radius: 4px;
       padding: 5px 12px;
-      color: #ECEFF4;
+      color: ${c.textBright};
       font-size: 12px;
     }
 
@@ -56,15 +59,15 @@ let
     }
 
     window.popup menu menuitem:hover {
-      background-color: rgba(59, 66, 82, 0.85);
+      background-color: rgba(${c.backgroundAltRgb}, 0.85);
     }
 
     window.popup menu menuitem:disabled {
-      color: rgba(216, 222, 233, 0.4);
+      color: rgba(${c.textDimRgb}, 0.4);
     }
 
     window.popup menu separator {
-      background-color: rgba(76, 86, 106, 0.4);
+      background-color: rgba(${c.borderRgb}, 0.4);
       min-height: 1px;
       margin: 3px 6px;
     }
@@ -85,14 +88,14 @@ let
 
     /* Media controls: active state for shuffle/loop.
        HyprPanel's monochrome SCSS uses the same colour for active and inactive,
-       so we override it here with a Nord frost tint. */
+       so we override it here with the accent tint. */
     .media-indicator-control-button.enabled.active {
-      background-color: rgba(136, 192, 208, 0.25);
-      color: #88C0D0;
+      background-color: rgba(${c.accentRgb}, 0.25);
+      color: ${c.accent};
     }
 
     .media-indicator-control-button.enabled.active:hover {
-      background-color: rgba(136, 192, 208, 0.4);
+      background-color: rgba(${c.accentRgb}, 0.4);
     }
 
     /* Notification popups: gap from floating bar and right screen edge */
@@ -145,9 +148,9 @@ in
         bar.layouts."*" = {
           left   = [ "dashboard" "workspaces" "windowtitle" "media" ];
           middle = [ "clock" ];
-          right  = [ "volume" "network" "bluetooth" ]
+          right  = [ "volume" "network" "bluetooth" "cpu" "ram" "cpuTemp" ]
                   ++ lib.optional config.hyprland.battery "battery"
-                  ++ [ "cpu" "ram" "cpuTemp" "systray" "notifications" ];
+                  ++ [ "systray" "notifications" ];
         };
 
         # ─── Bar modules ────────────────────────────────────────────────────
@@ -275,11 +278,11 @@ in
               shortcut1 = { icon = "󰍹"; tooltip = "Display Settings"; command = "nwg-displays"; };
               shortcut2 = { icon = "󰄀"; tooltip = "Screenshot";        command = "grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Region saved'"; };
               shortcut3 = { icon = "󰍉"; tooltip = "Search Apps";       command = "walker"; };
-              shortcut4 = { icon = ""; tooltip = ""; command = ""; };
+              shortcut4 = { icon = "󰑩"; tooltip = "Toggle Hotspot"; command = "bash -c 'if nmcli -t -f NAME connection show --active | grep -q Hotspot; then nmcli connection down Hotspot; else nmcli connection up Hotspot; fi'"; };
             };
             right = {
-              shortcut1 = { icon = ""; tooltip = ""; command = ""; };
-              shortcut3 = { icon = ""; tooltip = ""; command = ""; };
+              shortcut1 = { icon = "󰙯"; tooltip = "Discord"; command = "discord-ptb"; };
+              shortcut2 = { icon = ""; tooltip = "Proton Mail"; command = "protonmail-desktop"; };
             };
           };
           directories.enabled = false;
@@ -294,18 +297,13 @@ in
           active_monitor = true;
         };
 
-        # ─── Nord theme ─────────────────────────────────────────────────────
-        #
-        # Nord palette:
-        #   Polar Night: #2E3440  #3B4252  #434C5E  #4C566A
-        #   Snow Storm:  #D8DEE9  #E5E9F0  #ECEFF4
-        #   Frost:       #8FBCBB  #88C0D0  #81A1C1  #5E81AC
-        #   Aurora:      #BF616A  #D08770  #EBCB8B  #A3BE8C  #B48EAD
+        # ─── Theme ──────────────────────────────────────────────────────────
+        # Colors sourced from config.theme.colors (see modules/home-manager/theme/).
 
         theme.font = {
-          name   = "JetBrainsMono Nerd Font";
-          size   = "0.9rem";
-          weight = 600;
+          name   = f.name;
+          size   = f.size;
+          weight = f.weight;
         };
 
         theme.bar = {
@@ -316,58 +314,278 @@ in
           margin_sides  = "0.3em";
           background    = "rgba(0, 0, 0, 0)";
           border.location = "none";
-          border.color    = "#4C566A";
+          border.color    = c.border;
 
           buttons = {
             style              = "default";
             enableBorders      = false;
+            borderColor        = c.accent;
             background         = "rgba(0,0,0,0)";
             background_opacity = 0;
-            hover              = "#3B4252";
+            hover              = c.backgroundAlt;
             radius             = "0.4em";
             padding_x          = "0.4rem";
-            spacing            = "0.4em";   # wider gap between right-side modules
-            text               = "#ECEFF4";
-            icon               = "#88C0D0";
+            spacing            = "0.4em";
+            text               = c.accent;
+            icon               = c.accent;
 
-            # Clock text matches the popup clock time colour ($bar-menus-label)
-            clock.text = "#88C0D0";
+            clock.text            = c.accent;
+            clock.background      = "rgba(0,0,0,0)";
+            clock.icon_background = "rgba(0,0,0,0)";
 
             workspaces = {
-              active   = "#88C0D0";   # Nord Frost — active workspace
-              occupied = "#EBCB8B";   # Nord Aurora yellow — has windows
-              hover    = "#3B4252";
+              active     = c.accent;
+              available  = c.textDim;
+              occupied   = c.warning;
+              hover      = c.backgroundAlt;
+              background = "rgba(0,0,0,0)";
             };
+
+            dashboard.background = "rgba(0,0,0,0)";
+            dashboard.border     = c.accent;
+            dashboard.icon       = c.accent;
+
+            windowtitle.background      = "rgba(0,0,0,0)";
+            windowtitle.icon_background = "rgba(0,0,0,0)";
+            windowtitle.text            = c.accent;
+            windowtitle.icon            = c.accent;
+
+            media.background      = "rgba(0,0,0,0)";
+            media.icon_background = "rgba(0,0,0,0)";
+            media.border          = c.accent;
+            media.text            = c.accent;
+            media.icon            = c.accent;
+
+            volume.background      = "rgba(0,0,0,0)";
+            volume.icon_background = "rgba(0,0,0,0)";
+            volume.border          = c.accent;
+            volume.text            = c.accent;
+            volume.icon            = c.accent;
+
+            network.background      = "rgba(0,0,0,0)";
+            network.icon_background = "rgba(0,0,0,0)";
+            network.border          = c.accent;
+            network.text            = c.accent;
+            network.icon            = c.accent;
+
+            bluetooth.background      = "rgba(0,0,0,0)";
+            bluetooth.icon_background = "rgba(0,0,0,0)";
+            bluetooth.border          = c.accent;
+            bluetooth.text            = c.accent;
+            bluetooth.icon            = c.accent;
+
+            battery.background      = "rgba(0,0,0,0)";
+            battery.icon_background = "rgba(0,0,0,0)";
+            battery.border          = c.accent;
+            battery.text            = c.accent;
+            battery.icon            = c.accent;
+
+            systray.background  = "rgba(0,0,0,0)";
+            systray.customIcon  = c.accent;
+            systray.border      = c.accent;
+
+            notifications.background      = "rgba(0,0,0,0)";
+            notifications.icon_background = "rgba(0,0,0,0)";
+            notifications.border          = c.accent;
+            notifications.icon            = c.accent;
+            notifications.total           = c.accent;
+
+            modules.cpu.background      = "rgba(0,0,0,0)";
+            modules.cpu.icon_background = "rgba(0,0,0,0)";
+            modules.cpu.border          = c.accent;
+            modules.cpu.text            = c.accent;
+            modules.cpu.icon            = c.accent;
+
+            modules.ram.background      = "rgba(0,0,0,0)";
+            modules.ram.icon_background = "rgba(0,0,0,0)";
+            modules.ram.border          = c.accent;
+            modules.ram.text            = c.accent;
+            modules.ram.icon            = c.accent;
+
+            modules.cpuTemp.background      = "rgba(0,0,0,0)";
+            modules.cpuTemp.icon_background = "rgba(0,0,0,0)";
+            modules.cpuTemp.border          = c.accent;
+            modules.cpuTemp.text            = c.accent;
+            modules.cpuTemp.icon            = c.accent;
+
+            modules.microphone.border = c.accent;
+            modules.microphone.text   = c.accent;
+            modules.microphone.icon   = c.accent;
+
+            modules.netstat.border = c.accent;
+            modules.netstat.text   = c.accent;
+            modules.netstat.icon   = c.accent;
+
+            modules.kbLayout.border = c.accent;
+            modules.kbLayout.text   = c.accent;
+            modules.kbLayout.icon   = c.accent;
+
+            modules.updates.border = c.accent;
+            modules.updates.text   = c.accent;
+            modules.updates.icon   = c.accent;
+
+            modules.weather.border = c.accent;
+            modules.weather.text   = c.accent;
+            modules.weather.icon   = c.accent;
+
+            modules.power.border = c.accent;
+            modules.power.icon   = c.accent;
+
+            modules.hyprsunset.border = c.accent;
+            modules.hyprsunset.text   = c.accent;
+            modules.hyprsunset.icon   = c.accent;
+
+            modules.worldclock.border = c.accent;
+            modules.worldclock.text   = c.accent;
+            modules.worldclock.icon   = c.accent;
           };
         };
 
         # ─── Popup menus theme ──────────────────────────────────────────────
         theme.bar.menus = {
-          # monochrome = true forces all menus to use background/cards/text
-          # instead of per-menu Catppuccin defaults
-          monochrome  = true;
-          background  = "rgba(46, 52, 64, 0.55)";   # Nord Polar Night, glassy
-          cards       = "rgba(46, 52, 64, 0)";       # fully transparent — no pill boxes
+          monochrome  = false;
+          background  = "rgba(${c.backgroundRgb}, 0.55)";
+          cards       = c.backgroundAlt;
           card_radius = "0.4em";
-          text        = "#ECEFF4";
-          dimtext     = "#D8DEE9";
-          label       = "#88C0D0";
+          text        = c.textBright;
+          dimtext     = c.textDim;
+          feinttext   = c.surface;
+          label       = c.accent;
+          buttons.default  = c.accent;
+          buttons.text     = c.background;
+          buttons.radius   = "0.4em";
+        };
+
+        # ─── Per-popup-menu colors (each has independent defaults) ──────────
+        # HyprPanel uses nested objects: card.color, background.color, border.color
+        # (not card_color / background_color / border_color — those are silently ignored).
+        theme.bar.menus.menu = {
+
+          clock = {
+            card.color       = c.backgroundAlt;
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            border.color     = c.border;
+            text             = c.textBright;
+            time.time        = c.accent;
+            time.timeperiod  = c.textDim;
+            calendar.yearmonth   = c.accent;
+            calendar.weekdays    = c.textDim;
+            calendar.paginator   = c.accent;
+            calendar.currentday  = c.accent;
+            calendar.days        = c.textBright;
+            calendar.contextdays = c.border;
+          };
+
+          dashboard = {
+            card.color       = c.backgroundAlt;
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            border.color     = c.border;
+            profile.name     = c.textBright;
+            powermenu = {
+              shutdown = c.urgent;
+              restart  = c.warning;
+              logout   = c.success;
+              sleep    = c.accentBlue;
+              confirmation = {
+                card        = c.backgroundAlt;
+                background  = c.background;
+                border      = c.border;
+                label       = c.accent;
+                body        = c.textBright;
+                confirm     = c.success;
+                deny        = c.urgent;
+                button_text = c.background;
+              };
+            };
+            shortcuts.background = c.accent;
+            shortcuts.text       = c.background;
+            controls = {
+              disabled                 = c.border;
+              wifi.background          = c.accent;
+              wifi.text                = c.background;
+              bluetooth.background     = c.accent;
+              bluetooth.text           = c.background;
+              notifications.background = c.accent;
+              notifications.text       = c.background;
+              volume.background        = c.accent;
+              volume.text              = c.background;
+              input.background         = c.accent;
+              input.text               = c.background;
+            };
+            monitors.bar_background = c.surface;
+            monitors.cpu.icon    = c.accent;
+            monitors.cpu.bar     = c.accent;
+            monitors.cpu.label   = c.accent;
+            monitors.ram.icon    = c.accent;
+            monitors.ram.bar     = c.accent;
+            monitors.ram.label   = c.accent;
+          };
+
+          volume = {
+            card.color       = c.backgroundAlt;
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            border.color     = c.border;
+            label.color      = c.accent;
+            text             = c.textBright;
+          };
+
+          network = {
+            card.color       = c.backgroundAlt;
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            border.color     = c.border;
+            label.color      = c.accent;
+            text             = c.textBright;
+          };
+
+          bluetooth = {
+            card.color       = c.backgroundAlt;
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            border.color     = c.border;
+            label.color      = c.accent;
+            text             = c.textBright;
+          };
+
+          battery = {
+            card.color       = c.backgroundAlt;
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            border.color     = c.border;
+            label.color      = c.accent;
+            text             = c.textBright;
+          };
+
+          notifications = {
+            background             = "rgba(${c.backgroundRgb}, 0.55)";
+            card                   = c.backgroundAlt;
+            border                 = c.border;
+            label                  = c.accent;
+            no_notifications_label = c.textDim;
+            clear                  = c.urgent;
+            switch.enabled         = c.accent;
+            pager.button           = c.accent;
+            scrollbar.color        = c.border;
+          };
+
+          media = {
+            background.color = "rgba(${c.backgroundRgb}, 0.55)";
+            card.color       = c.backgroundAlt;
+            border.color     = c.border;
+          };
         };
 
         theme.notification = {
-          background = "rgba(46, 52, 64, 0.75)";   # glassy, same as menus
-          label      = "#ECEFF4";
-          border     = "#4C566A";
-          time       = "#D8DEE9";
-          text       = "#ECEFF4";
-          labelicon  = "#88C0D0";
+          background = "rgba(${c.backgroundRgb}, 0.75)";
+          label      = c.textBright;
+          border     = c.border;
+          time       = c.textDim;
+          text       = c.textBright;
+          labelicon  = c.accent;
           actions = {
-            background = "#3B4252";
-            text       = "#ECEFF4";
+            background = c.backgroundAlt;
+            text       = c.textBright;
           };
           close_button = {
-            background = "#BF616A";
-            label      = "#ECEFF4";
+            background = c.urgent;
+            label      = c.textBright;
           };
         };
 
@@ -375,10 +593,10 @@ in
           enable         = false;
           orientation    = "vertical";
           location       = "right";
-          bar_color      = "#88C0D0";
-          icon_container = "#4C566A";
-          icon           = "#ECEFF4";
-          label          = "#ECEFF4";
+          bar_color      = c.accent;
+          icon_container = c.border;
+          icon           = c.textBright;
+          label          = c.textBright;
         };
       };
     };

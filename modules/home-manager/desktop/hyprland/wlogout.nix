@@ -3,22 +3,21 @@
 { pkgs, lib, config, variables, ... }:
 
 let
+  c = config.theme.colors;
+  f = config.theme.font;
   iconSize = builtins.floor (64 * variables.displayScale);
 
-  # Create Nord-colored icons using ImageMagick at a scaled size
-  nordIcons = pkgs.runCommand "wlogout-nord-icons" {
+  themedIcons = pkgs.runCommand "wlogout-themed-icons" {
     buildInputs = [ pkgs.imagemagick ];
   } ''
     mkdir -p $out/icons
 
-    # Convert default wlogout icons to Nord gray color and resize
     for icon in lock logout shutdown reboot; do
       if [ -f ${pkgs.wlogout}/share/wlogout/icons/$icon.png ]; then
-        # Convert the icon: resize, make it grayscale, then tint it to Nord color
         convert ${pkgs.wlogout}/share/wlogout/icons/$icon.png \
           -resize ${toString iconSize}x${toString iconSize} \
           -colorspace gray \
-          -fill '#D8DEE9' -tint 100 \
+          -fill '${c.textDim}' -tint 100 \
           $out/icons/$icon.png
       fi
     done
@@ -57,18 +56,18 @@ in
       style = ''
         * {
           background-image: none;
-          font-family: "JetBrainsMono Nerd Font";
+          font-family: "${f.name}";
           font-size: 15px;
         }
 
         window {
-          background-color: rgba(46, 52, 64, 0.85);
+          background-color: rgba(${c.backgroundRgb}, 0.85);
         }
 
         button {
-          color: #D8DEE9;
-          background-color: rgba(59, 66, 82, 0.7);
-          border: 2px solid #4C566A;
+          color: ${c.textDim};
+          background-color: rgba(${c.backgroundAltRgb}, 0.7);
+          border: 2px solid ${c.border};
           border-radius: 8px;
           background-repeat: no-repeat;
           background-position: center 40%;
@@ -84,26 +83,26 @@ in
         }
 
         button:focus, button:active, button:hover {
-          background-color: rgba(76, 86, 106, 0.8);
-          color: #ECEFF4;
-          border: 2px solid #88C0D0;
+          background-color: rgba(${c.borderRgb}, 0.8);
+          color: ${c.textBright};
+          border: 2px solid ${c.accent};
           outline-style: none;
         }
 
         #lock {
-          background-image: image(url("${nordIcons}/icons/lock.png"));
+          background-image: image(url("${themedIcons}/icons/lock.png"));
         }
 
         #logout {
-          background-image: image(url("${nordIcons}/icons/logout.png"));
+          background-image: image(url("${themedIcons}/icons/logout.png"));
         }
 
         #shutdown {
-          background-image: image(url("${nordIcons}/icons/shutdown.png"));
+          background-image: image(url("${themedIcons}/icons/shutdown.png"));
         }
 
         #reboot {
-          background-image: image(url("${nordIcons}/icons/reboot.png"));
+          background-image: image(url("${themedIcons}/icons/reboot.png"));
         }
       '';
     };

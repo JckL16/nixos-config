@@ -29,4 +29,8 @@
 
   # Wallpaper path (relative to home directory config)
   wallpaperPath = "~/.config/wallpapers/wallpaper.png";
+
+  # Active theme — drives colors, wallpaper, GRUB, GTK, and Walker across the entire system.
+  # Options: "nord"  "gruvbox"  "dracula"  "tokyo-night"
+  theme = "gruvbox";
 }

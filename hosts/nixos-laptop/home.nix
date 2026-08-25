@@ -37,14 +37,11 @@
     signal-desktop
     discord-ptb
     ttyper
-    cmatrix
-    sl
-    cowsay
-    fortune
     qbittorrent
     claude-code
     ticktick
-    thunderbird
+    calibre
+    localsend
   ] ++ [
     pkgs-unstable.protonmail-desktop
   ];

@@ -31,7 +31,7 @@
   # Bootloader
   systemd-boot.enable = lib.mkDefault false;
   grub.enable = lib.mkDefault true;
-  grub.nordic-theme.enable = lib.mkDefault false;
+  grub.theme.enable = lib.mkDefault false;
 
   # Graphics drivers
   intel-graphics.enable = lib.mkDefault false;
@@ -55,6 +55,9 @@
 
   # Enableing the system to work with a yubikey
   yubikey.enable = lib.mkDefault true;
+
+  # TPM2-backed automatic LUKS unlock (requires one-time systemd-cryptenroll enrolment)
+  tpm2Unlock.enable = lib.mkDefault false;
 
   # VeraCrypt disk encryption
   veracrypt.enable = lib.mkDefault true;

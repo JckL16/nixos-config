@@ -1,10 +1,14 @@
 # modules/home-manager/desktop/hyprland/walker.nix
 # Walker — GTK4 app launcher.
-# Nord theme using Walker 2.x directory-based format (layout.xml + item.xml + style.css).
+# Theme driven by config.theme.colors and variables.theme; uses Walker 2.x
+# directory-based format (layout.xml + item.xml + style.css).
 
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, variables, ... }:
 
 let
+  c = config.theme.colors;
+  f = config.theme.font;
+  themeName = variables.theme or "nord";
   # GTK4 window layout — 520px wide, 320px max list height.
   walkerLayout = pkgs.writeText "walker-layout.xml" ''
     <?xml version="1.0" encoding="UTF-8"?>
@@ -202,19 +206,17 @@ let
     </interface>
   '';
 
-  # Nord CSS using Walker 2.x class names.
-  # Icons hidden to preserve the text-only look from the previous Walker 0.x theme.
-  walkerCss = pkgs.writeText "walker-nord.css" ''
-    @define-color foreground #ECEFF4;
-    @define-color background rgba(46, 52, 64, 0.92);
-    @define-color selection rgba(59, 66, 82, 0.85);
-    @define-color border rgba(76, 86, 106, 0.5);
-    @define-color dimtext rgba(216, 222, 233, 0.6);
-    @define-color accent #88C0D0;
+  walkerCss = pkgs.writeText "walker-theme.css" ''
+    @define-color foreground ${c.textBright};
+    @define-color background rgba(${c.backgroundRgb}, 0.92);
+    @define-color selection rgba(${c.backgroundAltRgb}, 0.85);
+    @define-color border rgba(${c.borderRgb}, 0.5);
+    @define-color dimtext rgba(${c.textDimRgb}, 0.6);
+    @define-color accent ${c.accent};
 
     * {
       all: unset;
-      font-family: "JetBrainsMono Nerd Font";
+      font-family: "${f.name}";
       font-size: 14px;
       color: @foreground;
     }
@@ -235,7 +237,7 @@ let
     }
 
     .search-container {
-      background-color: rgba(59, 66, 82, 0.5);
+      background-color: rgba(${c.backgroundAltRgb}, 0.5);
       border: 1px solid @border;
       border-radius: 6px;
     }
@@ -252,7 +254,7 @@ let
     }
 
     .input selection {
-      background: rgba(136, 192, 208, 0.3);
+      background: rgba(${c.accentRgb}, 0.3);
     }
 
     .item-box {
@@ -268,21 +270,16 @@ let
 
     #ItemImage,
     .item-image {
-      -gtk-icon-size: 0px;
-      min-width: 0;
-      min-height: 0;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
+      min-width: 28px;
+      min-height: 28px;
+      margin-right: 2px;
     }
 
     #ItemImageFont,
     .item-image-text {
-      font-size: 0;
-      min-width: 0;
-      margin: 0;
-      padding: 0;
-      opacity: 0;
+      font-size: 18px;
+      min-width: 28px;
+      margin-right: 2px;
     }
 
     .item-text {
@@ -310,7 +307,7 @@ let
     }
 
     .error {
-      background-color: rgba(191, 97, 106, 0.85);
+      background-color: rgba(${c.urgentRgb}, 0.85);
       padding: 8px;
       border-radius: 4px;
       margin-top: 8px;
@@ -344,7 +341,7 @@ in {
     services.elephant.enable = true;
 
     home.file.".config/walker/config.toml".text = ''
-      theme = "nord"
+      theme = "${themeName}"
       close_when_open = true
       click_to_close = true
       single_click_activation = false
@@ -389,10 +386,10 @@ in {
     #   - style.css: Nord colours
     #   - Copied (not symlinked) so Walker can write to the themes dir.
     home.activation.copyWalkerTheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      mkdir -p "$HOME/.config/walker/themes/nord"
-      cp --no-preserve=all "${walkerLayout}" "$HOME/.config/walker/themes/nord/layout.xml"
-      cp --no-preserve=all "${walkerItem}"   "$HOME/.config/walker/themes/nord/item.xml"
-      cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/nord/style.css"
+      mkdir -p "$HOME/.config/walker/themes/${themeName}"
+      cp --no-preserve=all "${walkerLayout}" "$HOME/.config/walker/themes/${themeName}/layout.xml"
+      cp --no-preserve=all "${walkerItem}"   "$HOME/.config/walker/themes/${themeName}/item.xml"
+      cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/${themeName}/style.css"
     '';
 
     # Clipboard picker: show cliphist entries in walker dmenu, decode and copy selected.
