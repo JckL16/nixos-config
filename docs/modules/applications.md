@@ -52,6 +52,16 @@ Firefox-based browser set as the XDG default for `http`, `https`, and `text/html
 
 The Walker web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
 
+## Spotify (Spicetify)
+
+- **Option:** `spotify.enable = true;` in `home.nix`
+- **Default:** `false`
+- **File:** `modules/home-manager/programs/desktop/spicetify.nix`
+
+Skins the real Spotify client (keeps Premium/Connect) using the `Gerg-L/spicetify-nix` flake input, enabled via `programs.spicetify.enable` under the hood. The module sets the Sleek theme's `customColorScheme` from the active `theme.colors` palette (see `modules/home-manager/theme/`), so Spotify re-themes automatically whenever `variables.theme` changes — no separate Spicetify theme to maintain.
+
+Any of the standard `programs.spicetify.*` options (e.g. `theme`, `spotifyPackage`, `enabledExtensions`) can still be set per-host to override the defaults.
+
 ## VeraCrypt (Disk Encryption)
 
 - **Option:** `veracrypt.enable = true;` in `configuration.nix`

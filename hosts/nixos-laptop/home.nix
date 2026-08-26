@@ -16,6 +16,8 @@
 
   obsidian.enable = true;
 
+  spotify.enable = true;
+
   # Installs the libreoffice suite for the user
   # libreoffice.enable = true;
   onlyoffice.enable = true;
@@ -31,7 +33,6 @@
   virt-manager.enable = true;
 
   home.packages = with pkgs; [
-    spotify
     vscode
     anki
     signal-desktop

@@ -19,6 +19,8 @@
 
   obsidian.enable = true;
 
+  spotify.enable = true;
+
   python-dev.enable = true;
   python-dev.packages = [ "requests" "numpy" "pandas" "matplotlib" ];
   rust.enable = true;
@@ -46,7 +48,6 @@
     readest
   ] ++ [
       pkgs-unstable.protonmail-desktop
-      pkgs-unstable.spotify
       pkgs-unstable.zoom-us
     ];
 
