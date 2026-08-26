@@ -17,6 +17,8 @@
 
   obsidian.enable = true;
 
+  spotify.enable = true;
+
   winbox.enable = true;
 
   rust.enable = true;
@@ -29,7 +31,6 @@
   virt-manager.enable = true;
 
   home.packages = with pkgs; [
-    spotify
     vscode
     discord-ptb
     caligula
