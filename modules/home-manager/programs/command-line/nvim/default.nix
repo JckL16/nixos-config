@@ -171,7 +171,7 @@ in
         { mode = [ "n" "v" ]; key = "<leader>y"; action = ''"+y''; options.desc = "Yank to clipboard"; }
         { mode = [ "n" "v" ]; key = "<leader>p"; action = ''"+p''; options.desc = "Paste from clipboard"; }
         { mode = "n"; key = "<leader>Y"; action = ''"+Y''; options.desc = "Yank line to clipboard"; }
-        { mode = [ "n" "v" ]; key = "<leader>d"; action = ''"_d''; options.desc = "Delete to black hole"; }
+        { mode = "v"; key = "<leader>d"; action = ''"_d''; options.desc = "Delete to black hole"; }
         # LSP
         { mode = "n"; key = "gd"; action.__raw = "vim.lsp.buf.definition"; options.desc = "Go to definition"; }
         { mode = "n"; key = "gD"; action.__raw = "vim.lsp.buf.declaration"; options.desc = "Go to declaration"; }
@@ -183,7 +183,7 @@ in
         { mode = "n"; key = "gr"; action.__raw = "vim.lsp.buf.references"; options.desc = "References"; }
         { mode = "n"; key = "[d"; action.__raw = "vim.diagnostic.goto_prev"; options.desc = "Previous diagnostic"; }
         { mode = "n"; key = "]d"; action.__raw = "vim.diagnostic.goto_next"; options.desc = "Next diagnostic"; }
-        { mode = "n"; key = "<leader>ld"; action.__raw = "vim.diagnostic.open_float"; options.desc = "Show diagnostics"; }
+        { mode = "n"; key = "<leader>d"; action.__raw = "vim.diagnostic.open_float"; options.desc = "Show diagnostics"; }
         # Buffer navigation
         { mode = "n"; key = "<leader>bn"; action = ":bnext<CR>"; options.desc = "Next buffer"; }
         { mode = "n"; key = "<leader>bp"; action = ":bprevious<CR>"; options.desc = "Previous buffer"; }
