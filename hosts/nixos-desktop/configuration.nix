@@ -11,7 +11,31 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 8080 8443 ];
-  
+
+  # MGMT VLAN (tagged on the physical NIC)
+  #
+  # Static, not DHCP: the route below's gateway (10.0.99.1) is on this same
+  # subnet, and the route-add runs synchronously when the interface is
+  # created -- with DHCP, dhcpcd hasn't acquired a lease yet at that point,
+  # so the kernel has no on-link address for 10.0.99.0/24 and the route
+  # fails ("Nexthop has invalid gateway"). A static address is assigned in
+  # the same unit, before the route line runs, so it's always in place.
+  networking.vlans.mgmt = {
+    id = 99;
+    interface = "enp4s0";
+  };
+  networking.interfaces.mgmt.ipv4.addresses = [
+    { address = "10.0.99.50"; prefixLength = 24; }
+  ];
+
+  networking.interfaces.mgmt.ipv4.routes = [
+    { address = "10.0.30.0"; prefixLength = 24; via = "10.0.99.1"; }
+  ];
+
+  # In case NetworkManager auto-picks up the new vlan interface and fights
+  # the static config above -- harmless if NM isn't managing this machine.
+  networking.networkmanager.unmanaged = [ "mgmt" ];
+
   # Enable emulation of ARM systems
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
