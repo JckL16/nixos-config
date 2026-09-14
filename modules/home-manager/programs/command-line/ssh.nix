@@ -12,6 +12,7 @@
         IdentitiesOnly = true;
       };
       "*" = {
+        IdentitiesOnly = true;
         AddKeysToAgent = "yes";
         ServerAliveInterval = 60;
         ServerAliveCountMax = 3;
