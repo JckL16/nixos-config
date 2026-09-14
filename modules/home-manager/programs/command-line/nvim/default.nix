@@ -24,6 +24,8 @@ in
   };
 
   config = lib.mkIf config.nvim.enable {
+    home.packages = [ pkgs.bear pkgs.cmake ];
+
     programs.nixvim = {
       enable = true;
       nixpkgs.source = inputs.nixpkgs;
@@ -66,6 +68,11 @@ in
           event = "FileType";
           pattern = [ "c" "cpp" ];
           command = "setlocal shiftwidth=4 tabstop=4 softtabstop=4";
+        }
+        {
+          event = "FileType";
+          pattern = [ "c" "cpp" ];
+          callback.__raw = "function() _G.maybe_run_bear() end";
         }
         {
           event = "FileType";
@@ -138,18 +145,169 @@ in
         -- nvim-autopairs cmp integration
         local cmp_autopairs = require('nvim-autopairs.completion.cmp')
         require('cmp').event:on('confirm_done', cmp_autopairs.on_confirm_done())
+
+        -- Auto-generate compile_commands.json for Makefile- or CMake-based C/C++ projects
+        local bear_checked_projects = {}
+
+        -- Nearest Makefile or CMakeLists.txt above the given directory.
+        -- Returns (root_dir, kind) where kind is "make" or "cmake", or nil.
+        local function find_build_root(start_dir)
+          local found = vim.fs.find({ "Makefile", "makefile", "CMakeLists.txt" }, { upward = true, path = start_dir })
+          if #found == 0 then
+            return nil, nil
+          end
+          local kind = (vim.fs.basename(found[1]) == "CMakeLists.txt") and "cmake" or "make"
+          return vim.fs.dirname(found[1]), kind
+        end
+
+        -- Project root: nearest .git upward from the build root, falling back
+        -- to the build root itself. Used to scope the "already have a
+        -- compile_commands.json somewhere in this project" check so that
+        -- generating one at any level (e.g. a sub-project) stops further
+        -- prompts for sibling/parent build files in the same project.
+        local function find_project_root(build_root)
+          local found = vim.fs.find({ ".git" }, { upward = true, path = build_root })
+          if #found == 0 then
+            return build_root
+          end
+          return vim.fs.dirname(found[1])
+        end
+
+        local function has_any_compile_commands(project_root)
+          return #vim.fn.glob(project_root .. "/**/compile_commands.json", true, true) > 0
+        end
+
+        local function read_json(path)
+          local f = io.open(path, "r")
+          if not f then
+            return {}
+          end
+          local content = f:read("*a")
+          f:close()
+          local ok, decoded = pcall(vim.json.decode, content)
+          return (ok and decoded) or {}
+        end
+
+        -- Merge src's entries into dest (dedup by file+directory), used for
+        -- cmake since, unlike bear, it has no built-in append mode.
+        local function merge_compile_commands(src_path, dest_path)
+          local src = read_json(src_path)
+          local dest = read_json(dest_path)
+          local seen = {}
+          for _, e in ipairs(dest) do
+            seen[e.file .. "\0" .. e.directory] = true
+          end
+          for _, e in ipairs(src) do
+            local key = e.file .. "\0" .. e.directory
+            if not seen[key] then
+              table.insert(dest, e)
+              seen[key] = true
+            end
+          end
+          local out = io.open(dest_path, "w")
+          out:write(vim.json.encode(dest))
+          out:close()
+        end
+
+        local function on_generated(obj, project_root, tool_desc)
+          vim.schedule(function()
+            if obj.code == 0 and has_any_compile_commands(project_root) then
+              vim.notify("compile_commands.json updated, restarting LSP", vim.log.levels.INFO)
+              pcall(vim.cmd, "LspRestart")
+            else
+              vim.notify(tool_desc .. " failed:\n" .. (obj.stderr or ""), vim.log.levels.WARN)
+            end
+          end)
+        end
+
+        -- --append + explicit --output at the project root so builds in
+        -- different subdirectories (e.g. separate tutorial projects) merge
+        -- into one compile_commands.json instead of overwriting each other.
+        local function generate_compile_commands(root, kind, project_root)
+          local db_path = project_root .. "/compile_commands.json"
+          if kind == "make" then
+            vim.notify("Running `bear -- make` in " .. root .. "...", vim.log.levels.INFO)
+            vim.system({ "bear", "--append", "--output", db_path, "--", "make" }, { cwd = root, text = true }, function(obj)
+              on_generated(obj, project_root, "bear -- make")
+            end)
+          else
+            local build_dir = root .. "/build"
+            vim.notify("Running cmake configure in " .. root .. "...", vim.log.levels.INFO)
+            vim.system(
+              { "cmake", "-S", root, "-B", build_dir, "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" },
+              { text = true },
+              function(obj)
+                if obj.code == 0 then
+                  local generated = build_dir .. "/compile_commands.json"
+                  if vim.fn.filereadable(generated) == 1 then
+                    merge_compile_commands(generated, db_path)
+                  end
+                end
+                on_generated(obj, project_root, "cmake configure")
+              end
+            )
+          end
+        end
+
+        -- Automatic: fires once per project per session, only offers to run
+        -- if no compile_commands.json exists anywhere in the project yet.
+        function _G.maybe_run_bear()
+          local root, kind = find_build_root(vim.fn.expand("%:p:h"))
+          if not root then
+            return
+          end
+          local project_root = find_project_root(root)
+          if bear_checked_projects[project_root] then
+            return
+          end
+          bear_checked_projects[project_root] = true
+
+          if has_any_compile_commands(project_root) then
+            return
+          end
+
+          local tool = (kind == "make") and "`bear -- make`" or "`cmake` (CMAKE_EXPORT_COMPILE_COMMANDS)"
+          local choice = vim.fn.confirm(
+            "No compile_commands.json found in " .. root .. ".\nRun " .. tool .. " there to give the LSP full project context?",
+            "&Yes\n&No",
+            2
+          )
+          if choice ~= 1 then
+            return
+          end
+
+          generate_compile_commands(root, kind, project_root)
+        end
+
+        -- Manual: run any time, for the build file nearest the current file,
+        -- regardless of whether a compile_commands.json already exists.
+        function _G.run_bear_here()
+          local root, kind = find_build_root(vim.fn.expand("%:p:h"))
+          if not root then
+            vim.notify("No Makefile or CMakeLists.txt found above the current file", vim.log.levels.WARN)
+            return
+          end
+          local project_root = find_project_root(root)
+          generate_compile_commands(root, kind, project_root)
+        end
+
+        vim.api.nvim_create_user_command("BearBuild", "lua run_bear_here()", {
+          desc = "Run bear -- make for the current file's project and merge into compile_commands.json",
+        })
       '';
 
       keymaps = [
         # File explorer
-        { mode = "n"; key = "<leader>e"; action = ":NvimTreeToggle<CR>"; options.desc = "Toggle file explorer"; }
-        { mode = "n"; key = "<leader>o"; action = ":NvimTreeFocus<CR>"; options.desc = "Focus file explorer"; }
+        { mode = "n"; key = "<leader>ee"; action = ":NvimTreeToggle<CR>"; options.desc = "Toggle file explorer"; }
+        { mode = "n"; key = "<leader>ef"; action = ":NvimTreeFocus<CR>"; options.desc = "Focus file explorer"; }
         # Telescope
         { mode = "n"; key = "<leader>ff"; action = "<cmd>Telescope find_files<cr>"; options.desc = "Find files"; }
         { mode = "n"; key = "<leader>fg"; action = "<cmd>Telescope live_grep<cr>"; options.desc = "Live grep"; }
         { mode = "n"; key = "<leader>fb"; action = "<cmd>Telescope buffers<cr>"; options.desc = "Find buffers"; }
         { mode = "n"; key = "<leader>fh"; action = "<cmd>Telescope help_tags<cr>"; options.desc = "Help tags"; }
         { mode = "n"; key = "<leader>fr"; action = "<cmd>Telescope oldfiles<cr>"; options.desc = "Recent files"; }
+        { mode = "n"; key = "<leader>fs"; action = "<cmd>Telescope lsp_document_symbols<cr>"; options.desc = "Document symbols"; }
+        { mode = "n"; key = "<leader>fS"; action = "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>"; options.desc = "Workspace symbols"; }
         # Neogit
         { mode = "n"; key = "<leader>gg"; action = "<cmd>Neogit<cr>"; options.desc = "Open Neogit"; }
         { mode = "n"; key = "<leader>gc"; action = "<cmd>Neogit commit<cr>"; options.desc = "Git commit"; }
@@ -178,9 +336,18 @@ in
         { mode = "n"; key = "gi"; action.__raw = "vim.lsp.buf.implementation"; options.desc = "Go to implementation"; }
         { mode = "n"; key = "go"; action.__raw = "vim.lsp.buf.type_definition"; options.desc = "Go to type definition"; }
         { mode = "n"; key = "K"; action.__raw = "vim.lsp.buf.hover"; options.desc = "Hover documentation"; }
-        { mode = "n"; key = "<leader>rn"; action.__raw = "vim.lsp.buf.rename"; options.desc = "Rename"; }
         { mode = "n"; key = "<leader>ca"; action.__raw = "vim.lsp.buf.code_action"; options.desc = "Code action"; }
         { mode = "n"; key = "gr"; action.__raw = "vim.lsp.buf.references"; options.desc = "References"; }
+        { mode = "n"; key = "<leader>cd"; action.__raw = "vim.lsp.buf.definition"; options.desc = "Go to definition"; }
+        { mode = "n"; key = "<leader>cD"; action.__raw = "vim.lsp.buf.declaration"; options.desc = "Go to declaration"; }
+        { mode = "n"; key = "<leader>ci"; action.__raw = "vim.lsp.buf.implementation"; options.desc = "Go to implementation"; }
+        { mode = "n"; key = "<leader>ct"; action.__raw = "vim.lsp.buf.type_definition"; options.desc = "Go to type definition"; }
+        { mode = "n"; key = "<leader>cr"; action.__raw = "vim.lsp.buf.rename"; options.desc = "Rename"; }
+        { mode = "n"; key = "<leader>cR"; action.__raw = "vim.lsp.buf.references"; options.desc = "References"; }
+        { mode = "n"; key = "<leader>ck"; action.__raw = "vim.lsp.buf.hover"; options.desc = "Hover documentation"; }
+        { mode = "n"; key = "<leader>cs"; action.__raw = "vim.lsp.buf.signature_help"; options.desc = "Signature help"; }
+        { mode = "n"; key = "<leader>cf"; action.__raw = "function() vim.lsp.buf.format({ async = true }) end"; options.desc = "Format buffer"; }
+        { mode = "n"; key = "<leader>cb"; action.__raw = "function() _G.run_bear_here() end"; options.desc = "Run bear -- make here"; }
         { mode = "n"; key = "[d"; action.__raw = "vim.diagnostic.goto_prev"; options.desc = "Previous diagnostic"; }
         { mode = "n"; key = "]d"; action.__raw = "vim.diagnostic.goto_next"; options.desc = "Next diagnostic"; }
         { mode = "n"; key = "<leader>d"; action.__raw = "vim.diagnostic.open_float"; options.desc = "Show diagnostics"; }
@@ -212,6 +379,15 @@ in
         { mode = "v"; key = "K"; action = ":m '<-2<CR>gv=gv"; options.desc = "Move text up"; }
         # Toggle wrap
         { mode = "n"; key = "<leader>uw"; action = ":set wrap!<CR>"; options.desc = "Toggle line wrap"; }
+        # Harpoon
+        { mode = "n"; key = "<leader>ha"; action.__raw = ''function() require("harpoon"):list():add() end''; options.desc = "Add file"; }
+        { mode = "n"; key = "<leader>hh"; action.__raw = ''function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end''; options.desc = "Toggle menu"; }
+        { mode = "n"; key = "<leader>h1"; action.__raw = ''function() require("harpoon"):list():select(1) end''; options.desc = "File 1"; }
+        { mode = "n"; key = "<leader>h2"; action.__raw = ''function() require("harpoon"):list():select(2) end''; options.desc = "File 2"; }
+        { mode = "n"; key = "<leader>h3"; action.__raw = ''function() require("harpoon"):list():select(3) end''; options.desc = "File 3"; }
+        { mode = "n"; key = "<leader>h4"; action.__raw = ''function() require("harpoon"):list():select(4) end''; options.desc = "File 4"; }
+        { mode = "n"; key = "<leader>hp"; action.__raw = ''function() require("harpoon"):list():prev() end''; options.desc = "Previous file"; }
+        { mode = "n"; key = "<leader>hn"; action.__raw = ''function() require("harpoon"):list():next() end''; options.desc = "Next file"; }
       ];
 
       plugins = {
@@ -248,9 +424,12 @@ in
             indent.enable = true;
           };
           grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
-            nix lua python javascript typescript rust bash json yaml markdown html css
+            nix lua python javascript typescript rust bash json yaml markdown html css c cpp
+            go ruby php toml asm sql
           ];
         };
+
+        treesitter-context.enable = true;
 
         # Completion
         cmp = {
@@ -370,6 +549,23 @@ in
 
         diffview.enable = true;
 
+        # Terminal
+        toggleterm = {
+          enable = true;
+          settings = {
+            size = 15;
+            direction = "float";
+            shade_terminals = true;
+            open_mapping = ''"<c-t>"'';
+          };
+        };
+
+        # Navigation
+        harpoon = {
+          enable = true;
+          enableTelescope = true;
+        };
+
         # Utilities
         comment.enable = true;
         nix.enable = true;
@@ -391,6 +587,8 @@ in
               { __unkeyed-1 = "<leader>c"; group = "Code"; }
               { __unkeyed-1 = "<leader>g"; group = "Git"; }
               { __unkeyed-1 = "<leader>t"; group = "Trouble"; }
+              { __unkeyed-1 = "<leader>e"; group = "Explorer"; }
+              { __unkeyed-1 = "<leader>h"; group = "Harpoon"; }
             ];
           };
         };
@@ -515,15 +713,30 @@ in
               installRustc = false;
               settings."rust-analyzer".check.command = "clippy";
             };
-            clangd.enable = true;
+            clangd = {
+              enable = true;
+              cmd = [
+                "clangd"
+                "--background-index"
+                "--query-driver=/usr/bin/*,/usr/local/bin/*,/opt/**/bin/*,${config.home.homeDirectory}/.opt/**/bin/*"
+              ];
+            };
             bashls.enable = true;
             jsonls.enable = true;
             yamlls.enable = true;
             html.enable = true;
             cssls.enable = true;
             dockerls.enable = true;
+            gopls.enable = true;
+            solargraph.enable = true;
+            phpactor.enable = true;
+            taplo.enable = true;
+            asm_lsp.enable = true;
+            sqls.enable = true;
           };
         };
+
+        lsp-signature.enable = true;
       };
     };
   };
