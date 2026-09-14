@@ -201,6 +201,9 @@ in {
           "$mod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy && notify-send 'Screenshot' 'Region copied to clipboard'"
           "$mod, Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Region saved to ~/Pictures/Screenshots/'"
 
+          # Color picker
+          "$mod, P, exec, hyprpicker -a && notify-send 'Color Picker' 'Color copied to clipboard'"
+
           # Mouse workspace switching
           "$mod, mouse_down, workspace, e+1"
           "$mod, mouse_up, workspace, e-1"
@@ -315,6 +318,7 @@ in {
       nwg-displays
       grim
       slurp
+      hyprpicker
       wl-clipboard
       playerctl
       brightnessctl
