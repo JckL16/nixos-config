@@ -23,6 +23,7 @@
 
   # Desktop environment
   hyprland.enable = true;
+  printing.enable = true;
 
   # Graphics drivers
   amd-graphics.enable = true;
