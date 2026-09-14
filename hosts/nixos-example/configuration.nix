@@ -77,6 +77,8 @@
   # Networking Tools
   # ==========================================================================
   # winbox.enable = true;           # MikroTik Winbox
+  # printing.enable = true;         # CUPS + network printer discovery (avahi)
+  # smbMounts.<name> = { server = "//host/share"; }; # SMB/CIFS automount
 
   # ==========================================================================
   # Security

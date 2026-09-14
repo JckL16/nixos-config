@@ -27,6 +27,7 @@
 
   # Desktop environment
   hyprland.enable = true;
+  printing.enable = true;
 
   # Enabling virtualisation for the system
   virtualisation.enable = true;

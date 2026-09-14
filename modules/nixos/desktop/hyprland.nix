@@ -8,8 +8,6 @@
     # Enable greetd display manager by default
     greetd.enable = lib.mkDefault true;
 
-    services.printing.enable = true;
-
     security.polkit.enable = true;
     security.pam.services.hyprlock = {};
 

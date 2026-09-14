@@ -11,6 +11,8 @@
     ./yubikey.nix
     ./veracrypt.nix
     ./ventoy.nix
+    ./smb-mount.nix
+    ./printing.nix
   ];
 
 }

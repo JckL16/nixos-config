@@ -35,6 +35,8 @@ All module enable options at a glance.
 | `veracrypt.enable` | `true` | VeraCrypt disk encryption |
 | `tpm2Unlock.enable` | `false` | TPM2-backed automatic LUKS unlock (requires one-time enrolment, see installation guide) |
 | `ventoy.enable` | `false` | Ventoy bootable USB drive tool (permits insecure package automatically) |
+| `smbMounts.<name>` | `{ }` | SMB/CIFS network share automount, keyed by name (see docs/modules/applications.md) |
+| `printing.enable` | `false` | CUPS printing with network printer discovery (avahi) |
 
 ## User Level (home.nix)
 
