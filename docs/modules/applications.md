@@ -8,6 +8,8 @@
 
 Obsidian note-taking application. The module wraps the package to unset `NIXOS_OZONE_WL`, forcing Obsidian to run via XWayland rather than native Wayland. This is required because Electron's native Wayland PDF renderer produces a black screen on Hyprland.
 
+Uses `pkgs-unstable.obsidian` rather than stable: Obsidian 1.12+ switched PDF.js to fetching PDFs via XHR from a vault-specific `app://` subdomain, and nixpkgs' 1.12.7 build includes the CORS patch that registers that scheme correctly. The 1.10.3 build in stable lacks the patch and renders PDFs as a blank "0 of 0" viewer.
+
 ---
 
 ## Image Viewer
@@ -145,6 +147,26 @@ domain=WORKGROUP
 EOF
 sudo chmod 600 /etc/nixos/secrets/smb-kronan-share-credentials
 ```
+
+---
+
+## Calendar (GNOME Calendar + QuickShell bar)
+
+- **Option:** `gnome-calendar` + `eds-calendar-events` installed via
+  `modules/home-manager/desktop/hyprland/quickshell.nix`
+
+Proton Calendar has no CalDAV support (a deliberate limitation on Proton's part), so the only
+officially supported way to sync it elsewhere is a read-only ICS share link. Add it as a web
+calendar from within GNOME Calendar itself (**+ → New Calendar → From Web**), pasting the ICS URL
+from Proton Calendar's calendar menu → **Share** → **Share via link**. This is a one-time GUI
+action — Nix never sees or stores the URL.
+
+GNOME Calendar's backend, `evolution-data-server` (EDS), keeps a local SQLite cache of whatever
+it syncs (`~/.cache/evolution/calendar/<source-id>/cache.db`), refreshed automatically every 30
+minutes. The bar's clock popup reads events straight out of that cache via `eds-calendar-events`
+(a small script built by `quickshell.nix`) — it finds whichever configured EDS source points at
+`calendar.proton.me` and queries its cache directly, so there's no second URL or fetch to manage.
+Clicking a day with a dot shows that day's events; no synced source means no dots, same as before.
 
 ---
 
