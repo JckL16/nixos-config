@@ -1,11 +1,3 @@
-# modules/home-manager/theme/presets.nix
-#
-# Pure Nix attrset — no pkgs dependency so it can be imported by both
-# home-manager modules and NixOS modules (e.g. the GRUB theme builder).
-#
-# Each entry must define every field that theme/default.nix declares options for,
-# since the loader applies mkDefault over the whole attrset.
-
 {
   # ── Nord ───────────────────────────────────────────────────────────────────
   nord = {
@@ -55,7 +47,6 @@
       background    = "#282828"; backgroundAlt = "#3c3836"; surface = "#504945";
       border        = "#665c54";
       textDim       = "#bdae93"; text = "#d5c4a1"; textBright = "#ebdbb2";
-      # Orange is Gruvbox's most distinctive accent; aqua as secondary
       accent        = "#fe8019"; accentBlue = "#83a598"; accentDark = "#076678";
       urgent        = "#fb4934"; warning    = "#fabd2f"; success    = "#b8bb26";
 
@@ -74,7 +65,6 @@
       themePackage     = "adw-gtk3";
       iconThemeName    = "Papirus-Dark";
       iconThemePackage = "papirus-icon-theme";
-      # Amber cursor matches Gruvbox's warm orange tones
       cursorName       = "Bibata-Modern-Amber";
       cursorPackage    = "bibata-cursors";
       cursorSize       = 20;
@@ -93,7 +83,6 @@
       background    = "#282a36"; backgroundAlt = "#44475a"; surface = "#44475a";
       border        = "#6272a4";
       textDim       = "#6272a4"; text = "#f8f8f2"; textBright = "#f8f8f2";
-      # Purple is Dracula's signature accent
       accent        = "#bd93f9"; accentBlue = "#8be9fd"; accentDark = "#6272a4";
       urgent        = "#ff5555"; warning    = "#ffb86c"; success    = "#50fa7b";
 
@@ -108,7 +97,42 @@
     font = { name = "JetBrainsMono Nerd Font"; size = "0.9rem"; weight = 600; };
 
     gtk = {
-      # No dedicated Dracula GTK package in nixpkgs; adw-gtk3-dark is a clean dark base
+      themeName        = "adw-gtk3-dark";
+      themePackage     = "adw-gtk3";
+      iconThemeName    = "Papirus-Dark";
+      iconThemePackage = "papirus-icon-theme";
+      cursorName       = "Bibata-Modern-Classic";
+      cursorPackage    = "bibata-cursors";
+      cursorSize       = 20;
+    };
+  };
+
+  # ── Monochrome ─────────────────────────────────────────────────────────────
+  monochrome = {
+    colors = {
+      nord0  = "#252525"; nord1  = "#464646"; nord2  = "#525252"; nord3  = "#6e6e6e";
+      nord4  = "#ababab"; nord5  = "#b9b9b9"; nord6  = "#e3e3e3";
+      nord7  = "#868686"; nord8  = "#686868"; nord9  = "#999999"; nord10 = "#5e5e5e";
+      nord11 = "#ffffff"; nord12 = "#a0a0a0"; nord13 = "#e3e3e3";
+      nord14 = "#b9b9b9"; nord15 = "#747474";
+
+      background    = "#252525"; backgroundAlt = "#464646"; surface = "#525252";
+      border        = "#6e6e6e";
+      textDim       = "#ababab"; text = "#b9b9b9"; textBright = "#f7f7f7";
+      accent        = "#f7f7f7"; accentBlue = "#e3e3e3"; accentDark = "#686868";
+      urgent        = "#ffffff"; warning    = "#e3e3e3"; success    = "#b9b9b9";
+
+      backgroundRgb    = "37, 37, 37";
+      backgroundAltRgb = "70, 70, 70";
+      borderRgb        = "110, 110, 110";
+      accentRgb        = "247, 247, 247";
+      textDimRgb       = "171, 171, 171";
+      urgentRgb        = "255, 255, 255";
+    };
+
+    font = { name = "JetBrainsMono Nerd Font"; size = "0.9rem"; weight = 600; };
+
+    gtk = {
       themeName        = "adw-gtk3-dark";
       themePackage     = "adw-gtk3";
       iconThemeName    = "Papirus-Dark";
@@ -131,7 +155,6 @@
       background    = "#1a1b26"; backgroundAlt = "#24283b"; surface = "#292e42";
       border        = "#414868";
       textDim       = "#565f89"; text = "#a9b1d6"; textBright = "#c0caf5";
-      # Blue is Tokyo Night's signature accent
       accent        = "#7aa2f7"; accentBlue = "#7dcfff"; accentDark = "#3d59a1";
       urgent        = "#f7768e"; warning    = "#e0af68"; success    = "#9ece6a";
 
@@ -146,7 +169,6 @@
     font = { name = "JetBrainsMono Nerd Font"; size = "0.9rem"; weight = 600; };
 
     gtk = {
-      # No dedicated Tokyo Night GTK package in nixpkgs; adw-gtk3-dark is a clean dark base
       themeName        = "adw-gtk3-dark";
       themePackage     = "adw-gtk3";
       iconThemeName    = "Papirus-Dark";

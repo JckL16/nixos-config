@@ -1,5 +1,3 @@
-# modules/home-manager/programs/command-line/nvim/default.nix
-
 { pkgs, lib, config, inputs, variables, ... }:
 let
   nvimColorscheme = {
@@ -7,6 +5,7 @@ let
     "gruvbox"     = "gruvbox";
     "dracula"     = "dracula-nvim";
     "tokyo-night" = "tokyonight";
+    "monochrome"  = "base16";
   }.${variables.theme} or "nord";
 
   nvimLualineTheme = {
@@ -14,6 +13,7 @@ let
     "gruvbox"     = "gruvbox";
     "dracula"     = "dracula";
     "tokyo-night" = "tokyonight";
+    "monochrome"  = "auto";
   }.${variables.theme} or "nord";
 in
 {
@@ -97,6 +97,15 @@ in
       colorschemes.gruvbox.enable      = nvimColorscheme == "gruvbox";
       colorschemes.dracula-nvim.enable = nvimColorscheme == "dracula-nvim";
       colorschemes.tokyonight.enable   = nvimColorscheme == "tokyonight";
+      colorschemes.base16 = {
+        enable = nvimColorscheme == "base16";
+        colorscheme = {
+          base00 = "#252525"; base01 = "#464646"; base02 = "#525252"; base03 = "#6e6e6e";
+          base04 = "#ababab"; base05 = "#b9b9b9"; base06 = "#e3e3e3"; base07 = "#f7f7f7";
+          base08 = "#7c7c7c"; base09 = "#999999"; base0A = "#a0a0a0"; base0B = "#8e8e8e";
+          base0C = "#868686"; base0D = "#686868"; base0E = "#747474"; base0F = "#5e5e5e";
+        };
+      };
 
       extraPackages = with pkgs; [
         wl-clipboard
@@ -110,7 +119,6 @@ in
       ];
 
       extraConfigLua = ''
-        -- Wayland clipboard
         if os.getenv("WAYLAND_DISPLAY") then
           vim.g.clipboard = {
             name = 'wl-clipboard',
@@ -126,7 +134,6 @@ in
           }
         end
 
-        -- Browse directory helper
         function _G.browse_directory()
           vim.ui.input({ prompt = "Enter directory path: ", default = vim.fn.getcwd() .. "/" }, function(input)
             if input then
@@ -142,15 +149,11 @@ in
           end)
         end
 
-        -- nvim-autopairs cmp integration
         local cmp_autopairs = require('nvim-autopairs.completion.cmp')
         require('cmp').event:on('confirm_done', cmp_autopairs.on_confirm_done())
 
-        -- Auto-generate compile_commands.json for Makefile- or CMake-based C/C++ projects
         local bear_checked_projects = {}
 
-        -- Nearest Makefile or CMakeLists.txt above the given directory.
-        -- Returns (root_dir, kind) where kind is "make" or "cmake", or nil.
         local function find_build_root(start_dir)
           local found = vim.fs.find({ "Makefile", "makefile", "CMakeLists.txt" }, { upward = true, path = start_dir })
           if #found == 0 then
@@ -160,11 +163,6 @@ in
           return vim.fs.dirname(found[1]), kind
         end
 
-        -- Project root: nearest .git upward from the build root, falling back
-        -- to the build root itself. Used to scope the "already have a
-        -- compile_commands.json somewhere in this project" check so that
-        -- generating one at any level (e.g. a sub-project) stops further
-        -- prompts for sibling/parent build files in the same project.
         local function find_project_root(build_root)
           local found = vim.fs.find({ ".git" }, { upward = true, path = build_root })
           if #found == 0 then
@@ -188,8 +186,6 @@ in
           return (ok and decoded) or {}
         end
 
-        -- Merge src's entries into dest (dedup by file+directory), used for
-        -- cmake since, unlike bear, it has no built-in append mode.
         local function merge_compile_commands(src_path, dest_path)
           local src = read_json(src_path)
           local dest = read_json(dest_path)
@@ -220,9 +216,6 @@ in
           end)
         end
 
-        -- --append + explicit --output at the project root so builds in
-        -- different subdirectories (e.g. separate tutorial projects) merge
-        -- into one compile_commands.json instead of overwriting each other.
         local function generate_compile_commands(root, kind, project_root)
           local db_path = project_root .. "/compile_commands.json"
           if kind == "make" then
@@ -249,8 +242,6 @@ in
           end
         end
 
-        -- Automatic: fires once per project per session, only offers to run
-        -- if no compile_commands.json exists anywhere in the project yet.
         function _G.maybe_run_bear()
           local root, kind = find_build_root(vim.fn.expand("%:p:h"))
           if not root then
@@ -279,8 +270,6 @@ in
           generate_compile_commands(root, kind, project_root)
         end
 
-        -- Manual: run any time, for the build file nearest the current file,
-        -- regardless of whether a compile_commands.json already exists.
         function _G.run_bear_here()
           local root, kind = find_build_root(vim.fn.expand("%:p:h"))
           if not root then
@@ -297,10 +286,8 @@ in
       '';
 
       keymaps = [
-        # File explorer
         { mode = "n"; key = "<leader>ee"; action = ":NvimTreeToggle<CR>"; options.desc = "Toggle file explorer"; }
         { mode = "n"; key = "<leader>ef"; action = ":NvimTreeFocus<CR>"; options.desc = "Focus file explorer"; }
-        # Telescope
         { mode = "n"; key = "<leader>ff"; action = "<cmd>Telescope find_files<cr>"; options.desc = "Find files"; }
         { mode = "n"; key = "<leader>fg"; action = "<cmd>Telescope live_grep<cr>"; options.desc = "Live grep"; }
         { mode = "n"; key = "<leader>fb"; action = "<cmd>Telescope buffers<cr>"; options.desc = "Find buffers"; }
@@ -308,29 +295,24 @@ in
         { mode = "n"; key = "<leader>fr"; action = "<cmd>Telescope oldfiles<cr>"; options.desc = "Recent files"; }
         { mode = "n"; key = "<leader>fs"; action = "<cmd>Telescope lsp_document_symbols<cr>"; options.desc = "Document symbols"; }
         { mode = "n"; key = "<leader>fS"; action = "<cmd>Telescope lsp_dynamic_workspace_symbols<cr>"; options.desc = "Workspace symbols"; }
-        # Neogit
         { mode = "n"; key = "<leader>gg"; action = "<cmd>Neogit<cr>"; options.desc = "Open Neogit"; }
         { mode = "n"; key = "<leader>gc"; action = "<cmd>Neogit commit<cr>"; options.desc = "Git commit"; }
         { mode = "n"; key = "<leader>gp"; action = "<cmd>Neogit pull<cr>"; options.desc = "Git pull"; }
         { mode = "n"; key = "<leader>gP"; action = "<cmd>Neogit push<cr>"; options.desc = "Git push"; }
         { mode = "n"; key = "<leader>gb"; action = "<cmd>Telescope git_branches<cr>"; options.desc = "Git branches"; }
         { mode = "n"; key = "<leader>gs"; action = "<cmd>Telescope git_status<cr>"; options.desc = "Git status"; }
-        # Trouble
         { mode = "n"; key = "<leader>tt"; action = "<cmd>Trouble diagnostics toggle<cr>"; options.desc = "Toggle diagnostics"; }
         { mode = "n"; key = "<leader>td"; action = "<cmd>Trouble diagnostics toggle filter.buf=0<cr>"; options.desc = "Document diagnostics"; }
         { mode = "n"; key = "<leader>tq"; action = "<cmd>Trouble qflist toggle<cr>"; options.desc = "Quickfix list"; }
         { mode = "n"; key = "<leader>tl"; action = "<cmd>Trouble loclist toggle<cr>"; options.desc = "Location list"; }
-        # Todo Comments
         { mode = "n"; key = "<leader>ft"; action = "<cmd>TodoTelescope<cr>"; options.desc = "Find TODOs"; }
         { mode = "n"; key = "<leader>fk"; action = "<cmd>Telescope keymaps<cr>"; options.desc = "Find keymaps"; }
         { mode = "n"; key = "]t"; action.__raw = ''function() require("todo-comments").jump_next() end''; options.desc = "Next TODO"; }
         { mode = "n"; key = "[t"; action.__raw = ''function() require("todo-comments").jump_prev() end''; options.desc = "Previous TODO"; }
-        # Clipboard
         { mode = [ "n" "v" ]; key = "<leader>y"; action = ''"+y''; options.desc = "Yank to clipboard"; }
         { mode = [ "n" "v" ]; key = "<leader>p"; action = ''"+p''; options.desc = "Paste from clipboard"; }
         { mode = "n"; key = "<leader>Y"; action = ''"+Y''; options.desc = "Yank line to clipboard"; }
         { mode = "v"; key = "<leader>d"; action = ''"_d''; options.desc = "Delete to black hole"; }
-        # LSP
         { mode = "n"; key = "gd"; action.__raw = "vim.lsp.buf.definition"; options.desc = "Go to definition"; }
         { mode = "n"; key = "gD"; action.__raw = "vim.lsp.buf.declaration"; options.desc = "Go to declaration"; }
         { mode = "n"; key = "gi"; action.__raw = "vim.lsp.buf.implementation"; options.desc = "Go to implementation"; }
@@ -351,35 +333,27 @@ in
         { mode = "n"; key = "[d"; action.__raw = "vim.diagnostic.goto_prev"; options.desc = "Previous diagnostic"; }
         { mode = "n"; key = "]d"; action.__raw = "vim.diagnostic.goto_next"; options.desc = "Next diagnostic"; }
         { mode = "n"; key = "<leader>d"; action.__raw = "vim.diagnostic.open_float"; options.desc = "Show diagnostics"; }
-        # Buffer navigation
         { mode = "n"; key = "<leader>bn"; action = ":bnext<CR>"; options.desc = "Next buffer"; }
         { mode = "n"; key = "<leader>bp"; action = ":bprevious<CR>"; options.desc = "Previous buffer"; }
         { mode = "n"; key = "<leader>bd"; action = ":bdelete<CR>"; options.desc = "Delete buffer"; }
         { mode = "n"; key = "<Tab>"; action = ":bnext<CR>"; options.desc = "Next buffer"; }
         { mode = "n"; key = "<S-Tab>"; action = ":bprevious<CR>"; options.desc = "Previous buffer"; }
-        # Save and quit
         { mode = "n"; key = "<leader>w"; action = ":w<CR>"; options.desc = "Save"; }
         { mode = "n"; key = "<leader>q"; action = ":q<CR>"; options.desc = "Quit"; }
         { mode = "n"; key = "<leader>Q"; action = ":qa<CR>"; options.desc = "Quit all"; }
-        # Window / pane navigation (handled by tmux-navigator; works across nvim splits and tmux panes)
         { mode = "n"; key = "<C-h>"; action = "<cmd>TmuxNavigateLeft<cr>"; options.desc = "Navigate left"; }
         { mode = "n"; key = "<C-j>"; action = "<cmd>TmuxNavigateDown<cr>"; options.desc = "Navigate down"; }
         { mode = "n"; key = "<C-k>"; action = "<cmd>TmuxNavigateUp<cr>"; options.desc = "Navigate up"; }
         { mode = "n"; key = "<C-l>"; action = "<cmd>TmuxNavigateRight<cr>"; options.desc = "Navigate right"; }
-        # Resize windows
         { mode = "n"; key = "<C-Up>"; action = ":resize -2<CR>"; options.desc = "Decrease height"; }
         { mode = "n"; key = "<C-Down>"; action = ":resize +2<CR>"; options.desc = "Increase height"; }
         { mode = "n"; key = "<C-Left>"; action = ":vertical resize -2<CR>"; options.desc = "Decrease width"; }
         { mode = "n"; key = "<C-Right>"; action = ":vertical resize +2<CR>"; options.desc = "Increase width"; }
-        # Indenting
         { mode = "v"; key = "<"; action = "<gv"; options.desc = "Indent left"; }
         { mode = "v"; key = ">"; action = ">gv"; options.desc = "Indent right"; }
-        # Move text
         { mode = "v"; key = "J"; action = ":m '>+1<CR>gv=gv"; options.desc = "Move text down"; }
         { mode = "v"; key = "K"; action = ":m '<-2<CR>gv=gv"; options.desc = "Move text up"; }
-        # Toggle wrap
         { mode = "n"; key = "<leader>uw"; action = ":set wrap!<CR>"; options.desc = "Toggle line wrap"; }
-        # Harpoon
         { mode = "n"; key = "<leader>ha"; action.__raw = ''function() require("harpoon"):list():add() end''; options.desc = "Add file"; }
         { mode = "n"; key = "<leader>hh"; action.__raw = ''function() require("harpoon").ui:toggle_quick_menu(require("harpoon"):list()) end''; options.desc = "Toggle menu"; }
         { mode = "n"; key = "<leader>h1"; action.__raw = ''function() require("harpoon"):list():select(1) end''; options.desc = "File 1"; }
@@ -391,7 +365,6 @@ in
       ];
 
       plugins = {
-        # File navigation
         nvim-tree = {
           enable = true;
           settings = {
@@ -416,7 +389,6 @@ in
           extensions.fzf-native.enable = true;
         };
 
-        # Treesitter
         treesitter = {
           enable = true;
           settings = {
@@ -431,7 +403,6 @@ in
 
         treesitter-context.enable = true;
 
-        # Completion
         cmp = {
           enable = true;
           settings = {
@@ -487,7 +458,6 @@ in
         cmp-cmdline.enable = true;
         cmp_luasnip.enable = true;
 
-        # UI
         lualine = {
           enable = true;
           settings.options = {
@@ -525,7 +495,6 @@ in
           };
         };
 
-        # Git
         gitsigns = {
           enable = true;
           settings.signs = {
@@ -549,7 +518,6 @@ in
 
         diffview.enable = true;
 
-        # Terminal
         toggleterm = {
           enable = true;
           settings = {
@@ -560,13 +528,11 @@ in
           };
         };
 
-        # Navigation
         harpoon = {
           enable = true;
           enableTelescope = true;
         };
 
-        # Utilities
         comment.enable = true;
         nix.enable = true;
 
@@ -692,7 +658,6 @@ in
           };
         };
 
-        # LSP
         lsp = {
           enable = true;
           servers = {
