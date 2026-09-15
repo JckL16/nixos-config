@@ -22,6 +22,9 @@ System-level configures Feral GameMode with:
 - Renice for game processes
 - Desktop notifications on activation/deactivation
 
+To use GameMode with a Steam game, add `gamemoderun %command%` to that game's launch options
+(right-click the game → Properties → set launch options).
+
 ## Minecraft
 
 - **User only:** `minecraft.enable = true;` in `home.nix`
