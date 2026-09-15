@@ -10,7 +10,9 @@ type: project
 
 - **LUKS password is permanent**: The encryption password is never stored in the Nix config. It cannot be changed or recovered after installation without reinstalling. Set it carefully.
 
-- **Monitor config is manual**: Hyprland loads `~/.config/hypr/monitors.conf` at startup. This file lives outside the Nix store and is set up using `nwg-displays` GUI after first boot. Not managed declaratively.
+- **Monitor config is manual**: Hyprland loads `~/.config/hypr/monitors.conf` at startup. This file lives outside the Nix store and is set up using `nwg-displays` GUI after first boot. Not managed declaratively. `hyprland.nix` only creates an empty placeholder if the file doesn't exist yet (so Hyprland's `source =` doesn't error on a fresh install) via `home.activation`, not `home.file` — home-manager's `home.file` creates a read-only Nix-store symlink, which would break nwg-displays' ability to write to it.
+
+- **Disko vs. hardware-configuration.nix fileSystems conflict**: both define `fileSystems` at the same priority, which conflicts. `modules/nixos/disko/default.nix` forces disko's device paths to win over the UUIDs `nixos-generate-config` writes into `hardware-configuration.nix`.
 
 **Why:** These are operational constraints not obvious from reading the code.
 **How to apply:** Flag these during install guidance or when helping set up a new host.

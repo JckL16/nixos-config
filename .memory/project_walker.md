@@ -54,6 +54,13 @@ Walker 2.x dmenu just reads stdin lines and outputs the selected line unchanged 
 **How to apply:** Never use `-t $'\t' -l N -V N` in Walker invocations — they are invalid.
 For scripts that need to extract a field from the selected line, use `awk`/`cut` on Walker's output.
 
+## Clipboard picker lives in walker.nix only
+`modules/home-manager/desktop/hyprland/clipman.nix` used to ALSO define
+`home.file.".config/walker/clipboard.sh"` with the old Walker 1.x dmenu flags (`-l 0 -V 1`,
+now invalid — see below). Both files were imported, a real conflicting-definition bug. Removed
+from clipman.nix; it now only owns the cliphist systemd service. Don't re-add a clipboard
+picker script there — it belongs in walker.nix.
+
 ## Clipboard picker: simple pipe
 `cliphist list` outputs `ID\tpreview` lines. Walker dmenu shows them and outputs the selected line.
 `cliphist decode` accepts the full `ID\tpreview` line from stdin — so the script is a direct pipe:
