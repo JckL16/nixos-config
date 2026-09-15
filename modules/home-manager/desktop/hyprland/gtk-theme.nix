@@ -9,6 +9,7 @@ let
     ${pkgs.imagemagick}/bin/convert \
       -size 1920x1080 \
       radial-gradient:"${c.surface}"-"${c.background}" \
+      -attenuate 0.03 +noise Gaussian \
       PNG24:$out
   '';
 in {
