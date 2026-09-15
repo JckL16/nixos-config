@@ -1,5 +1,3 @@
-# modules/home-manager/services/keyring.nix
-
 { pkgs, ... }: {
 
   services.gnome-keyring = {

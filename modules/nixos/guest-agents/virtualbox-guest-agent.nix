@@ -1,5 +1,3 @@
-# modules/nixos/guest-agents/virtualbox-guest-agent.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {

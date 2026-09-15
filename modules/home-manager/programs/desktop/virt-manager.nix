@@ -1,5 +1,3 @@
-# modules/home-manager/programs/desktop/virt-manager.nix
-
 { config, pkgs, lib, ... }:
 
 {

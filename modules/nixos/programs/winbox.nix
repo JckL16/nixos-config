@@ -1,4 +1,3 @@
-# modules/nixos/programs/winbox.nix
 { pkgs, pkgs-unstable, lib, config, ... }:
 
 {
@@ -8,7 +7,7 @@
   };
   
   config = lib.mkIf config.winbox.enable {
-    # Makes sure that winbox can access mac services by opening the firewall
+
     programs.winbox = {
       enable = true;
       openFirewall = true;

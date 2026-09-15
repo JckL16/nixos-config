@@ -1,4 +1,3 @@
-# modules/home-manager/programs/gaming/minecraft.nix
 { pkgs, lib, config, ... }: {
   options = {
     minecraft.enable = 

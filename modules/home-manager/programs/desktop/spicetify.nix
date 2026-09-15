@@ -1,11 +1,3 @@
-# modules/home-manager/programs/desktop/spicetify.nix
-#
-# Skins the real Spotify client via spicetify-nix using the active theme's
-# palette, so it re-themes automatically whenever variables.theme changes.
-# Enable per-host with `spotify.enable = true;`. Any `programs.spicetify.*`
-# option (theme, spotifyPackage, enabledExtensions, ...) can still be
-# overridden per-host on top of this.
-
 { lib, pkgs, config, inputs, ... }:
 let
   colors = config.theme.colors;
@@ -21,7 +13,6 @@ in {
       enable = true;
       theme = lib.mkDefault spicePkgs.themes.sleek;
 
-      # Keys per Sleek's color.ini legend (github.com/spicetify/spicetify-themes).
       customColorScheme = lib.mkDefault {
         text = hex colors.textBright;
         subtext = hex colors.textDim;

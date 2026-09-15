@@ -1,17 +1,14 @@
-# modules/nixos/desktop/hyprland.nix
-
 { pkgs, lib, config, variables, ... }: {
   options = {
     hyprland.enable = lib.mkEnableOption "Enable hyprland window manager";
   };
   config = lib.mkIf config.hyprland.enable {
-    # Enable greetd display manager by default
+
     greetd.enable = lib.mkDefault true;
 
     security.polkit.enable = true;
     security.pam.services.hyprlock = {};
 
-    # Let Hyprland handle lid switch instead of systemd
     services.logind.settings.Login.HandleLidSwitch = "ignore";
 
     programs.hyprland = {
@@ -38,10 +35,6 @@
     
     services.udisks2.enable = true;
 
-    # UPower — required for HyprPanel battery widget.
-    # usePercentageForPolicy makes the DisplayDevice aggregate by averaging
-    # individual battery percentages instead of summing raw energy values,
-    # which fixes the >100% display on dual-battery systems.
     services.upower = {
       enable = true;
       usePercentageForPolicy = true;

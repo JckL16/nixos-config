@@ -1,5 +1,3 @@
-# modules/home-manager/programs/terminals/tmux.nix
-
 { pkgs, lib, config, ... }:
 
 let
@@ -27,14 +25,12 @@ in {
       ];
 
       extraConfig = ''
-        # True color passthrough — required for nvim termguicolors
+
         set -ga terminal-overrides ",*256col*:Tc"
 
-        # Pane borders
         set -g pane-border-style "fg=${c.nord3}"
         set -g pane-active-border-style "fg=${c.nord8}"
 
-        # Status bar
         set -g status-position bottom
         set -g status-style "bg=${c.nord1},fg=${c.nord4}"
         set -g status-left-length 30
@@ -47,7 +43,6 @@ in {
         set -g window-status-current-format "#[fg=${c.nord8},bold] #I:#W "
         set -g window-status-separator ""
 
-        # Message / command bar
         set -g message-style "bg=${c.nord3},fg=${c.nord4}"
         set -g message-command-style "bg=${c.nord3},fg=${c.nord8}"
       '';

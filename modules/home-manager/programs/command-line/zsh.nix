@@ -1,5 +1,3 @@
-# modules/home-manager/programs/command-line/zsh.nix
-
 { pkgs, lib, config, variables, ... }:
 let
   c = config.theme.colors;
@@ -94,7 +92,6 @@ in {
     };
 
     shellAliases = {
-      # Nixos aliases
       switch = "sudo nixos-rebuild switch --flake ~/nixos-config";
       test = "sudo nixos-rebuild test --flake ~/nixos-config";
       dry-run = "sudo nixos-rebuild dry-run --flake ~/nixos-config";
@@ -102,39 +99,31 @@ in {
       clean = "nix-collect-garbage";
       install-bootloader = "sudo nixos-rebuild boot --install-bootloader --flake ~/nixos-config";
 
-      # Pay pay-respects alias (correction of earlier written command)
       fuck = "f";
 
-      # Eza aliases (ls replacement)
       ls = "eza --icons --group-directories-first";
       ll = "eza --icons --group-directories-first -l";
       la = "eza --icons --group-directories-first -la";
       lt = "eza --icons --group-directories-first --tree";
       tree = "eza --icons --group-directories-first --tree";
 
-      # Zoxide alias (cd replacement)
       cd = "z";
 
-      # Git shortcuts
       gst = "git status";
       gco = "git checkout";
       gp = "git push";
       gl = "git pull";
 
-      # Navigation
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
 
-      # Safety nets
       rm = "rm -i";
       cp = "cp -i";
       mv = "mv -i";
 
-      # Nix helpers
       nix-search = "nix search nixpkgs";
 
-      # Open files with default application
       open = "xdg-open";
 
       rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
@@ -143,15 +132,12 @@ in {
     initContent = ''
       eval "$(pay-respects --alias --shell zsh)"
 
-      # Better directory navigation
       setopt AUTO_CD
       setopt AUTO_PUSHD
       setopt PUSHD_IGNORE_DUPS
 
-      # Better globbing
       setopt EXTENDED_GLOB
 
-      # FZF tab completion helpers
       _fzf_compgen_path() {
         fd --hidden --exclude .git . "$1"
       }
@@ -160,7 +146,6 @@ in {
         fd --type=d --hidden --exclude .git . "$1"
       }
 
-      # ESC ESC to prepend sudo (replaces oh-my-zsh sudo plugin)
       sudo-command-line() {
         [[ -z $BUFFER ]] && zle up-history
         if [[ $BUFFER == sudo\ * ]]; then
@@ -172,13 +157,11 @@ in {
       zle -N sudo-command-line
       bindkey "^[^[" sudo-command-line
 
-      # Open host config dir in nvim, then rebuild
       update-config() {
         nvim ~/nixos-config/hosts/$(hostname)/
         sudo nixos-rebuild switch --flake ~/nixos-config
       }
 
-      # Extract various archive formats (replaces oh-my-zsh extract plugin)
       extract() {
         if [ -f "$1" ]; then
           case "$1" in
@@ -201,10 +184,8 @@ in {
         fi
       }
 
-      # Reduce ESC delay for vi mode switching
       KEYTIMEOUT=1
 
-      # Vi mode - cursor shape (beam in insert, block in normal)
       zle-keymap-select() {
         if [[ $KEYMAP == vicmd ]]; then
           echo -ne '\e[2 q'
@@ -216,16 +197,13 @@ in {
       zle-line-init() { echo -ne '\e[6 q'; }
       zle -N zle-line-init
 
-      # Edit current command in nvim (v in normal mode)
       autoload -Uz edit-command-line
       zle -N edit-command-line
       bindkey -M vicmd 'v' edit-command-line
 
-      # Ctrl+A/E in vi insert mode
       bindkey '^A' beginning-of-line
       bindkey '^E' end-of-line
 
-      # Ctrl+Arrow for word-by-word navigation
       bindkey '^[[1;5C' forward-word
       bindkey '^[[1;5D' backward-word
     '';

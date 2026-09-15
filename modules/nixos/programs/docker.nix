@@ -1,6 +1,3 @@
-
-# modules/nixos/programs/docker.nix
-
 { pkgs, lib, config, variables, ... }: {
   options = {
     docker.enable = 

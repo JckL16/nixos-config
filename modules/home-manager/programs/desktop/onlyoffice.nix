@@ -1,5 +1,3 @@
-# modules/home-manager/programs/onlyoffice.nix
-
 { pkgs, lib, config, ... }: {
   options = {
     onlyoffice.enable =

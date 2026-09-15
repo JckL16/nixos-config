@@ -16,38 +16,31 @@
     ./cyber
   ];
 
-  # Default enables
   git.enable = lib.mkDefault true;
   nvim.enable = lib.mkDefault true;
   alacritty.enable = lib.mkDefault true;
   zen-browser.enable = lib.mkDefault true;
 
-  # Virtualization
   virt-manager.enable = lib.mkDefault false;
   
-  # Gaming modules
+
   steam.enable = lib.mkDefault false;
   gamemode.enable = lib.mkDefault false;
   minecraft.enable = lib.mkDefault false;
 
-  # Office suites
   libreoffice.enable = lib.mkDefault false;
   onlyoffice.enable = lib.mkDefault false;
   winbox.enable = lib.mkDefault false;
 
-  # Image viewer
   imv.enable = lib.mkDefault true;
 
-  # Desktop environments
   hyprland.enable = lib.mkDefault false;
 
-  # Programming languages
   rust.enable = lib.mkDefault false;
   c-cpp.enable = lib.mkDefault false;
   go.enable = lib.mkDefault false;
   python-dev.enable = lib.mkDefault false;
   python-dev.packages = lib.mkDefault [];
 
-  # Cyber security toolkit
   cyber.enable = lib.mkDefault false;
 }

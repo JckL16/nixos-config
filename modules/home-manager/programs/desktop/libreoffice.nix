@@ -1,5 +1,3 @@
-# modules/home-manager/programs/libreoffice.nix
-
 { pkgs, lib, config, variables, ... }: {
 
   options = {

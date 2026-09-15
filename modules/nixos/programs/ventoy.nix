@@ -1,5 +1,3 @@
-# modules/nixos/programs/ventoy.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {
@@ -11,7 +9,6 @@
       ventoy-full
     ];
 
-    # ventoy uses binary blobs flagged as insecure; explicitly opt in
     nixpkgs.config.permittedInsecurePackages = [ "ventoy-1.1.12" ];
   };
 

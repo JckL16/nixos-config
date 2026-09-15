@@ -1,15 +1,10 @@
-# modules/home-manager/desktop/hyprland/walker.nix
-# Walker — GTK4 app launcher.
-# Theme driven by config.theme.colors and variables.theme; uses Walker 2.x
-# directory-based format (layout.xml + item.xml + style.css).
-
 { pkgs, lib, config, variables, ... }:
 
 let
   c = config.theme.colors;
   f = config.theme.font;
   themeName = variables.theme or "nord";
-  # GTK4 window layout — 520px wide, 320px max list height.
+
   walkerLayout = pkgs.writeText "walker-layout.xml" ''
     <?xml version="1.0" encoding="UTF-8"?>
     <interface>
@@ -143,7 +138,6 @@ let
     </interface>
   '';
 
-  # Item template — Walker 2.x default structure.
   walkerItem = pkgs.writeText "walker-item.xml" ''
     <?xml version="1.0" encoding="UTF-8"?>
     <interface>
@@ -336,8 +330,6 @@ in {
   config = lib.mkIf config.hyprland.enable {
     home.packages = with pkgs; [ walker qalculate-qt libqalculate ];
 
-    # Elephant is the data provider backend for Walker 2.x.
-    # Using the HM module so it runs as a systemd user service (graphical-session.target).
     services.elephant.enable = true;
 
     home.file.".config/walker/config.toml".text = ''
@@ -379,12 +371,6 @@ in {
       provider = "runner"
     '';
 
-    # Walker 2.x theme system:
-    #   - Theme directory: ~/.config/walker/themes/nord/
-    #   - layout.xml: GTK4 window/widget layout definition
-    #   - item.xml: list item template
-    #   - style.css: Nord colours
-    #   - Copied (not symlinked) so Walker can write to the themes dir.
     home.activation.copyWalkerTheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       mkdir -p "$HOME/.config/walker/themes/${themeName}"
       cp --no-preserve=all "${walkerLayout}" "$HOME/.config/walker/themes/${themeName}/layout.xml"
@@ -392,7 +378,6 @@ in {
       cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/${themeName}/style.css"
     '';
 
-    # Clipboard picker: show cliphist entries in walker dmenu, decode and copy selected.
     home.file.".config/walker/clipboard.sh" = {
       executable = true;
       text = ''

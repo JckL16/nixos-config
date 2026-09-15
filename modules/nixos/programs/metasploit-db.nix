@@ -1,5 +1,3 @@
-# modules/nixos/programs/metasploit-db.nix
-
 { pkgs, lib, config, variables, ... }: {
   options = {
     metasploit-db.enable =
@@ -7,12 +5,11 @@
   };
 
   config = lib.mkIf config.metasploit-db.enable {
-    # Enable PostgreSQL
+
     services.postgresql = {
       enable = true;
       package = pkgs.postgresql_16;
 
-      # Create msf database and user
       ensureDatabases = [ "msf" ];
       ensureUsers = [
         {
@@ -21,16 +18,14 @@
         }
       ];
 
-      # Allow local connections with peer authentication (more secure than trust)
       authentication = lib.mkOverride 10 ''
-        # TYPE  DATABASE        USER            ADDRESS                 METHOD
+
         local   all             all                                     peer
         host    all             all             127.0.0.1/32            scram-sha-256
         host    all             all             ::1/128                 scram-sha-256
       '';
     };
 
-    # Create the database.yml config for Metasploit in user's home
     system.activationScripts.metasploit-db-config = ''
       MSF_DIR="/home/${variables.username}/.msf4"
       DB_CONFIG="$MSF_DIR/database.yml"

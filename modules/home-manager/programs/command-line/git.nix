@@ -1,5 +1,3 @@
-# modules/home-manager/programs/git.nix
-
 { pkgs, lib, config, variables, ... }: {
 
   options = {

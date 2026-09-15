@@ -1,4 +1,3 @@
-# modules/home-manager/programming/python-dev.nix
 { config, lib, pkgs, ... }:
 let
   cfg = config.python-dev;
@@ -26,7 +25,7 @@ in
       let
         python = pkgs.python3;
         
-        # Basic packages always included
+
         basicPythonPackages = ps: with ps; [
           pip
           setuptools
@@ -34,11 +33,11 @@ in
           virtualenv
         ];
         
-        # User-specified packages
+
         userPythonPackages = ps: 
           map (name: ps.${name}) cfg.packages;
         
-        # Combine all packages
+
         allPythonPackages = ps: 
           (basicPythonPackages ps) ++ (userPythonPackages ps);
       in
@@ -46,12 +45,12 @@ in
         (python.withPackages allPythonPackages)
         poetry
         pipenv
-        pyright  # LSP server
+        pyright
       ] ++ cfg.extraPackages;
     
-    # Set up environment variables
+
     home.sessionVariables = {
-      PYTHONDONTWRITEBYTECODE = "1";  # Don't create __pycache__
+      PYTHONDONTWRITEBYTECODE = "1";
     };
   };
 }

@@ -1,19 +1,3 @@
-# modules/nixos/programs/smb-mount.nix
-#
-# Mounts CIFS/SMB shares that are only reachable on a specific network
-# (e.g. home LAN). Define one or more under smbMounts.<name>. Uses systemd
-# automount so the mount point never blocks boot and never hangs the shell
-# when the share is unreachable:
-#   - noauto + x-systemd.automount: mounted lazily on first access, not at boot
-#   - x-systemd.device-timeout / x-systemd.mount-timeout: bound how long an
-#     access can stall (~5s) when the server isn't reachable, instead of the
-#     systemd default (or an indefinite CIFS hang)
-#   - x-systemd.idle-timeout: auto-unmounts after being idle, so it doesn't
-#     sit connected once you leave the network
-#
-# Credentials are never stored in this repo or the Nix store: they're read
-# at mount time from credentialsFile, which you create by hand.
-
 { lib, variables, config, ... }:
 
 let

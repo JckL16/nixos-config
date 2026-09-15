@@ -1,5 +1,3 @@
-# modules/home-manager/programs/command-line/ssh.nix
-
 { lib, ... }: {
   programs.ssh = {
     enable = true;

@@ -1,5 +1,3 @@
-# modules/home-manager/programming/rust.nix
-
 { pkgs, config, lib, ... }: {
 
   options = {

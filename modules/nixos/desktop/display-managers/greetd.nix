@@ -1,5 +1,3 @@
-# modules/nixos/desktop/display-managers/greetd.nix
-
 { pkgs, lib, config, variables, ... }:
 
 let

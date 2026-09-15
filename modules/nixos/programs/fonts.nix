@@ -1,5 +1,3 @@
-# modules/nixos/programs/fonts.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {
@@ -20,7 +18,6 @@
       subpixel.rgba = "rgb";
     };
 
-    # X11 font path for XWayland (needed for legacy apps like Zoom)
     environment.systemPackages = [ pkgs.xset ];
     environment.sessionVariables = {
       XFONTSEL_FONT = "-*-helvetica-medium-r-*-*-14-*-*-*-*-*-*-*";
@@ -28,7 +25,7 @@
     services.xserver.fontPath = "/run/current-system/sw/share/X11/fonts";
 
     fonts.packages = with pkgs; [
-      # Web/UI fonts for browsers
+
       noto-fonts
       noto-fonts-color-emoji
       noto-fonts-cjk-sans
@@ -39,10 +36,10 @@
       source-sans
       source-serif
       font-awesome
-      # Microsoft fonts (unfree) — required for correct rendering on many websites
-      corefonts   # Arial, Georgia, Verdana, Trebuchet MS, Times New Roman, etc.
-      vista-fonts  # Calibri, Cambria, Candara, Consolas, Constantia, Corbel
-      # X11 fonts required by legacy apps (Zoom, etc.)
+
+      corefonts
+      vista-fonts
+
       font-misc-misc
       font-adobe-75dpi
       font-adobe-100dpi

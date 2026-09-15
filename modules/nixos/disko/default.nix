@@ -1,5 +1,3 @@
-# modules/nixos/disko/default.nix
-# Shared disko configuration module for all hosts
 { lib, config, variables, ... }:
 
 {
@@ -31,8 +29,7 @@
   };
 
   config = lib.mkIf config.diskoConfig.enable (lib.mkMerge [
-    # Force disko's device paths to win over the UUIDs in hardware-configuration.nix.
-    # Both sources define fileSystems at the same priority, causing a conflict.
+
     (lib.mkIf config.diskoConfig.encryption.enable {
       fileSystems."/".device = lib.mkForce "/dev/mapper/${config.diskoConfig.encryption.luksName}";
     })
@@ -43,14 +40,12 @@
       fileSystems."/boot".device = lib.mkForce "/dev/disk/by-partlabel/disk-main-boot-fs";
     })
 
-    # BIOS bootloader config
     (lib.mkIf variables.isBIOS {
       boot.loader.grub.devices = lib.mkForce [ config.diskoConfig.device ];
       boot.loader.grub.efiSupport = lib.mkForce false;
       boot.loader.efi.canTouchEfiVariables = lib.mkForce false;
     })
 
-    # UEFI bootloader config
     (lib.mkIf (!variables.isBIOS) {
       boot.loader.grub.device = lib.mkForce "nodev";
       boot.loader.grub.efiSupport = lib.mkForce true;
@@ -61,7 +56,6 @@
       }];
     })
 
-    # Disko devices config
     {
     disko.devices = {
       disk.main = {
@@ -70,15 +64,12 @@
         content = {
           type = "gpt";
           partitions = {
-            # BIOS boot partition (only for BIOS systems)
+
             boot = lib.mkIf variables.isBIOS {
               size = "1M";
-              type = "EF02"; # BIOS boot partition
+              type = "EF02";
             };
 
-            # Separate unencrypted /boot for BIOS systems.
-            # Allows GRUB to load the kernel without unlocking LUKS,
-            # avoiding a double password prompt and slow GRUB decryption.
             boot-fs = lib.mkIf variables.isBIOS {
               size = "1G";
               content = {
@@ -88,8 +79,6 @@
               };
             };
 
-            # EFI System Partition (only for UEFI systems)
-            # Acts as /boot, so GRUB never needs to unlock LUKS.
             ESP = lib.mkIf (!variables.isBIOS) {
               size = "1G";
               type = "EF00";
@@ -101,7 +90,6 @@
               };
             };
 
-            # Swap partition (optional)
             swap = lib.mkIf (config.diskoConfig.swapSize != null) {
               size = config.diskoConfig.swapSize;
               content = {
@@ -110,7 +98,6 @@
               };
             };
 
-            # Root partition - with or without LUKS
             root = {
               size = "100%";
               content =

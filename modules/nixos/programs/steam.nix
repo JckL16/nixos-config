@@ -1,5 +1,3 @@
-# modules/nixos/programs/steam.nix
-
 { pkgs, lib, config, ... }: {
   options = {
     steam.enable = 
@@ -14,7 +12,7 @@
         proton-ge-bin
       ];
       
-      # Conditionally add gamemode if enabled
+
       package = if config.gamemode.enable then
         pkgs.steam.override {
           extraPkgs = pkgs: with pkgs; [

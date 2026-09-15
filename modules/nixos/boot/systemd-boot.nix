@@ -1,5 +1,3 @@
-# modules/nixos/bootloader/systemd-boot.nix
-
 { pkgs, lib, config, variables, ... }: {
   
   options = {

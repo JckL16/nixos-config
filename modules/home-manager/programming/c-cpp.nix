@@ -9,14 +9,14 @@ in
   
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; [
-      # Build essentials
+
       gnumake
       pkg-config
       
-      # Compilers - gcc has priority, clang is secondary
+
       gcc
       
-      # Build tools
+
       cmake
       ninja
       meson
@@ -24,16 +24,15 @@ in
       automake
       libtool
       
-      # Debug tools
+
       gdb
       valgrind
       lldb
       strace
 
-      # LSP
       clang-tools
       
-      # Common libraries
+
       boost
       fmt
       spdlog
@@ -41,7 +40,7 @@ in
       gtest
     ];
     
-    # Set up environment variables
+
     home.sessionVariables = {
       PKG_CONFIG_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/pkgconfig";
     };
