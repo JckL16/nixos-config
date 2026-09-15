@@ -1,16 +1,8 @@
-# modules/home-manager/desktop/hyprland/gtk-theme.nix
-#
-# GTK/cursor/Qt theming and wallpaper generation.
-# All values come from config.theme.* which is driven by variables.theme.
-
 { pkgs, lib, config, ... }:
 let
   c = config.theme.colors;
   g = config.theme.gtk;
 
-  # Generate a radial-gradient wallpaper at Nix build time using theme colors.
-  # The center is slightly lighter (surface) fading to background at the edges,
-  # giving a subtle vignette that looks good on all themes.
   generatedWallpaper = pkgs.runCommand "theme-wallpaper" {
     buildInputs = [ pkgs.imagemagick ];
   } ''
@@ -39,8 +31,6 @@ in {
         gtk-application-prefer-dark-theme = 1;
       };
 
-      # Override popup/context menu styling so systray right-click menus
-      # match the HyprPanel dropdown look (rounded, glassy).
       gtk3.extraCss = ''
         menu {
           background-color: rgba(${c.backgroundRgb}, 0.92);
@@ -80,6 +70,8 @@ in {
       };
     };
 
+    dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+
     home.pointerCursor = {
       name    = g.cursorName;
       package = pkgs.${g.cursorPackage};
@@ -102,7 +94,6 @@ in {
       MOZ_ENABLE_WAYLAND     = "1";
     };
 
-    # Wallpaper generated from theme colors; swaybg and hyprlock both read this path.
     home.file.".config/wallpapers/wallpaper.png".source = generatedWallpaper;
 
     home.packages = [
