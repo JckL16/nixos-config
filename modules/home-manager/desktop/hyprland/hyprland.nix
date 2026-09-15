@@ -1,10 +1,9 @@
-# modules/home-manager/desktop/hyprland/hyprland.nix
 { pkgs, lib, config, variables, pkgs-unstable,  ... }:
 let
   c = config.theme.colors;
   f = config.theme.font;
   g = config.theme.gtk;
-  # Hyprland color format: rgba(RRGGBBAA) without leading #
+
   hyprHex = hex: builtins.substring 1 6 hex;
 in {
 
@@ -20,14 +19,14 @@ in {
       configType = "hyprlang";
       
       settings = {
-        # Modifier key
+
         "$mod" = "SUPER";
 
         monitor = [
           ",preferred,auto,${toString variables.displayScale}"
         ];
         
-        # General settings
+
         general = {
           gaps_in = 4;
           gaps_out = 6;
@@ -37,7 +36,7 @@ in {
           layout = "dwindle";
         };
         
-        # Decoration
+
         decoration = {
           rounding = 3;
           
@@ -59,7 +58,7 @@ in {
           dim_strength = 0.15;
         };
         
-        # Animations
+
         animations = {
           enabled = true;
           bezier = [
@@ -101,7 +100,6 @@ in {
           use_cpu_buffer = 1;
         };
 
-        # Input configuration
         input = {
           kb_layout = "${variables.keyboard-layout},us";
           kb_options = "grp:alt_shift_toggle,caps:escape";
@@ -112,17 +110,17 @@ in {
           };
         };
         
-        # Dwindle layout
+
         dwindle = {
           preserve_split = true;
         };
         
-        # Key bindings
+
         bind = [
           "$mod SHIFT, Q, killactive"
           "$mod SHIFT, C, exec, hyprctl reload"
           "$mod SHIFT, E, exit"
-          "$mod SHIFT, P, exec, pgrep wlogout || wlogout -b 2 -c 2 -r 2 -L 500 -R 500 -T 300 -B 300"
+          "$mod SHIFT, P, exec, quickshell -c quickshell ipc call powermenu toggle"
           
           "$mod, H, movefocus, l"
           "$mod, J, movefocus, d"
@@ -175,7 +173,7 @@ in {
           "$mod SHIFT, 9, movetoworkspace, 9"
           "$mod SHIFT, 0, movetoworkspace, 10"
           
-          # Preselect split direction (dwindle layout)
+
           "$mod CTRL, H, layoutmsg, preselect l"
           "$mod CTRL, J, layoutmsg, preselect d"
           "$mod CTRL, K, layoutmsg, preselect u"
@@ -192,54 +190,46 @@ in {
           "$mod SHIFT, V, exec, ~/.config/walker/clipboard.sh"
           "$mod, T, exec, xdg-open https://"
 
-          # Volume controls with swayosd
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
           ", XF86AudioMicMute, exec, swayosd-client --input-volume mute-toggle"
 
-          # Screenshot keybindings
           ", Print, exec, grim ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Full screen saved to ~/Pictures/Screenshots/'"
           "$mod SHIFT, S, exec, grim -g \"$(slurp)\" - | wl-copy && notify-send 'Screenshot' 'Region copied to clipboard'"
           "$mod, Print, exec, grim -g \"$(slurp)\" ~/Pictures/Screenshots/$(date +'%Y%m%d_%H%M%S').png && notify-send 'Screenshot' 'Region saved to ~/Pictures/Screenshots/'"
 
-          # Color picker
           "$mod, P, exec, hyprpicker -a && notify-send 'Color Picker' 'Color copied to clipboard'"
 
-          # Mouse workspace switching
           "$mod, mouse_down, workspace, e+1"
           "$mod, mouse_up, workspace, e-1"
 
-          # Toggle notification center
           "$mod, N, exec, hyprpanel -t notificationsmenu"
 
           "$mod, C, exec, proton-mail"
 
-          # Toggle lid suspend behavior
           ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
         ];
         
-        # Binds that can be held down
+
         binde = [
-          # Volume controls with swayosd
+
           ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume 2"
           ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -2"
 
-          # Brightness controls with swayosd
           ", XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
           ", XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
         ];
         
-        # Mouse bindings
+
         bindm = [
           "$mod, mouse:272, movewindow"
           "$mod, mouse:273, resizewindow"
         ];
 
-        # Lid switch binding
         bindl = [
           '', switch:on:Lid Switch, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" != "0" ]; then loginctl lock-session; sleep 1; systemctl suspend; fi''
         ];
         
-        # Startup applications
+
         exec-once = [
           "xset fp+ $(readlink -f /run/current-system/sw/share/X11/fonts) && xset fp rehash"
           "mkdir -p ~/Pictures/Screenshots"
@@ -254,37 +244,35 @@ in {
           "walker --gapplication-service"
         ];
         
-        # Environment variables
+
         env = [
           "XCURSOR_THEME,${g.cursorName}"
           "XCURSOR_SIZE,${toString g.cursorSize}"
           "GTK_ICON_THEME,${g.iconThemeName}"
+          "TZDIR,/etc/zoneinfo"
         ];
       };
       
-      # Resize mode using extraConfig (bypasses Nix validation)
+
       extraConfig = ''
-        # Monitor config managed by nwg-displays (ignored if file doesn't exist)
+
         source = ~/.config/hypr/monitors.conf
 
-        # Window rules
-        windowrule = float on class:^(org.pulseaudio.pavucontrol)$
-        windowrule = float on class:^(.blueman-manager-wrapped)$
-        windowrule = float on class:^(nm-connection-editor)$
-        windowrule = no_blur on fullscreen:1
+        windowrule = float on, center on, match:class ^(quickshell-mixer)$
+        windowrule = float on, center on, match:class ^(quickshell-nmtui)$
+        windowrule = float on, center on, match:class ^(quickshell-bluetui)$
+        windowrule = no_blur on, match:fullscreen 1
 
-        # Layer rules - blur and transparency
         layerrule = blur on, ignore_alpha 0.5, match:namespace walker
-        # HyprPanel bar layers are named bar-0, bar-1, etc.
+
         layerrule = blur on, ignore_alpha 0.5, match:namespace bar-[0-9]+
-        # HyprPanel popup menus (networkmenu, audiomenu, mediamenu, etc.)
+
         layerrule = blur on, ignore_alpha 0.5, match:namespace .*menu
-        # HyprPanel notification center
+
         layerrule = blur on, ignore_alpha 0.5, match:namespace notifications-window
         layerrule = blur on, ignore_alpha 1, match:namespace swayosd
         layerrule = blur on, ignore_alpha 1, match:namespace logout_dialog
 
-        # Resize submap
         bind = $mod, R, submap, resize
         
         submap = resize
@@ -305,8 +293,6 @@ in {
       '';
     };
 
-    # Create monitors.conf if it doesn't exist so Hyprland's source= doesn't error.
-    # nwg-displays writes here; we must not use home.file (read-only symlink).
     home.activation.createMonitorsConf = lib.hm.dag.entryAfter ["writeBoundary"] ''
       if [ ! -f "$HOME/.config/hypr/monitors.conf" ]; then
         mkdir -p "$HOME/.config/hypr"
@@ -329,10 +315,16 @@ in {
       libnotify
       batsignal
       jq
+      xdg-desktop-portal-gtk
     ] ++ [
       pkgs-unstable.protonmail-desktop
     ];
 
+    xdg.portal.config.hyprland = {
+      default = [ "hyprland" "gtk" ];
+      "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+      "org.freedesktop.impl.portal.Inhibit" = [ "gtk" ];
+    };
 
     programs.hyprlock = {
       enable = true;
@@ -345,7 +337,8 @@ in {
           {
             path = "~/.config/wallpapers/wallpaper.png";
             blur_passes = 2;
-            blur_size = 7;
+            blur_size = 5;
+            brightness = 0.6;
           }
         ];
 
@@ -392,13 +385,14 @@ in {
       };
     };
 
-    # blueman-applet disabled — HyprPanel has its own bluetooth module in the bar
     services.blueman-applet.enable = false;
 
-    # Suppress blueman's XDG autostart entry so dex doesn't start it.
-    # The system blueman package installs /etc/xdg/autostart/blueman.desktop;
-    # a Hidden=true override in ~/.config/autostart/ prevents dex from picking it up.
     xdg.configFile."autostart/blueman.desktop".text = ''
+      [Desktop Entry]
+      Hidden=true
+    '';
+
+    xdg.configFile."autostart/nm-applet.desktop".text = ''
       [Desktop Entry]
       Hidden=true
     '';

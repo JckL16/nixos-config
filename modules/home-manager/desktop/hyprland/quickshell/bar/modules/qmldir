@@ -1,0 +1,10 @@
+WorkspacesWidget 1.0 WorkspacesWidget.qml
+MediaWidget 1.0 MediaWidget.qml
+ClockWidget 1.0 ClockWidget.qml
+VolWidget 1.0 VolWidget.qml
+NetworkWidget 1.0 NetworkWidget.qml
+BtWidget 1.0 BtWidget.qml
+SysMonWidget 1.0 SysMonWidget.qml
+BatWidget 1.0 BatWidget.qml
+TrayWidget 1.0 TrayWidget.qml
+NotificationWidget 1.0 NotificationWidget.qml
