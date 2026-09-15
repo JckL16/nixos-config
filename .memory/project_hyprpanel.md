@@ -54,6 +54,11 @@ The right card of the shortcuts section always injects hardcoded SettingsButton 
 RecordingButton — cannot be removed via config. The left card (shortcut1-4) is hidden
 if all commands are empty strings (hasCommand checks length > 0).
 
+## Media controls active-state color
+HyprPanel's monochrome SCSS uses the same color for the shuffle/loop buttons' active and
+inactive states — `.media-indicator-control-button.enabled.active` needs an explicit accent-tint
+override in `modules.scss`, or "active" is visually indistinguishable from "off".
+
 ## modules.scss CSS constraints (GTK3)
 - No `!important` support — GTK3 CSS parser errors on it
 - No `@charset` — non-ASCII characters in comments cause SASS to prepend `@charset "UTF-8"`
