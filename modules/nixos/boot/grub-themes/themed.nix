@@ -1,12 +1,3 @@
-# modules/nixos/boot/grub-themes/themed.nix
-#
-# Unified GRUB theme builder — reads variables.theme and builds a matching
-# GRUB theme from the same color presets used by home-manager.
-# Replaces the old grub.nordic-theme module.
-#
-# Enable with:  grub.theme.enable = true;
-# Resolution:   grub.theme.resolution = "2560x1440";  (default: "1920x1080")
-
 { pkgs, lib, config, variables, ... }:
 
 let
@@ -15,7 +6,6 @@ let
   preset  = presets.${variables.theme or "nord"};
   c       = preset.colors;
 
-  # Strip leading # so ImageMagick and Hyprland get bare hex like "2E3440".
   hex = h: builtins.substring 1 6 h;
 
   grubTheme = pkgs.stdenv.mkDerivation {
@@ -29,7 +19,6 @@ let
     buildPhase = ''
       mkdir -p theme
 
-      # Background: radial gradient, lighter surface in centre fading to base bg
       ${pkgs.imagemagick}/bin/convert \
         -size ${cfg.resolution} \
         radial-gradient:"#${hex c.surface}"-"#${hex c.background}" \
@@ -37,7 +26,6 @@ let
         -define png:bit-depth=8 -define png:color-type=2 \
         PNG24:theme/background.png
 
-      # Menu panel background (rounded rectangle)
       ${pkgs.imagemagick}/bin/convert \
         -size 1150x650 \
         "xc:#${hex c.backgroundAlt}" \
@@ -50,7 +38,6 @@ let
         -define png:bit-depth=8 -define png:color-type=6 \
         PNG32:theme/menu_bg.png
 
-      # Selection highlight (rounded rectangle)
       ${pkgs.imagemagick}/bin/convert \
         -size 1080x40 \
         "xc:#${hex c.surface}" \
@@ -69,8 +56,6 @@ let
       cp -r theme/* $out/
 
       cat > $out/theme.txt <<EOFTHEME
-# GRUB theme — ${variables.theme or "nord"}
-# Generated from the active theme preset in variables.nix
 
 title-text: ""
 desktop-image: "background.png"

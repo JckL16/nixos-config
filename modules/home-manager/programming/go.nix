@@ -1,5 +1,3 @@
-# modules/home-manager/programming/go.nix
-
 { pkgs, config, lib, ... }: {
 
   options = {

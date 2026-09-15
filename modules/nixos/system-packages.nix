@@ -1,5 +1,3 @@
-# modules/nixos/system-packages.nix
-
 { pkgs, ... }: {
 
   environment.systemPackages = with pkgs; [

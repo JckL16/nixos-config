@@ -1,6 +1,3 @@
-# modules/home-manager/programs/command-line/neofetch.nix
-# Migrated from neofetch (removed in nixpkgs 26.05) to fastfetch
-
 { pkgs, ... }:
 
 {

@@ -1,5 +1,3 @@
-# modules/nixos/users.nix
-
 { pkgs, variables, ... }: {
 
   users.users."${variables.username}" = {
@@ -8,7 +6,7 @@
     extraGroups = [ "wheel" "dialout" ];
     packages = [];
     shell = pkgs.zsh;
-    # Temporary password for first login - change immediately with `passwd`
+
     initialPassword = "nixos";
   };
 

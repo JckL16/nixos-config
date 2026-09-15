@@ -1,5 +1,3 @@
-# modules/home-manager/programs/alacritty.nix
-
 { pkgs, lib, config, variables, ... }:
 let
   c = config.theme.colors;
@@ -16,10 +14,9 @@ in {
       enable = true;
       settings = {
         colors = {
-          # 16-color palette mapped through the nord0-nord15 theme slots.
-          # Each theme preset assigns these to its closest palette equivalents.
+
           normal = {
-            black   = c.nord1;   # slightly-lighter background
+            black   = c.nord1;
             red     = c.nord11;
             green   = c.nord14;
             yellow  = c.nord13;
@@ -29,13 +26,13 @@ in {
             white   = c.nord5;
           };
           bright = {
-            black   = c.nord3;   # visible-but-muted (borders/comments)
+            black   = c.nord3;
             red     = c.nord11;
             green   = c.nord14;
             yellow  = c.nord13;
             blue    = c.nord9;
             magenta = c.nord15;
-            cyan    = c.nord8;   # primary accent as bright cyan
+            cyan    = c.nord8;
             white   = c.nord6;
           };
           primary = {

@@ -1,5 +1,3 @@
-# modules/home-manager/programs/desktop/imv.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {

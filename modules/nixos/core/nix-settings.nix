@@ -1,14 +1,11 @@
-# modules/nixos/core/nix-settings.nix
-
 { pkgs, ... }: {
   
-  # Unfree packages
+
   nixpkgs.config.allowUnfree = true;
 
-  # Nix settings
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    download-buffer-size = 128 * 1024 * 1024; # 128 MiB
+    download-buffer-size = 128 * 1024 * 1024;
     trusted-users = [ "root" "@wheel" ];
     substituters = [
       "https://cache.nixos.org"

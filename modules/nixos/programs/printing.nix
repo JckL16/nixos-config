@@ -1,5 +1,3 @@
-# modules/nixos/programs/printing.nix
-
 { pkgs, lib, config, variables, ... }: {
   options = {
     printing.enable =
@@ -9,7 +7,6 @@
   config = lib.mkIf config.printing.enable {
     services.printing.enable = true;
 
-    # Discover network/shared printers over mDNS (e.g. AirPrint, IPP printers)
     services.avahi = {
       enable = true;
       nssmdns4 = true;

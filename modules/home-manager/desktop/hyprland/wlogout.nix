@@ -1,5 +1,3 @@
-# modules/home-manager/desktop/shared/wlogout.nix
-
 { pkgs, lib, config, variables, ... }:
 
 let

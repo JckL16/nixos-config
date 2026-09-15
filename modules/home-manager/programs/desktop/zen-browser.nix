@@ -1,5 +1,3 @@
-# modules/home-manager/programs/desktop/zen-browser.nix
-
 { pkgs, lib, config, inputs, ... }: {
 
   options = {

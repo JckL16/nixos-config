@@ -1,5 +1,3 @@
-# modules/nixos/hardware/bluetooth.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {

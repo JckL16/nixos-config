@@ -1,29 +1,12 @@
-# modules/home-manager/desktop/hyprland/hyprpanel.nix
-#
-# HyprPanel — AGS-based bar with animated popups, calendar, media controls,
-# network manager UI, notification center, and audio mixer.
-# Replaces Waybar and Mako.
-#
-# Config schema sourced from:
-#   /nix/store/7h5rb2vvfg00i76vjw86jqc1d8icp3v2-source/src/configuration/
-
 { pkgs, lib, config, variables, ... }:
 
 let
   c = config.theme.colors;
   f = config.theme.font;
 
-  # modules.scss is loaded by HyprPanel after its main SCSS for user overrides.
-  # Using pkgs.writeText + activation-script copy avoids the GLib ELOOP that
-  # occurs when HyprPanel's readFile() follows multi-level nix-store symlinks.
   hyprpanelModulesScss = pkgs.writeText "hyprpanel-modules.scss" ''
-    /* Systray popup menus are styled via gtk3.extraCss in gtk-theme.nix
-       since they belong to external GTK apps, not HyprPanel itself. */
-
-    /* Calendar: today marker as bottom border + no background.
-       GTK3 box-shadow inset is unreliable; border-bottom is the safe way
-       to get an underline that stays centred under the number. */
-    .calendar-menu-widget:selected {
+    
+        .calendar-menu-widget:selected {
       background-color: transparent;
       border-bottom: 2px solid ${c.accent};
       color: ${c.accent};
@@ -31,10 +14,7 @@ let
       border-radius: 0;
     }
 
-    /* Systray right-click popup menus.
-       SNI tray menus render inside HyprPanel's own GTK context so
-       modules.scss applies directly. */
-    window.popup {
+        window.popup {
       background-color: transparent;
     }
 
@@ -72,9 +52,7 @@ let
       margin: 3px 6px;
     }
 
-    /* Bar modules: fixed minimum width so the bar does not shift when values
-       change between narrow (e.g. "8G") and wide (e.g. "12.34G") text. */
-    .module-label.cpu {
+        .module-label.cpu {
       min-width: 2.8em;
     }
 
@@ -86,10 +64,7 @@ let
       min-width: 2.8em;
     }
 
-    /* Media controls: active state for shuffle/loop.
-       HyprPanel's monochrome SCSS uses the same colour for active and inactive,
-       so we override it here with the accent tint. */
-    .media-indicator-control-button.enabled.active {
+        .media-indicator-control-button.enabled.active {
       background-color: rgba(${c.accentRgb}, 0.25);
       color: ${c.accent};
     }
@@ -98,8 +73,7 @@ let
       background-color: rgba(${c.accentRgb}, 0.4);
     }
 
-    /* Notification popups: gap from floating bar and right screen edge */
-    .notifications-window {
+        .notifications-window {
       margin-top: 2.8em;
       margin-right: 1.5em;
     }
@@ -108,16 +82,11 @@ in
 {
   config = lib.mkIf config.hyprland.enable {
 
-    # 1. Wipe before linkGeneration so home-manager can lay down a fresh symlink.
     home.activation.cleanHyprpanelConfig =
       lib.hm.dag.entryBefore [ "linkGeneration" ] ''
         rm -rf "$HOME/.config/hyprpanel"
       '';
 
-    # 2. After linkGeneration, replace the nix-store symlinks with real file copies.
-    #    GLib (used by HyprPanel) raises ELOOP when following the multi-level
-    #    symlink chain into the nix store. Plain file copies sidestep this
-    #    and let HyprPanel write GUI changes back to config.json freely.
     home.activation.copyHyprpanelConfig =
       lib.hm.dag.entryAfter [ "linkGeneration" ] ''
         mkdir -p "$HOME/.config/hyprpanel"
@@ -132,19 +101,14 @@ in
     programs.hyprpanel = {
       enable = true;
 
-      # Start via exec-once (hyprland.nix) rather than systemd,
-      # consistent with how the rest of the desktop is launched.
       systemd.enable = false;
 
       settings = {
 
-        # Disable wallpaper management — swaybg handles this
         wallpaper.enable = false;
 
-        # Disable matugen (wallpaper-based dynamic color generation)
         theme.matugen = false;
 
-        # ─── Bar layout ─────────────────────────────────────────────────────
         bar.layouts."*" = {
           left   = [ "dashboard" "workspaces" "windowtitle" "media" ];
           middle = [ "clock" ];
@@ -153,18 +117,14 @@ in
                   ++ [ "systray" "notifications" ];
         };
 
-        # ─── Bar modules ────────────────────────────────────────────────────
-
         bar.launcher = {
           autoDetectIcon = false;
-          # builtins.fromJSON is the only way to produce a \uXXXX Unicode char
-          # in Nix — Nix strings don't support \u escapes but JSON does.
-          icon           = builtins.fromJSON ''"\uf313"'';   # NixOS snowflake
+          icon           = builtins.fromJSON ''"\uf313"'';
         };
 
         bar.workspaces = {
           show_numbered = true;
-          workspaces    = 0;   # dynamic: only show workspaces that exist
+          workspaces    = 0;
         };
 
         bar.windowtitle = {
@@ -196,8 +156,6 @@ in
           hideLabelWhenFull = false;
         };
 
-        # round = true → integer percentages, no decimals
-        # Note: these live under customModules, not bar directly
         bar.customModules.cpu = {
           label           = true;
           round           = true;
@@ -218,7 +176,6 @@ in
           pollingInterval = 2000;
         };
 
-        # Clock — date and time in middle, no icon
         bar.clock = {
           format   = "%Y-%m-%d  V%V  %H:%M";
           showIcon = false;
@@ -228,8 +185,6 @@ in
           show_total        = false;
           hideCountWhenZero = false;
         };
-
-        # ─── Popup menus ────────────────────────────────────────────────────
 
         menus.clock = {
           time = {
@@ -263,15 +218,11 @@ in
             shutdown     = "systemctl poweroff";
             avatar.name  = variables.username;
           };
-          # Keep system stats pills at the bottom
           stats = {
             enabled    = true;
             enable_gpu = false;
           };
-          # Keep quick-toggle controls (dark mode, DND, etc.)
           controls.enabled = true;
-          # Left card: screen, screenshot, search.
-          # Right card always shows hardcoded Settings + Recording buttons.
           shortcuts = {
             enabled = true;
             left = {
@@ -288,17 +239,12 @@ in
           directories.enabled = false;
         };
 
-        # ─── Notifications ──────────────────────────────────────────────────
-
         notifications = {
           displayedTotal = 5;
           clearDelay     = 3000;
           position       = "top right";
           active_monitor = true;
         };
-
-        # ─── Theme ──────────────────────────────────────────────────────────
-        # Colors sourced from config.theme.colors (see modules/home-manager/theme/).
 
         theme.font = {
           name   = f.name;
@@ -441,7 +387,6 @@ in
           };
         };
 
-        # ─── Popup menus theme ──────────────────────────────────────────────
         theme.bar.menus = {
           monochrome  = false;
           background  = "rgba(${c.backgroundRgb}, 0.55)";
@@ -456,9 +401,6 @@ in
           buttons.radius   = "0.4em";
         };
 
-        # ─── Per-popup-menu colors (each has independent defaults) ──────────
-        # HyprPanel uses nested objects: card.color, background.color, border.color
-        # (not card_color / background_color / border_color — those are silently ignored).
         theme.bar.menus.menu = {
 
           clock = {
@@ -601,8 +543,6 @@ in
       };
     };
 
-    # pavucontrol — advanced audio routing, opened via volume right-click
-    # glib-networking — GIO TLS/HTTP backend; lets HyprPanel fetch Spotify album art
     home.packages = with pkgs; [ pavucontrol glib-networking ];
   };
 }

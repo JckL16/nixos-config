@@ -1,4 +1,3 @@
-# modules/home-manager/programs/winbox.nix
 { pkgs, pkgs-unstable, lib, config, ... }:
 
 {

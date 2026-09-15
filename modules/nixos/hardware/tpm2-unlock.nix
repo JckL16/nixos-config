@@ -1,5 +1,3 @@
-# modules/nixos/hardware/tpm2-unlock.nix
-
 { lib, config, ... }: {
 
   options.tpm2Unlock.enable = lib.mkEnableOption "TPM2-backed automatic LUKS unlock";

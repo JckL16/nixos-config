@@ -1,17 +1,12 @@
-# modules/nixos/core/locale.nix
-
 { variables, ... }: {
 
-  # Timezone
   time.timeZone = variables.timeZone;
 
-  # Keyboard configuration
   services.xserver.xkb = {
     layout = variables.keyboard-layout;
   };
   console.keyMap = variables.console-keyboard;
 
-  # Locale settings
   i18n.defaultLocale = variables.defaultLocale;
   i18n.extraLocaleSettings = {
     LC_ADDRESS = variables.extraLocale;

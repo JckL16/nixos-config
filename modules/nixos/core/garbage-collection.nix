@@ -1,5 +1,3 @@
-# modules/nixos/core/garbage-collection.nix
-
 { pkgs, lib, config, ... }: {
   options = {
     garbage-collection.enable =
@@ -7,14 +5,13 @@
   };
 
   config = lib.mkIf config.garbage-collection.enable {
-    # Automatic garbage collection
+
     nix.gc = {
       automatic = true;
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
 
-    # Automatic store optimization (deduplication)
     nix.optimise = {
       automatic = true;
       dates = [ "weekly" ];

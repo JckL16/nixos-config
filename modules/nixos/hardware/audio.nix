@@ -1,5 +1,3 @@
-# modules/nixos/hardware/audio.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {

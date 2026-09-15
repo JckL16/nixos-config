@@ -1,5 +1,3 @@
-# modules/nixos/graphics/intel.nix
-
 { pkgs, lib, config, ... }: {
 
   options = {
@@ -17,10 +15,10 @@
       ];
     };
     
-    # Load Intel graphics driver early
+
     boot.initrd.kernelModules = [ "i915" ];
     
-    # Enable GuC/HuC firmware loading (Gen 9+)
+
     boot.kernelParams = [ "i915.enable_guc=2" "i915.enable_fbc=1" ];
   };
   

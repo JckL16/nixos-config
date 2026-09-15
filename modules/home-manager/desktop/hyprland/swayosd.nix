@@ -1,5 +1,3 @@
-# modules/home-manager/shared/swayosd.nix
-
 { pkgs, lib, config, ... }:
 let
   c = config.theme.colors;
