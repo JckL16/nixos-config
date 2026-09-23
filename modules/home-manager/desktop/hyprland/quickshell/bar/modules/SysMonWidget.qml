@@ -22,7 +22,13 @@ Rectangle {
     property real prevIdle: -1
     property real prevTotal: -1
 
+    property real diskPercent: 0
+    property real diskUsedGb: 0
+    property real diskTotalGb: 0
+    property real diskAvailGb: 0
+
     readonly property real kbToGb: 1.0 / 1048576.0
+    readonly property real bytesToGb: 1.0 / 1073741824.0
 
     Process {
         id: statProc
@@ -78,6 +84,35 @@ Rectangle {
         running: sysMonRoot.moduleActive
         triggeredOnStart: true
         onTriggered: { statProc.running = false; statProc.running = true; }
+    }
+
+    Process {
+        id: diskProc
+        running: false
+        command: ["df", "-B1", "--output=used,size,avail", "/"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let lines = text.trim().split("\n");
+                if (lines.length >= 2) {
+                    let parts = lines[1].trim().split(/\s+/).map(Number);
+                    if (parts.length >= 3) {
+                        let [used, size, avail] = parts;
+                        sysMonRoot.diskUsedGb = used * sysMonRoot.bytesToGb;
+                        sysMonRoot.diskTotalGb = size * sysMonRoot.bytesToGb;
+                        sysMonRoot.diskAvailGb = avail * sysMonRoot.bytesToGb;
+                        sysMonRoot.diskPercent = size > 0 ? Math.max(0, Math.min(100, 100 * used / size)) : 0;
+                    }
+                }
+            }
+        }
+    }
+
+    Timer {
+        interval: 30000
+        repeat: true
+        running: sysMonRoot.moduleActive
+        triggeredOnStart: true
+        onTriggered: { diskProc.running = false; diskProc.running = true; }
     }
 
     function fmtGb(v) { return v.toFixed(1) + "G"; }
@@ -167,6 +202,41 @@ Rectangle {
                 anchors.fill: parent
                 cursorShape: Qt.PointingHandCursor
                 onClicked: ramPopup.visible = !ramPopup.visible
+            }
+        }
+
+        Rectangle {
+            id: diskPill
+            width: diskRow.implicitWidth + (barWindow ? barWindow.s(8) : 8)
+            height: barWindow ? barWindow.s(30) : 30
+            radius: ThemeBackend.borderRadius
+            color: "transparent"
+
+            RowLayout {
+                id: diskRow
+                anchors.centerIn: parent
+                spacing: 4
+                Text {
+                    text: "󰋊"
+                    font.family: ThemeBackend.fontFamily
+                    font.pixelSize: barWindow ? barWindow.s(13) : 13
+                    color: ThemeBackend.subtext0
+                }
+                Text {
+                    text: Math.round(sysMonRoot.diskPercent) + "%"
+                    Layout.preferredWidth: barWindow ? barWindow.s(26) : 26
+                    horizontalAlignment: Text.AlignLeft
+                    font.family: ThemeBackend.fontFamily
+                    font.pixelSize: barWindow ? barWindow.s(11) : 11
+                    font.bold: true
+                    color: ThemeBackend.text
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: diskPopup.visible = !diskPopup.visible
             }
         }
     }
@@ -276,6 +346,55 @@ Rectangle {
                 Text {
                     visible: sysMonRoot.swapTotalGb > 0
                     text: "Swap: " + sysMonRoot.fmtGb(sysMonRoot.swapUsedGb) + " / " + sysMonRoot.fmtGb(sysMonRoot.swapTotalGb)
+                    font.family: ThemeBackend.fontFamily
+                    font.pixelSize: barWindow ? barWindow.s(11) : 11
+                    color: ThemeBackend.subtext0
+                }
+            }
+        }
+    }
+
+    PopupWindow {
+        id: diskPopup
+        visible: false
+        color: "transparent"
+        implicitWidth: barWindow ? barWindow.s(180) : 180
+        implicitHeight: diskPopupContent.implicitHeight + (barWindow ? barWindow.s(16) : 16)
+        anchor.item: diskPill
+        anchor.edges: Edges.Bottom
+        anchor.gravity: Edges.Bottom
+        anchor.adjustment: PopupAdjustment.All
+        grabFocus: true
+
+        Rectangle {
+            anchors.fill: parent
+            radius: ThemeBackend.borderRadius
+            color: ThemeBackend.mantle
+            border.width: 1
+            border.color: ThemeBackend.surface1
+
+            Column {
+                id: diskPopupContent
+                anchors.centerIn: parent
+                width: parent.width - (barWindow ? barWindow.s(16) : 16)
+                spacing: barWindow ? barWindow.s(6) : 6
+
+                Text {
+                    text: "Disk (/)"
+                    font.family: ThemeBackend.fontFamily
+                    font.weight: Font.Bold
+                    font.pixelSize: barWindow ? barWindow.s(12) : 12
+                    color: ThemeBackend.text
+                }
+                Rectangle { width: parent.width; height: 1; color: ThemeBackend.surface0 }
+                Text {
+                    text: "Used: " + sysMonRoot.fmtGb(sysMonRoot.diskUsedGb) + " / " + sysMonRoot.fmtGb(sysMonRoot.diskTotalGb) + " (" + Math.round(sysMonRoot.diskPercent) + "%)"
+                    font.family: ThemeBackend.fontFamily
+                    font.pixelSize: barWindow ? barWindow.s(11) : 11
+                    color: ThemeBackend.subtext0
+                }
+                Text {
+                    text: "Available: " + sysMonRoot.fmtGb(sysMonRoot.diskAvailGb)
                     font.family: ThemeBackend.fontFamily
                     font.pixelSize: barWindow ? barWindow.s(11) : 11
                     color: ThemeBackend.subtext0

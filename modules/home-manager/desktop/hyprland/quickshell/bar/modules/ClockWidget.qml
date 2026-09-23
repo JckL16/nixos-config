@@ -227,7 +227,7 @@ Rectangle {
                         Layout.preferredWidth: barWindow ? barWindow.s(26) : 26
                         horizontalAlignment: Text.AlignHCenter
                         font.family: ThemeBackend.fontFamily
-                        font.pixelSize: barWindow ? barWindow.s(10) : 10
+                        font.pixelSize: barWindow ? barWindow.s(11) : 11
                         color: ThemeBackend.overlay1
                     }
                     Repeater {
@@ -239,7 +239,7 @@ Rectangle {
                             text: modelData
                             font.family: ThemeBackend.fontFamily
                             font.weight: Font.Bold
-                            font.pixelSize: barWindow ? barWindow.s(10) : 10
+                            font.pixelSize: barWindow ? barWindow.s(11) : 11
                             color: ThemeBackend.overlay1
                         }
                     }
@@ -257,7 +257,7 @@ Rectangle {
                             Layout.preferredWidth: barWindow ? barWindow.s(26) : 26
                             horizontalAlignment: Text.AlignHCenter
                             font.family: ThemeBackend.fontFamily
-                            font.pixelSize: barWindow ? barWindow.s(10) : 10
+                            font.pixelSize: barWindow ? barWindow.s(11) : 11
                             color: ThemeBackend.overlay1
                         }
                         Repeater {
@@ -279,7 +279,7 @@ Rectangle {
                                     text: dayCell.modelData.day
                                     font.family: ThemeBackend.fontFamily
                                     font.weight: dayCell.modelData.isToday ? Font.Bold : Font.Normal
-                                    font.pixelSize: barWindow ? barWindow.s(8) : 8
+                                    font.pixelSize: barWindow ? barWindow.s(12) : 12
                                     color: dayCell.modelData.isToday ? ThemeBackend.base : (dayCell.modelData.inMonth ? ThemeBackend.text : ThemeBackend.overlay0)
                                 }
 
