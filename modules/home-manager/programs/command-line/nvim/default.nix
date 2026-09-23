@@ -1,20 +1,12 @@
 { pkgs, lib, config, inputs, variables, ... }:
 let
-  nvimColorscheme = {
-    "nord"        = "nord";
-    "gruvbox"     = "gruvbox";
-    "dracula"     = "dracula-nvim";
-    "tokyo-night" = "tokyonight";
-    "monochrome"  = "base16";
-  }.${variables.theme} or "nord";
-
-  nvimLualineTheme = {
-    "nord"        = "nord";
-    "gruvbox"     = "gruvbox";
-    "dracula"     = "dracula";
-    "tokyo-night" = "tokyonight";
-    "monochrome"  = "auto";
-  }.${variables.theme} or "nord";
+  # Nvim's colorscheme is intentionally independent of variables.theme (which
+  # drives the rest of the system) — monochrome was too hard to read in the editor,
+  # and tokyonight too purple. This keeps the same dark-grey background alacritty
+  # uses (variables.theme's monochrome background, #252525) but gives syntax
+  # categories distinct, non-purple hues instead of shades of grey.
+  nvimColorscheme = "base16";
+  nvimLualineTheme = "auto";
 in
 {
   imports = [ inputs.nixvim.homeModules.nixvim ];
@@ -100,10 +92,10 @@ in
       colorschemes.base16 = {
         enable = nvimColorscheme == "base16";
         colorscheme = {
-          base00 = "#252525"; base01 = "#464646"; base02 = "#525252"; base03 = "#6e6e6e";
-          base04 = "#ababab"; base05 = "#b9b9b9"; base06 = "#e3e3e3"; base07 = "#f7f7f7";
-          base08 = "#7c7c7c"; base09 = "#999999"; base0A = "#a0a0a0"; base0B = "#8e8e8e";
-          base0C = "#868686"; base0D = "#686868"; base0E = "#747474"; base0F = "#5e5e5e";
+          base00 = "#252525"; base01 = "#2d2d2d"; base02 = "#3b3b3b"; base03 = "#6e6e6e";
+          base04 = "#ababab"; base05 = "#d0d0d0"; base06 = "#e3e3e3"; base07 = "#f7f7f7";
+          base08 = "#e06c75"; base09 = "#d19a66"; base0A = "#e5c07b"; base0B = "#98c379";
+          base0C = "#56b6c2"; base0D = "#61afef"; base0E = "#7f9bbf"; base0F = "#be5046";
         };
       };
 
@@ -307,6 +299,8 @@ in
         { mode = "n"; key = "<leader>tl"; action = "<cmd>Trouble loclist toggle<cr>"; options.desc = "Location list"; }
         { mode = "n"; key = "<leader>ft"; action = "<cmd>TodoTelescope<cr>"; options.desc = "Find TODOs"; }
         { mode = "n"; key = "<leader>fk"; action = "<cmd>Telescope keymaps<cr>"; options.desc = "Find keymaps"; }
+        { mode = "n"; key = "<leader>sr"; action = "<cmd>GrugFar<cr>"; options.desc = "Search and replace"; }
+        { mode = "v"; key = "<leader>sr"; action.__raw = ''function() require("grug-far").with_visual_selection() end''; options.desc = "Search and replace (selection)"; }
         { mode = "n"; key = "]t"; action.__raw = ''function() require("todo-comments").jump_next() end''; options.desc = "Next TODO"; }
         { mode = "n"; key = "[t"; action.__raw = ''function() require("todo-comments").jump_prev() end''; options.desc = "Previous TODO"; }
         { mode = [ "n" "v" ]; key = "<leader>y"; action = ''"+y''; options.desc = "Yank to clipboard"; }
@@ -396,8 +390,8 @@ in
             indent.enable = true;
           };
           grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
-            nix lua python javascript typescript rust bash json yaml markdown html css c cpp
-            go ruby php toml asm sql
+            nix lua python javascript typescript rust bash json yaml markdown markdown_inline
+            html css c cpp go ruby php toml asm sql vim regex
           ];
         };
 
@@ -483,6 +477,28 @@ in
           };
         };
 
+        grug-far = {
+          enable = true;
+          settings.engine = "ripgrep";
+        };
+
+        noice = {
+          enable = true;
+          settings = {
+            lsp.override = {
+              "vim.lsp.util.convert_input_to_markdown_lines" = true;
+              "vim.lsp.util.stylize_markdown" = true;
+              "cmp.entry.get_documentation" = true;
+            };
+            presets = {
+              bottom_search = true;
+              command_palette = true;
+              long_message_to_split = true;
+              lsp_doc_border = true;
+            };
+          };
+        };
+
         indent-blankline = {
           enable = true;
           settings = {
@@ -555,6 +571,7 @@ in
               { __unkeyed-1 = "<leader>t"; group = "Trouble"; }
               { __unkeyed-1 = "<leader>e"; group = "Explorer"; }
               { __unkeyed-1 = "<leader>h"; group = "Harpoon"; }
+              { __unkeyed-1 = "<leader>s"; group = "Search/Replace"; }
             ];
           };
         };

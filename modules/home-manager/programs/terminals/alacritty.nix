@@ -1,7 +1,14 @@
 { pkgs, lib, config, variables, ... }:
 let
-  c = config.theme.colors;
   f = config.theme.font;
+
+  # Same base16 palette as nvim (modules/home-manager/programs/command-line/nvim) —
+  # decoupled from variables.theme so the terminal keeps distinct, non-purple
+  # syntax-like colors instead of the monochrome theme's shades of grey.
+  base00 = "#252525"; base01 = "#2d2d2d"; base02 = "#3b3b3b"; base03 = "#6e6e6e";
+  base04 = "#ababab"; base05 = "#d0d0d0"; base06 = "#e3e3e3"; base07 = "#f7f7f7";
+  base08 = "#e06c75"; base0A = "#e5c07b"; base0B = "#98c379";
+  base0C = "#56b6c2"; base0D = "#61afef"; base0E = "#7f9bbf";
 in {
 
   options = {
@@ -16,36 +23,36 @@ in {
         colors = {
 
           normal = {
-            black   = c.nord1;
-            red     = c.nord11;
-            green   = c.nord14;
-            yellow  = c.nord13;
-            blue    = c.nord9;
-            magenta = c.nord15;
-            cyan    = c.nord7;
-            white   = c.nord5;
+            black   = base01;
+            red     = base08;
+            green   = base0B;
+            yellow  = base0A;
+            blue    = base0D;
+            magenta = base0E;
+            cyan    = base0C;
+            white   = base04;
           };
           bright = {
-            black   = c.nord3;
-            red     = c.nord11;
-            green   = c.nord14;
-            yellow  = c.nord13;
-            blue    = c.nord9;
-            magenta = c.nord15;
-            cyan    = c.nord8;
-            white   = c.nord6;
+            black   = base03;
+            red     = base08;
+            green   = base0B;
+            yellow  = base0A;
+            blue    = base0D;
+            magenta = base0E;
+            cyan    = base0C;
+            white   = base07;
           };
           primary = {
-            background = c.background;
-            foreground = c.textDim;
+            background = base00;
+            foreground = base05;
           };
           cursor = {
-            cursor = c.textDim;
-            text   = c.background;
+            cursor = base05;
+            text   = base00;
           };
           selection = {
-            background = c.textDim;
-            text       = c.background;
+            background = base05;
+            text       = base00;
           };
         };
         cursor = {
