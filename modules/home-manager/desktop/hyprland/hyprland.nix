@@ -146,7 +146,7 @@ in {
           "$mod, F, fullscreen, 0"
           "$mod, S, togglegroup"
           "$mod, W, changegroupactive, f"
-          "$mod, E, layoutmsg, togglesplit"
+          "$mod, E, exec, nautilus"
           
           "$mod SHIFT, Space, togglefloating"
           "$mod, Space, focuscurrentorlast"
@@ -187,7 +187,7 @@ in {
           "$mod, Tab, exec, walker -m windows"
           "$mod, Return, exec, alacritty"
           "$mod SHIFT, X, exec, hyprlock"
-          "$mod SHIFT, V, exec, ~/.config/walker/clipboard.sh"
+          "$mod SHIFT, V, exec, walker -m clipboard"
           "$mod, T, exec, xdg-open https://"
 
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
@@ -316,6 +316,7 @@ in {
       batsignal
       jq
       xdg-desktop-portal-gtk
+      nautilus
     ] ++ [
       pkgs-unstable.protonmail-desktop
     ];

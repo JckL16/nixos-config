@@ -369,6 +369,21 @@ in {
       [[providers.prefixes]]
       prefix = ">"
       provider = "runner"
+
+      [[providers.prefixes]]
+      prefix = "/"
+      provider = "files"
+
+      [[providers.prefixes]]
+      prefix = ";"
+      provider = "providerlist"
+
+      [[providers.prefixes]]
+      prefix = ":"
+      provider = "clipboard"
+
+      [providers.clipboard]
+      time_format = "relative"
     '';
 
     home.activation.copyWalkerTheme = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
@@ -377,14 +392,5 @@ in {
       cp --no-preserve=all "${walkerItem}"   "$HOME/.config/walker/themes/${themeName}/item.xml"
       cp --no-preserve=all "${walkerCss}"    "$HOME/.config/walker/themes/${themeName}/style.css"
     '';
-
-    home.file.".config/walker/clipboard.sh" = {
-      executable = true;
-      text = ''
-        #!/usr/bin/env bash
-        entry=$(cliphist list | walker -d -p "Paste...")
-        [ -n "$entry" ] && printf '%s' "$entry" | cliphist decode | wl-copy
-      '';
-    };
   };
 }
