@@ -31,6 +31,8 @@ in
   steam.enable = true;
   gamemode.enable = true;
 
+  minecraft.enable = true;
+
   zen-browser.enable = true;
 
   obsidian.enable = true;
@@ -63,6 +65,7 @@ in
     tea
     readest
     riscv64-unknown-elf-toolchain # KTH system-security course (s3k)
+    syncthing
   ] ++ [
       pkgs-unstable.protonmail-desktop
       pkgs-unstable.zoom-us
