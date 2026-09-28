@@ -40,6 +40,20 @@ summaries alone and don't.
   effect at window **connection** time. A `systemctl --user restart quickshell` is required to
   see them apply — `test` alone (which triggers a QML hot-reload) is not enough, since
   already-connected `PanelWindow` instances stay alive across reloads and just toggle `visible`.
+- `QsMenuAnchor.open()` (used for tray-icon right-click context menus in `TrayWidget.qml`) is a
+  no-op — fails silently in the UI, only logs `ERROR: Cannot call QsMenuAnchor.open() as
+  quickshell was not started in QApplication mode.` to the service journal — unless the root QML
+  file (`shell.qml`) starts with the pragma comment `//@ pragma UseQApplication` (must be the
+  very first line, before any `import`). Left-click (`modelData.activate()`, a plain DBus call)
+  works fine either way, which makes this look like a partial/flaky tray bug rather than a global
+  missing-mode issue.
+- **`sudo nixos-rebuild switch` does NOT restart the `quickshell` user service** even though
+  `programs.quickshell.systemd.enable = true` manages it — home-manager only restarts a systemd
+  unit when the unit file itself changes, and Quickshell's QML source is just data read by the
+  already-running process, not part of the unit. Any QML edit (including pragma changes above)
+  needs a manual `systemctl --user restart quickshell` after `switch`/`test` to take effect;
+  check `systemctl --user status quickshell` for a stale `Active: ... since <old date>` timestamp
+  if a config change doesn't seem to apply.
 
 ## Hyprland windowrule syntax
 
