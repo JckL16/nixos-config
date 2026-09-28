@@ -37,6 +37,7 @@ All module enable options at a glance.
 | `ventoy.enable` | `false` | Ventoy bootable USB drive tool (permits insecure package automatically) |
 | `smbMounts.<name>` | `{ }` | SMB/CIFS network share automount, keyed by name (see docs/modules/applications.md) |
 | `printing.enable` | `false` | CUPS printing with network printer discovery (avahi) |
+| `tailscale.enable` | `false` | Tailscale VPN client |
 
 ## User Level (home.nix)
 

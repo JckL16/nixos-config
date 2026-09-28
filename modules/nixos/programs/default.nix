@@ -13,6 +13,7 @@
     ./ventoy.nix
     ./smb-mount.nix
     ./printing.nix
+    ./tailscale.nix
   ];
 
 }
