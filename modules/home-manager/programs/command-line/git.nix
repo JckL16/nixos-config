@@ -13,6 +13,11 @@
         email = variables.gitEmail;
       };
     };
+
+    programs.gh = {
+      enable = true;
+      gitCredentialHelper.enable = true;
+    };
   };
   
 }
