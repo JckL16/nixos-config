@@ -162,6 +162,17 @@ in {
         sudo nixos-rebuild switch --flake ~/nixos-config
       }
 
+      new-devshell() {
+        noglob nix flake init -t ~/nixos-config#devshell
+        direnv allow
+
+        local ignore_lines=(".direnv/" "result" "result-*")
+        touch .gitignore
+        for line in $ignore_lines; do
+          grep -qxF "$line" .gitignore || echo "$line" >> .gitignore
+        done
+      }
+
       extract() {
         if [ -f "$1" ]; then
           case "$1" in

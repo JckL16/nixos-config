@@ -86,5 +86,11 @@
       };
 
       homeModules.default = ./modules/home-manager;
+
+      templates.devshell = {
+        path = ./templates/devshell;
+        description = "Project dev shell built from this repo's rust/go/c-cpp/python-dev home-manager options";
+      };
+      templates.default = self.templates.devshell;
     };
 }

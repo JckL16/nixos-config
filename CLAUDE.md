@@ -28,6 +28,7 @@ Defined in `modules/home-manager/programs/command-line/zsh.nix`.
 | `update` | `nix flake update --flake ~/nixos-config && sudo nixos-rebuild switch --flake ~/nixos-config` |
 | `clean` | `nix-collect-garbage` |
 | `install-bootloader` | `sudo nixos-rebuild boot --install-bootloader --flake ~/nixos-config` |
+| `new-devshell` | scaffolds `templates/devshell`, runs `direnv allow`, and merges `.direnv/`/`result`/`result-*` into `.gitignore` (creating or appending as needed) |
 | `nix-search` | `nix search nixpkgs` |
 | `update-config` | `nvim ~/nixos-config/hosts/$(hostname)/` then auto-runs `switch` on exit |
 | `ls` / `ll` / `la` / `lt` / `tree` | eza (replacement for ls) |

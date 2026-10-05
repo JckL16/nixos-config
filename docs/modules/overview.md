@@ -29,6 +29,8 @@ nixos-config/
 │       ├── programming/            # Development environments
 │       ├── services/               # User services (keyring, udiskie)
 │       └── cyber/                  # Security toolkit
+├── templates/                      # `nix flake init -t` templates for other projects
+│   └── devshell/                   # Per-project dev shell (see "Flake Outputs" below)
 └── wallpaper/                      # Wallpaper assets
 ```
 
@@ -70,6 +72,15 @@ nixos-myhost = mkSystem {
   extraVars = { displayScale = 1.5; };
 };
 ```
+
+## Flake Outputs
+
+Besides `nixosConfigurations`, `flake.nix` exposes a few outputs meant for use outside this repo:
+
+| Output | Points to | Purpose |
+|---|---|---|
+| `homeModules.default` | `./modules/home-manager` | The full user-level module tree, as imported by every host's `home.nix` |
+| `templates.devshell` / `templates.default` | `./templates/devshell` | A `nix flake init` template for a blank per-project dev shell — see [Project Dev Shells](../project-devshells.md) |
 
 ## Unstable Packages (pkgs-unstable)
 

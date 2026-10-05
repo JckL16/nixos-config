@@ -19,6 +19,10 @@ This directory contains the full documentation for the NixOS configuration.
 - [Cyber Security](modules/cyber.md) - Security toolkit for CTFs and pentesting
 - [Applications](modules/applications.md) - Office suites, browser, CLI tools
 
+## Project Tooling
+
+- [Project Dev Shells](project-devshells.md) - Scaffold a per-project nix dev shell with `new-devshell`
+
 ## Reference
 
 - [Quick Reference](reference.md) - All module options at a glance
