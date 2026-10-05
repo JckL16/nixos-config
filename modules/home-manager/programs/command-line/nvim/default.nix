@@ -7,6 +7,22 @@ let
   # categories distinct, non-purple hues instead of shades of grey.
   nvimColorscheme = "base16";
   nvimLualineTheme = "auto";
+
+  # vimtex's own texlivePackage option defaults to scheme-medium, which is
+  # missing titlesec/enumitem/microtype; pin it to the same combine used in
+  # extraPackages so there's only ever one (complete) TeX Live in nvim's PATH.
+  texlivePkg = pkgs.texlive.combine {
+    inherit (pkgs.texlive) scheme-medium titlesec enumitem microtype;
+  };
+
+  # nvim's own baked texlivePkg always wins over PATH, so a project-local
+  # direnv/flake TeX Live is otherwise invisible to vimtex's \ll. Route the
+  # compile through `direnv exec .` instead: if the project has an .envrc
+  # (e.g. a flake providing extra texlive packages), that environment's
+  # `latexmk` is used; if not, this is a harmless passthrough to nvim's own.
+  vimtexLatexmkWrapper = pkgs.writeShellScriptBin "vimtex-latexmk" ''
+    exec direnv exec . latexmk "$@"
+  '';
 in
 {
   imports = [ inputs.nixvim.homeModules.nixvim ];
@@ -72,6 +88,11 @@ in
           command = "setlocal wrap linebreak";
         }
         {
+          event = "FileType";
+          pattern = "tex";
+          command = "setlocal wrap linebreak";
+        }
+        {
           event = "VimEnter";
           callback.__raw = ''
             function(data)
@@ -108,6 +129,7 @@ in
         git
         tree-sitter
         nodejs
+        texlivePkg
       ];
 
       extraConfigLua = ''
@@ -391,7 +413,7 @@ in
           };
           grammarPackages = with pkgs.vimPlugins.nvim-treesitter.builtGrammars; [
             nix lua python javascript typescript rust bash json yaml markdown markdown_inline
-            html css c cpp go ruby php toml asm sql vim regex
+            html css c cpp go ruby php toml asm sql vim regex latex bibtex
           ];
         };
 
@@ -441,6 +463,7 @@ in
               { name = "luasnip"; }
               { name = "buffer"; }
               { name = "path"; }
+              { name = "vimtex"; }
             ];
           };
         };
@@ -451,6 +474,23 @@ in
         cmp-path.enable = true;
         cmp-cmdline.enable = true;
         cmp_luasnip.enable = true;
+        cmp-vimtex.enable = true;
+
+        vimtex = {
+          enable = true;
+          zathuraPackage = pkgs.zathura;
+          texlivePackage = texlivePkg;
+          settings = {
+            view_method = "zathura";
+            compiler_method = "latexmk";
+            quickfix_mode = 0;
+            compiler_latexmk = {
+              aux_dir = "build";
+              out_dir = "build";
+              executable = "${vimtexLatexmkWrapper}/bin/vimtex-latexmk";
+            };
+          };
+        };
 
         lualine = {
           enable = true;
@@ -715,6 +755,7 @@ in
             taplo.enable = true;
             asm_lsp.enable = true;
             sqls.enable = true;
+            texlab.enable = true;
           };
         };
 

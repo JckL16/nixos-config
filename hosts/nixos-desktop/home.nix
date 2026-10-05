@@ -25,6 +25,7 @@
   python-dev.enable = true;
   python-dev.packages = [ "tqdm" ];
   go.enable = true;
+  latex.enable = true;
 
   cyber.enable = true;
 

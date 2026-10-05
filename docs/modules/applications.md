@@ -287,6 +287,8 @@ Always active. Configured with:
 
 Pre-configured with LSP support and plugins via external Lua configuration.
 
+**LaTeX:** `vimtex` + `texlab` LSP provide compilation (`latexmk`), completion, and forward/inverse search into Zathura (SyncTeX). `texliveMedium` is bundled via `extraPackages`; switch to `texliveFull` or `texliveSmall` in `extraPackages` if you hit missing packages or want a smaller closure.
+
 ### Alacritty
 
 - **Option:** `alacritty.enable` (default: `true`)

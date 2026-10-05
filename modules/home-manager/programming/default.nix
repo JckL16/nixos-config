@@ -5,6 +5,7 @@
     ./c-cpp.nix
     ./python-dev.nix
     ./go.nix
+    ./latex.nix
   ];
 
 }
