@@ -107,7 +107,6 @@ in {
       lt = "eza --icons --group-directories-first --tree";
       tree = "eza --icons --group-directories-first --tree";
 
-      cd = "z";
 
       gst = "git status";
       gco = "git checkout";
@@ -137,6 +136,16 @@ in {
       setopt PUSHD_IGNORE_DUPS
 
       setopt EXTENDED_GLOB
+
+      cd() {
+        if [[ "$#" -eq 0 ]]; then
+          builtin cd
+        elif [[ "$1" == "-" || -d "$1" ]]; then
+          builtin cd -- "$@"
+        else
+          zi "$@"
+        fi
+      }
 
       _fzf_compgen_path() {
         fd --hidden --exclude .git . "$1"
