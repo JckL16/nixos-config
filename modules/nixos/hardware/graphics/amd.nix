@@ -18,6 +18,15 @@
 
     boot.initrd.kernelModules = [ "amdgpu" ];
 
+    # Cap the TTM WC/UC page pool at ~2G (524288 pages * 4K) so amdgpu can't
+    # hoard idle system RAM in this cache -- it was observed holding ~7.5G
+    # idle after GPU-heavy workloads (e.g. video calls), leaving too little
+    # headroom and causing swap thrashing.
+    boot.kernelParams = [
+      "ttm.pages_limit=524288"
+      "ttm.page_pool_size=524288"
+    ];
+
     environment.variables = {
       AMD_VULKAN_ICD = "RADV";
 
