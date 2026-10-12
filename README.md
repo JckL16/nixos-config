@@ -16,7 +16,7 @@ Some highlights:
 - Dev environments for Python, Rust, C/C++, and Go
 - Virtualisation with libvirt/QEMU and Docker
 - A cyber security toolkit with the usual suspects (Metasploit, Burp Suite, Wireshark, Ghidra, etc.)
-- Zsh + Neovim + Alacritty + Zen Browser as the default shell/editor/terminal/browser
+- Zsh + Neovim + Kitty + Zen Browser as the default shell/editor/terminal/browser
 - PipeWire, Bluetooth, printing, and other basics are enabled out of the box
 
 ## Getting started

@@ -47,7 +47,7 @@ All module enable options at a glance.
 | `hyprland.battery` | `false` | Include battery widget in HyprPanel bar (enable on hosts with a battery) |
 | `git.enable` | `true` | Git with configured identity |
 | `nvim.enable` | `true` | Neovim with LSP |
-| `alacritty.enable` | `true` | Alacritty terminal |
+| `kitty.enable` | `true` | Kitty terminal |
 | `tmux.enable` | `false` | tmux with Nord theme and vim-tmux-navigator |
 | `zen-browser.enable` | `true` | Zen Browser (default browser) |
 | `steam.enable` | `false` | Steam user tools (MangoHUD, etc.) |

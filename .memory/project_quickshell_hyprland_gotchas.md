@@ -118,11 +118,14 @@ silently matches **nothing** on 0.55.4+ — no error, just a dead rule. Confirme
   visibly off-center (a stale-size race). Fix: don't force a `size` in the windowrule at all —
   let the terminal launch at its own natural default size, avoiding any resize-after-launch race
   entirely, and just use `float on, center on`.
-- Alacritty's `-o key=value` CLI flag accepts arbitrary TOML config overrides scoped to that one
-  invocation (e.g. `-o 'keyboard.bindings=[{key="Escape",action="Quit"}]'`) — useful for
-  one-off floating-terminal tool launchers without touching the global Alacritty config.
+- Kitty's `-o key=value` CLI flag accepts arbitrary kitty.conf overrides scoped to that one
+  invocation (e.g. `-o background_opacity=0.5`) — useful for one-off floating-terminal tool
+  launchers without touching the global Kitty config. Unlike Alacritty (which this repo used
+  before [[project_kitty_terminal_migration]]), Kitty takes the command to run as trailing
+  positional args directly — no `-e` needed, which is why VolWidget/NetworkWidget/BtWidget's
+  `Quickshell.execDetached` calls dropped that flag when they moved to Kitty.
 - `NEWT_COLORS` env var (`field=fg,bg field2=fg2,bg2 ...`) themes newt-based TUIs like `nmtui`;
-  on a truecolor terminal (Alacritty) it accepts real hex values, not just the classic 8 ANSI
+  on a truecolor terminal (Kitty) it accepts real hex values, not just the classic 8 ANSI
   color names some docs imply are the only option.
 
 ## Bar widget spacing (found while tightening gaps between all bar modules)

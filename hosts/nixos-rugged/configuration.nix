@@ -50,7 +50,7 @@
   # for how to create /etc/nixos/secrets/smb-kronan-share-credentials
   smbMounts.kronan-share = {
     server = "//smb.kronan.arpa/share";
-    mountPoint = "/home/${variables.username}/kronan-mount";
+    mountPoint = "/home/${variables.username}/mount/kronan";
   };
 
   home-manager = {

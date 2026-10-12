@@ -433,7 +433,7 @@ Rectangle {
                                 + " actcheckbox=" + ThemeBackend.base + "," + ThemeBackend.mauve
                                 + " helpline=" + ThemeBackend.subtext0 + "," + ThemeBackend.base
                                 + " roottext=" + ThemeBackend.subtext0 + "," + ThemeBackend.base;
-                            Quickshell.execDetached(["alacritty", "--class", "quickshell-nmtui", "-e", "sh", "-c", "NEWT_COLORS='" + nc + "' exec nmtui"]);
+                            Quickshell.execDetached(["kitty", "--class", "quickshell-nmtui", "sh", "-c", "NEWT_COLORS='" + nc + "' exec nmtui"]);
                             netPopup.visible = false;
                         }
                     }

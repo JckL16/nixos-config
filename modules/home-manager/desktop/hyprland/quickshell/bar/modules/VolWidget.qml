@@ -296,7 +296,7 @@ Rectangle {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            Quickshell.execDetached(["alacritty", "--class", "quickshell-mixer", "-e", "wiremix"]);
+                            Quickshell.execDetached(["kitty", "--class", "quickshell-mixer", "wiremix"]);
                             volPopup.visible = false;
                         }
                     }

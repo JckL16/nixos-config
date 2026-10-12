@@ -117,7 +117,7 @@ Automounts one or more CIFS/SMB shares that are only reachable on a specific net
 |---|---|---|
 | `enable` | `true` | Whether to automount this share |
 | `server` | *required* | `//host/share` |
-| `mountPoint` | `/home/<user>/<name>` | Local mount path |
+| `mountPoint` | `/home/<user>/mount/<name>` | Local mount path |
 | `credentialsFile` | `/etc/nixos/secrets/smb-<name>-credentials` | Path to a `mount.cifs` credentials file |
 | `uid` / `gid` | `<user>` / `users` | File ownership on the mount |
 | `extraOptions` | `[ ]` | Extra `mount.cifs` options, e.g. `[ "vers=3.0" ]` |
@@ -125,8 +125,8 @@ Automounts one or more CIFS/SMB shares that are only reachable on a specific net
 ```nix
 # configuration.nix
 smbMounts.kronan-share = {
-  server = "//smb.kronan.lan/share";
-  mountPoint = "/home/${variables.username}/kronan-mount";
+  server = "//smb.kronan.arpa/share";
+  mountPoint = "/home/${variables.username}/mount/kronan";
 };
 ```
 
@@ -289,11 +289,12 @@ Pre-configured with LSP support and plugins via external Lua configuration.
 
 **LaTeX:** `vimtex` + `texlab` LSP provide compilation (`latexmk`), completion, and forward/inverse search into Zathura (SyncTeX). `texliveMedium` is bundled via `extraPackages`; switch to `texliveFull` or `texliveSmall` in `extraPackages` if you hit missing packages or want a smaller closure.
 
-### Alacritty
+### Kitty
 
-- **Option:** `alacritty.enable` (default: `true`)
+- **Option:** `kitty.enable` (default: `true`)
+- **File:** `modules/home-manager/programs/terminals/kitty.nix`
 
-GPU-accelerated terminal emulator. When `tmux.enable` is also true, Alacritty launches directly into a tmux session instead of a plain shell.
+GPU-accelerated terminal emulator with ligature support (via HarfBuzz text shaping) and built-in image display. Bound to the Hyprland `$mod,Return` keybind and used by the quickshell floating-tool launchers (VolWidget/NetworkWidget/BtWidget).
 
 ### Tmux
 
@@ -301,8 +302,6 @@ GPU-accelerated terminal emulator. When `tmux.enable` is also true, Alacritty la
 - **File:** `modules/home-manager/programs/terminals/tmux.nix`
 
 Persistent terminal multiplexer with a Nord-themed status bar, vi key mode, and seamless nvim split / tmux pane navigation via vim-tmux-navigator.
-
-**Session persistence:** Alacritty auto-attaches to a session named `main` on launch (`tmux new-session -A -s main`). Closing the Alacritty window disconnects the client but leaves the session running. Reopening Alacritty reattaches to the same session — window layout and running processes are preserved.
 
 **Prefix key:** `Ctrl+Space`
 
@@ -346,4 +345,4 @@ Configured with the username and email from `variables.nix`.
 ### Services (Always Active)
 
 - **Keyring** (`modules/home-manager/services/keyring.nix`) -- GNOME Keyring for password management.
-- **Udiskie** (`modules/home-manager/services/udiskie.nix`) -- Automatic USB drive mounting.
+- **Udiskie** (`modules/home-manager/services/udiskie.nix`) -- Automatic USB drive mounting. udisks2 hardcodes `/run/media/<user>` as the mount base with no config option for a custom path, so on Hyprland hosts `modules/nixos/desktop/hyprland.nix` redirects it with a `systemd.tmpfiles.rules` symlink: `/run/media/<user>` → `~/mount/media`, keeping it alongside SMB shares under `~/mount`.

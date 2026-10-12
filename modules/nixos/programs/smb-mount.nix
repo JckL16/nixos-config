@@ -19,7 +19,7 @@ let
 
       mountPoint = lib.mkOption {
         type = lib.types.str;
-        default = "/home/${variables.username}/${name}";
+        default = "/home/${variables.username}/mount/${name}";
         description = "Local path the share is mounted at.";
       };
 

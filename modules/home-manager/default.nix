@@ -18,7 +18,7 @@
 
   git.enable = lib.mkDefault true;
   nvim.enable = lib.mkDefault true;
-  alacritty.enable = lib.mkDefault true;
+  kitty.enable = lib.mkDefault true;
   zen-browser.enable = lib.mkDefault true;
 
   virt-manager.enable = lib.mkDefault false;

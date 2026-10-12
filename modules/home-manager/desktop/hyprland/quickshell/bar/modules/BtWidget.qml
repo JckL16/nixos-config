@@ -301,7 +301,7 @@ Rectangle {
                         anchors.fill: parent
                         cursorShape: Qt.PointingHandCursor
                         onClicked: {
-                            Quickshell.execDetached(["alacritty", "--class", "quickshell-bluetui", "-e", "bluetui"]);
+                            Quickshell.execDetached(["kitty", "--class", "quickshell-bluetui", "bluetui"]);
                             btPopup.visible = false;
                         }
                     }

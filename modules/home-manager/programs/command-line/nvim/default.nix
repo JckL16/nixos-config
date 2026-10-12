@@ -2,7 +2,7 @@
 let
   # Nvim's colorscheme is intentionally independent of variables.theme (which
   # drives the rest of the system) — monochrome was too hard to read in the editor,
-  # and tokyonight too purple. This keeps the same dark-grey background alacritty
+  # and tokyonight too purple. This keeps the same dark-grey background kitty
   # uses (variables.theme's monochrome background, #252525) but gives syntax
   # categories distinct, non-purple hues instead of shades of grey.
   nvimColorscheme = "base16";

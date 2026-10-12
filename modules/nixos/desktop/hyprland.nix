@@ -35,6 +35,15 @@
     
     services.udisks2.enable = true;
 
+    # udisks2/udiskie hardcode /run/media/$USER as the removable-media mount base and
+    # don't support a custom path directly — redirect it via symlink so auto-mounted
+    # drives land under ~/mount alongside the SMB shares (see modules/nixos/programs/smb-mount.nix).
+    systemd.tmpfiles.rules = [
+      "d /home/${variables.username}/mount 0755 ${variables.username} users -"
+      "d /home/${variables.username}/mount/media 0755 ${variables.username} users -"
+      "L+ /run/media/${variables.username} - - - - /home/${variables.username}/mount/media"
+    ];
+
     services.upower = {
       enable = true;
       usePercentageForPolicy = true;

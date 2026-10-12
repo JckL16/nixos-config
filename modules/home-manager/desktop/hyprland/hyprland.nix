@@ -185,7 +185,7 @@ in {
           "$mod SHIFT, D, exec, walker -m websearch"
           "$mod, F1, exec, walker -m hyprlandkeybinds"
           "$mod, Tab, exec, walker -m windows"
-          "$mod, Return, exec, alacritty"
+          "$mod, Return, exec, kitty"
           "$mod SHIFT, X, exec, hyprlock"
           "$mod SHIFT, V, exec, walker -m clipboard"
           "$mod, T, exec, xdg-open https://"
