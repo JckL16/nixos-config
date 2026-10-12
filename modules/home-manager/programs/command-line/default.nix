@@ -6,6 +6,7 @@
     ./neofetch.nix
     ./nvim
     ./ssh.nix
+    ./tui-do
   ];
 
 }

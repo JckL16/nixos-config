@@ -24,6 +24,8 @@ in
 
   tmux.enable = true;
 
+  programs.tui-do.enable = true;
+
   # Lid close does nothing
   wayland.windowManager.hyprland.settings.bindl = lib.mkForce [];
 

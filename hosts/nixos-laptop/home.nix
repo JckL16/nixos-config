@@ -9,6 +9,8 @@
 
   tmux.enable = true;
 
+  programs.tui-do.enable = true;
+
   # Enables user level config for gaming
   steam.enable = true;
   gamemode.enable = true;

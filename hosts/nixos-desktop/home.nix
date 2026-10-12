@@ -8,6 +8,8 @@
 
   tmux.enable = true;
 
+  programs.tui-do.enable = true;
+
   # Enabled user specific configuration for gaming
   steam.enable = true;
   gamemode.enable = true;
