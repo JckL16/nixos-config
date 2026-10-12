@@ -204,6 +204,11 @@ in {
         fi
       }
 
+      title_precmd() { print -Pn "\e]0;%1~\a" }
+      title_preexec() { print -Pn "\e]0;%1~: $1\a" }
+      precmd_functions+=(title_precmd)
+      preexec_functions+=(title_preexec)
+
       KEYTIMEOUT=1
 
       zle-keymap-select() {
