@@ -59,6 +59,7 @@ All module enable options at a glance.
 | `obsidian.enable` | `false` | Obsidian note-taking app (XWayland wrapper for PDF support) |
 | `libreoffice.enable` | `false` | LibreOffice suite |
 | `onlyoffice.enable` | `false` | OnlyOffice suite |
+| `syncthing.enable` | `false` | Syncthing + tray icon, autostarted on login |
 | `spotify.enable` | `false` | Spotify, themed via spicetify-nix (colors from `theme.colors`) |
 | `winbox.enable` | `false` | MikroTik Winbox |
 | `python-dev.enable` | `false` | Python development environment |

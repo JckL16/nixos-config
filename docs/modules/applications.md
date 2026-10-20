@@ -45,6 +45,14 @@ libreoffice.enable = true;
 onlyoffice.enable = true;
 ```
 
+## Syncthing
+
+- **Option:** `syncthing.enable = true;` in `home.nix`
+- **Default:** `false`
+- **File:** `modules/home-manager/programs/desktop/syncthing.nix`
+
+Runs Syncthing as a user systemd service (`services.syncthing`), started automatically on login, with a `syncthingtray` tray icon service alongside it. The web GUI is reachable at `http://localhost:8384` once running.
+
 ## Zen Browser
 
 - **Option:** `zen-browser.enable = true;` in `home.nix`
