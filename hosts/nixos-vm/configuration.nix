@@ -30,6 +30,7 @@
   # Security tools
   metasploit-db.enable = true;  # PostgreSQL database for Metasploit
   docker.enable = true;         # For vulnerable containers (e.g., VulnHub)
+  wireshark.enable = true;      # Packet capture
 
   # Home Manager configuration
   home-manager = {

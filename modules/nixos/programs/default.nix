@@ -8,6 +8,7 @@
     ./winbox.nix
     ./docker.nix
     ./metasploit-db.nix
+    ./wireshark.nix
     ./yubikey.nix
     ./veracrypt.nix
     ./ventoy.nix

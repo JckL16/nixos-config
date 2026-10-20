@@ -84,6 +84,7 @@
   # Security
   # ==========================================================================
   # metasploit-db.enable = true;    # PostgreSQL database for Metasploit
+  # wireshark.enable = true;        # Packet capture (used with cyber.enable)
 
   # ==========================================================================
   # VM Guest Agents — only needed when running inside a virtual machine

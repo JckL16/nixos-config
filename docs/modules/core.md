@@ -83,6 +83,7 @@ These have no enable toggle and are always imported:
 | `gamemode` | `programs/gamemode.nix` | `gamemode.enable` |
 | `libvirtd` | `programs/virtualisation.nix` | `virtualisation.enable` |
 | `docker` | `programs/docker.nix` | `docker.enable` |
+| `wireshark` | `programs/wireshark.nix` | `wireshark.enable` |
 
 ## Bootloader
 

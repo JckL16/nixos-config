@@ -40,6 +40,7 @@
 
   # Metasploit database (used with cyber.enable)
   metasploit-db.enable = true;
+  wireshark.enable = true;        # Packet capture (used with cyber.enable)
 
 
   networking.firewall.allowedTCPPorts = [ 9090 53317 ];

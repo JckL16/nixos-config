@@ -31,6 +31,7 @@ All module enable options at a glance.
 | `qemu-guest-agent.enable` | `false` | QEMU guest agent |
 | `virtualbox-guest-agent.enable` | `false` | VirtualBox guest additions |
 | `metasploit-db.enable` | `false` | PostgreSQL database for Metasploit |
+| `wireshark.enable` | `false` | Wireshark packet capture, adds main user to `wireshark` group |
 | `yubikey.enable` | `true` | YubiKey support |
 | `veracrypt.enable` | `true` | VeraCrypt disk encryption |
 | `tpm2Unlock.enable` | `false` | TPM2-backed automatic LUKS unlock (requires one-time enrolment, see installation guide) |

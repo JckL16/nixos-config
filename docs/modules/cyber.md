@@ -87,3 +87,15 @@ metasploit-db.enable = true;
 # home.nix
 cyber.enable = true;
 ```
+
+## Wireshark Capture Permissions
+
+Wireshark is included in the package list, but capturing live traffic as a non-root user requires the system-level group membership:
+
+```nix
+# configuration.nix
+wireshark.enable = true;    # adds the main user to the wireshark group
+
+# home.nix
+cyber.enable = true;
+```

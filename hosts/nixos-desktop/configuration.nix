@@ -60,6 +60,7 @@
 
   # Metasploit database (used with cyber.enable)
   metasploit-db.enable = true;
+  wireshark.enable = true;        # Packet capture (used with cyber.enable)
 
   winbox.enable = true;
   ventoy.enable = true;

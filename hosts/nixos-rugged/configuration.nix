@@ -33,6 +33,7 @@
   docker.enable = true;
 
   metasploit-db.enable = true;    # PostgreSQL database for Metasploit
+  wireshark.enable = true;        # Packet capture (used with cyber.enable)
 
   tailscale.enable = true;
 
