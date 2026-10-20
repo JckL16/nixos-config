@@ -35,7 +35,15 @@ in
 
   minecraft.enable = true;
 
-  zen-browser.enable = true;
+  programs.zen-browser.enable = true;
+  # Adopts the pre-existing (pre-declarative-management) profile directory
+  # instead of letting home-manager create a fresh "default" one — keeps the
+  # 1.1GB of real browsing data (bookmarks/history/logins/extensions) in
+  # ~/.config/zen/6ucup768.Default Profile intact and still in use.
+  programs.zen-browser.profiles.default = {
+    name = "Default Profile";
+    path = "6ucup768.Default Profile";
+  };
 
   obsidian.enable = true;
 

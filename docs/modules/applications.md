@@ -55,10 +55,13 @@ Runs Syncthing as a user systemd service (`services.syncthing`), started automat
 
 ## Zen Browser
 
-- **Option:** `zen-browser.enable = true;` in `home.nix`
-- **Default:** `true`
+- **Option:** `programs.zen-browser.enable = true;` in `home.nix`
+- **Default:** `false`
+- **File:** `modules/home-manager/programs/desktop/zen-browser.nix`
 
-Firefox-based browser set as the XDG default for `http`, `https`, and `text/html`. Installed via the `0xc000022070/zen-browser-flake` community flake.
+Firefox-based browser set as the XDG default for `http`, `https`, and `text/html` (`setAsDefaultBrowser = true`). Installed via the `0xc000022070/zen-browser-flake` community flake's `homeModules.beta`, which wraps home-manager's standard Firefox profile module — `flake.nix`'s `zen-browser` input follows `home-manager` for this to work.
+
+The browser chrome is themed via `profiles.default.userChrome`, a CSS block (adapted from the `tinted-theming/tinted-zen` community template) that maps Zen's `--zen-*` custom properties onto `theme.colors.*`, so it tracks `variables.theme` the same way kitty/hyprland/waybar do — no manual theme install needed in-app.
 
 The Walker web search shortcut (`Super+Shift+D`) opens results directly in Zen Browser.
 

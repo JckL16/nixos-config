@@ -50,7 +50,7 @@ All module enable options at a glance.
 | `nvim.enable` | `true` | Neovim with LSP |
 | `kitty.enable` | `true` | Kitty terminal |
 | `tmux.enable` | `false` | tmux with Nord theme and vim-tmux-navigator |
-| `zen-browser.enable` | `true` | Zen Browser (default browser) |
+| `programs.zen-browser.enable` | `false` | Zen Browser (default browser; themed via `userChrome` from `theme.colors`) |
 | `steam.enable` | `false` | Steam user tools (MangoHUD, etc.) |
 | `gamemode.enable` | `false` | GameMode user config |
 | `minecraft.enable` | `false` | Minecraft launcher |
