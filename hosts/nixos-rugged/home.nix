@@ -55,6 +55,8 @@ in
 
   syncthing.enable = true;
 
+  tailscale.enable = true;
+
   home.packages = with pkgs; [
     tectonic
     signal-desktop

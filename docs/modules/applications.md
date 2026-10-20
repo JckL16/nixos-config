@@ -199,7 +199,7 @@ printing.enable = true;
 - **File:** `modules/nixos/programs/tailscale.nix`
 - **Default:** `false`
 
-Enables the `tailscaled` client daemon (`services.tailscale`) and installs `trayscale`, an unofficial GUI/tray client, system-wide.
+Enables the `tailscaled` client daemon (`services.tailscale`) and installs `trayscale`, an unofficial GUI/tray client, system-wide. `tailscaled` runs as a system service, so it's already active at boot regardless of login.
 
 | Sub-option | Default | Description |
 |---|---|---|
@@ -209,6 +209,13 @@ Enables the `tailscaled` client daemon (`services.tailscale`) and installs `tray
 
 ```nix
 # configuration.nix
+tailscale.enable = true;
+```
+
+To also autostart the Trayscale tray icon on login, enable the matching user-level option (`modules/home-manager/programs/desktop/tailscale.nix`) — this writes an XDG autostart entry that Hyprland's `dex --autostart` picks up on session start:
+
+```nix
+# home.nix
 tailscale.enable = true;
 ```
 
