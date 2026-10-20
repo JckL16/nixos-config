@@ -15,7 +15,7 @@
   gamemode.enable = true;
   minecraft.enable = true;
 
-  zen-browser.enable = true;
+  programs.zen-browser.enable = true;
 
   obsidian.enable = true;
 

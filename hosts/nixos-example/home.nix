@@ -56,7 +56,7 @@
   # git.enable = false;           # Disable Git (configured from variables.nix)
   # nvim.enable = false;          # Disable Neovim
   # kitty.enable = false;         # Disable Kitty terminal
-  # zen-browser.enable = false;   # Disable Zen Browser
+  # programs.zen-browser.enable = false;   # Disable Zen Browser
 
   # ==========================================================================
   # Extra Packages
