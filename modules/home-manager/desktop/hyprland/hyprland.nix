@@ -247,6 +247,11 @@ in {
           "batsignal -b -w 20 -c 10 -d 5 -n BAT0"
           "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
           "walker --gapplication-service"
+          # Launched (not just installed) so its EDS backend activates and
+          # syncs the Proton webcal source — otherwise nothing ever queries
+          # it and the bar's eds-calendar-events cache stays empty until
+          # GNOME Calendar is opened manually.
+          "gnome-calendar &"
         ];
         
 

@@ -179,6 +179,11 @@ minutes. The bar's clock popup reads events straight out of that cache via `eds-
 `calendar.proton.me` and queries its cache directly, so there's no second URL or fetch to manage.
 Clicking a day with a dot shows that day's events; no synced source means no dots, same as before.
 
+GNOME Calendar is launched (hidden behind other windows, not just installed) via Hyprland's
+`exec-once` so its EDS backend activates and syncs on login — without a running client for that
+source, EDS never queries `calendar.proton.me` and the bar's cache stays empty until someone opens
+GNOME Calendar by hand.
+
 ---
 
 ## Printing (CUPS)
