@@ -143,6 +143,42 @@
     };
   };
 
+  # ── Typewriter (Obsidian Typewriter theme by crashmoney) ──────────────────
+  typewriter = {
+    colors = {
+      nord0  = "#262626"; nord1  = "#3A342E"; nord2  = "#47423C"; nord3  = "#5E5E5E";
+      nord4  = "#999999"; nord5  = "#C5B8A1"; nord6  = "#E8E0D0";
+      nord7  = "#6C99BB"; nord8  = "#7A9EE0"; nord9  = "#3C71D2"; nord10 = "#197300";
+      nord11 = "#E63C3C"; nord12 = "#C97B3D"; nord13 = "#D4B96A";
+      nord14 = "#197300"; nord15 = "#A1879E";
+
+      background    = "#262626"; backgroundAlt = "#3A342E"; surface = "#47423C";
+      border        = "#5E5E5E";
+      textDim       = "#999999"; text = "#C5B8A1"; textBright = "#E8E0D0";
+      accent        = "#7A9EE0"; accentBlue = "#6C99BB"; accentDark = "#3C71D2";
+      urgent        = "#E63C3C"; warning    = "#D4B96A"; success    = "#197300";
+
+      backgroundRgb    = "38, 38, 38";
+      backgroundAltRgb = "58, 52, 46";
+      borderRgb        = "94, 94, 94";
+      accentRgb        = "122, 158, 224";
+      textDimRgb       = "153, 153, 153";
+      urgentRgb        = "230, 60, 60";
+    };
+
+    font = { name = "JetBrainsMono Nerd Font"; size = "0.9rem"; weight = 600; };
+
+    gtk = {
+      themeName        = "adw-gtk3-dark";
+      themePackage     = "adw-gtk3";
+      iconThemeName    = "Papirus-Dark";
+      iconThemePackage = "papirus-icon-theme";
+      cursorName       = "Bibata-Modern-Classic";
+      cursorPackage    = "bibata-cursors";
+      cursorSize       = 20;
+    };
+  };
+
   # ── Tokyo Night ────────────────────────────────────────────────────────────
   "tokyo-night" = {
     colors = {

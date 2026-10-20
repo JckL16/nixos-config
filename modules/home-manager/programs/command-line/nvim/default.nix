@@ -1,11 +1,18 @@
 { pkgs, lib, config, inputs, variables, ... }:
 let
-  # Nvim's colorscheme is intentionally independent of variables.theme (which
-  # drives the rest of the system) — monochrome was too hard to read in the editor,
-  # and tokyonight too purple. This keeps the same dark-grey background kitty
-  # uses (variables.theme's monochrome background, #252525) but gives syntax
-  # categories distinct, non-purple hues instead of shades of grey.
-  nvimColorscheme = "base16";
+  # Nvim follows variables.theme: themes with a real nixvim colorscheme plugin
+  # use it directly; everything else (monochrome, typewriter, ...) falls back
+  # to base16 with its background/foreground ramp (base00-07) pulled from
+  # config.theme.colors, while syntax categories (base08-0F) stay on fixed,
+  # distinct non-purple hues — plain monochrome/tokyonight-style grayscale or
+  # purple-heavy ramps made syntax categories too hard to tell apart.
+  nvimColorschemeMap = {
+    nord        = "nord";
+    gruvbox     = "gruvbox";
+    dracula     = "dracula-nvim";
+    "tokyo-night" = "tokyonight";
+  };
+  nvimColorscheme = nvimColorschemeMap.${variables.theme} or "base16";
   nvimLualineTheme = "auto";
 
   # vimtex's own texlivePackage option defaults to scheme-medium, which is
@@ -113,8 +120,10 @@ in
       colorschemes.base16 = {
         enable = nvimColorscheme == "base16";
         colorscheme = {
-          base00 = "#252525"; base01 = "#2d2d2d"; base02 = "#3b3b3b"; base03 = "#6e6e6e";
-          base04 = "#ababab"; base05 = "#d0d0d0"; base06 = "#e3e3e3"; base07 = "#f7f7f7";
+          base00 = config.theme.colors.background;    base01 = config.theme.colors.backgroundAlt;
+          base02 = config.theme.colors.surface;        base03 = config.theme.colors.border;
+          base04 = config.theme.colors.textDim;        base05 = config.theme.colors.text;
+          base06 = config.theme.colors.textBright;     base07 = config.theme.colors.textBright;
           base08 = "#e06c75"; base09 = "#d19a66"; base0A = "#e5c07b"; base0B = "#98c379";
           base0C = "#56b6c2"; base0D = "#61afef"; base0E = "#7f9bbf"; base0F = "#be5046";
         };
