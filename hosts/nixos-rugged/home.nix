@@ -79,9 +79,10 @@ in
     tea
     readest
     riscv64-unknown-elf-toolchain # KTH system-security course (s3k)
+    jellyfin-desktop
   ] ++ [
       pkgs-unstable.protonmail-desktop
-      pkgs-unstable.zoom-us
+      pkgs-unstable.ani-cli # stable (26.05) is pinned to 5.0, which uses the dead allanime backend
     ];
 
 }
