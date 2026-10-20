@@ -3,7 +3,7 @@
   imports = [
     ./git.nix
     ./zsh.nix
-    ./neofetch.nix
+    ./fastfetch.nix
     ./nvim
     ./ssh.nix
     ./tui-do

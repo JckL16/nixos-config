@@ -26,6 +26,13 @@ in {
       };
 
       settings = {
+        # Nerd Fonts' Material Design icon set (fastfetch, etc.) lives in
+        # U+F0001-U+F1AF0. Kitty auto-widens PUA glyphs followed by a space to
+        # 2 cells, but the "Mono" Nerd Font variant already renders them at a
+        # fixed 1 cell — without this, that mismatch shows up as a stray gap
+        # after every icon.
+        narrow_symbols = "U+f0001-U+f1af0 1";
+
         background = base00;
         foreground = base05;
 
