@@ -82,7 +82,6 @@ in
     jellyfin-desktop
   ] ++ [
       pkgs-unstable.protonmail-desktop
-      pkgs-unstable.ani-cli # stable (26.05) is pinned to 5.0, which uses the dead allanime backend
     ];
 
 }
