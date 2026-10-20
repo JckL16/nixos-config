@@ -2,16 +2,6 @@
 let
   c = config.theme.colors;
   g = config.theme.gtk;
-
-  generatedWallpaper = pkgs.runCommand "theme-wallpaper" {
-    buildInputs = [ pkgs.imagemagick ];
-  } ''
-    ${pkgs.imagemagick}/bin/convert \
-      -size 1920x1080 \
-      radial-gradient:"${c.surface}"-"${c.background}" \
-      -attenuate 0.03 +noise Gaussian \
-      PNG24:$out
-  '';
 in {
 
   config = lib.mkIf config.hyprland.enable {
@@ -95,7 +85,7 @@ in {
       MOZ_ENABLE_WAYLAND     = "1";
     };
 
-    home.file.".config/wallpapers/wallpaper.png".source = generatedWallpaper;
+    home.file.".config/wallpapers/wallpaper.png".source = ../../../../wallpaper/wallpaper.png;
 
     home.packages = [
       pkgs.${g.themePackage}

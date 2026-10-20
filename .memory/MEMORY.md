@@ -16,3 +16,4 @@
 - [project_quickshell_hyprland_gotchas.md](project_quickshell_hyprland_gotchas.md) — Verified QuickShell/Qt6 API, Hyprland portal/windowrule, and EDS calendar gotchas (code comments were stripped, moved here)
 - [project_nvim_cpp_tooling.md](project_nvim_cpp_tooling.md) — How nvim's auto compile_commands.json generation works (build-root/project-root scoping, merge-not-overwrite for CMake)
 - [project_kitty_terminal_migration.md](project_kitty_terminal_migration.md) — Why Kitty replaced Alacritty as default terminal (ligature support; Alacritty fully removed)
+- [project_wallpaper_mechanism.md](project_wallpaper_mechanism.md) — Wallpaper is home.file-sourced from repo's wallpaper/wallpaper.png (gtk-theme.nix), no longer a per-theme generated gradient
