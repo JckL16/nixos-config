@@ -1,4 +1,27 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, ... }:
+let
+  extractArchive = pkgs.writeShellScriptBin "spf-extract-archive" ''
+    set -e
+    f="$1"
+    dir="$(dirname "$f")"
+    base="$(basename "$f")"
+    name="''${base%.*}"
+    [[ "$name" == *.tar ]] && name="''${name%.tar}"
+    dest="$dir/$name"
+    mkdir -p "$dest"
+    case "$f" in
+      *.tar.gz|*.tgz) tar -xzf "$f" -C "$dest" ;;
+      *.tar.bz2|*.tbz2) tar -xjf "$f" -C "$dest" ;;
+      *.tar) tar -xf "$f" -C "$dest" ;;
+      *.gz) gunzip -k -c "$f" > "$dest/''${name}" ;;
+      *.zip) unzip -o "$f" -d "$dest" ;;
+      *.7z) 7z x -o"$dest" "$f" ;;
+      *.rar) unrar x "$f" "$dest/" ;;
+      *) echo "Unsupported archive: $f"; exit 1 ;;
+    esac
+    notify-send "Archive extracted" "$dest"
+  '';
+in {
   options = {
     cyber.enable =
       lib.mkEnableOption "Enable comprehensive cyber security toolkit";
@@ -303,11 +326,35 @@
 
       ffmpeg
       vlc
+
+      extractArchive
     ];
+
+    xdg.desktopEntries.spf-extract-archive = {
+      name = "Extract Archive";
+      exec = "kitty --class archive-extract ${extractArchive}/bin/spf-extract-archive %f";
+      terminal = false;
+      type = "Application";
+      categories = [ "Utility" "Archiving" ];
+      mimeType = [
+        "application/zip"
+        "application/x-7z-compressed"
+        "application/x-tar"
+        "application/gzip"
+        "application/vnd.rar"
+        "application/x-rar-compressed"
+      ];
+    };
 
     xdg.mimeApps = {
       enable = true;
       defaultApplications = {
+        "application/zip" = "spf-extract-archive.desktop";
+        "application/x-7z-compressed" = "spf-extract-archive.desktop";
+        "application/x-tar" = "spf-extract-archive.desktop";
+        "application/gzip" = "spf-extract-archive.desktop";
+        "application/vnd.rar" = "spf-extract-archive.desktop";
+        "application/x-rar-compressed" = "spf-extract-archive.desktop";
         "audio/mpeg" = "vlc.desktop";
         "audio/mp3" = "vlc.desktop";
         "audio/flac" = "vlc.desktop";
