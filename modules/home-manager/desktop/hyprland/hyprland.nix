@@ -1,4 +1,4 @@
-{ pkgs, lib, config, variables, pkgs-unstable,  ... }:
+{ pkgs, lib, config, variables, ... }:
 let
   c = config.theme.colors;
   f = config.theme.font;
@@ -42,7 +42,9 @@ in {
 
         decoration = {
           rounding = 3;
-          
+          active_opacity = 0.95;
+          inactive_opacity = 0.95;
+
           blur = {
             enabled = true;
             size = 5;
@@ -94,7 +96,7 @@ in {
 
         misc = {
           disable_hyprland_logo = true;
-          font_family = "JetBrains Mono";
+          font_family = f.name;
           focus_on_activate = true;
         };
 
@@ -309,18 +311,12 @@ in {
       slurp
       hyprpicker
       wl-clipboard
-      playerctl
       brightnessctl
-      networkmanagerapplet
       swaybg
-      udiskie
       nerd-fonts.jetbrains-mono
       libnotify
       batsignal
-      jq
       xdg-desktop-portal-gtk
-    ] ++ [
-      pkgs-unstable.protonmail-desktop
     ];
 
     xdg.portal.config.hyprland = {
