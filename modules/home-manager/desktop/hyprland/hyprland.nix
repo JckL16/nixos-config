@@ -13,6 +13,9 @@ in {
   };
 
   config = lib.mkIf config.hyprland.enable {
+    # $mod+E spawns the superfile TUI file manager (see keybinds below)
+    programs.superfile.enableThemeIntegration = true;
+
     wayland.windowManager.hyprland = {
       enable = true;
       package = pkgs.hyprland;
@@ -146,7 +149,7 @@ in {
           "$mod, F, fullscreen, 0"
           "$mod, S, togglegroup"
           "$mod, W, changegroupactive, f"
-          "$mod, E, exec, nautilus"
+          "$mod, E, exec, kitty --class superfile superfile"
           
           "$mod SHIFT, Space, togglefloating"
           "$mod, Space, focuscurrentorlast"
@@ -316,7 +319,6 @@ in {
       batsignal
       jq
       xdg-desktop-portal-gtk
-      nautilus
     ] ++ [
       pkgs-unstable.protonmail-desktop
     ];

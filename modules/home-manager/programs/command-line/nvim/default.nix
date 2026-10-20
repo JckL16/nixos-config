@@ -762,5 +762,22 @@ in
         lsp-signature.enable = true;
       };
     };
+
+    xdg.desktopEntries.spf-nvim-markdown = {
+      name = "Neovim (Markdown)";
+      exec = "kitty --class nvim-markdown nvim %F";
+      terminal = false;
+      type = "Application";
+      categories = [ "Utility" "TextEditor" ];
+      mimeType = [ "text/markdown" "text/x-markdown" ];
+    };
+
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/markdown" = "spf-nvim-markdown.desktop";
+        "text/x-markdown" = "spf-nvim-markdown.desktop";
+      };
+    };
   };
 }

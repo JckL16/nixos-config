@@ -6,6 +6,7 @@
     ./fastfetch.nix
     ./nvim
     ./ssh.nix
+    ./superfile.nix
     ./tui-do
   ];
 
