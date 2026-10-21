@@ -22,6 +22,8 @@ let
     notify-send "Archive extracted" "$dest"
   '';
 in {
+  imports = [ ./wireshark-profiles.nix ];
+
   options = {
     cyber.enable =
       lib.mkEnableOption "Enable comprehensive cyber security toolkit";
