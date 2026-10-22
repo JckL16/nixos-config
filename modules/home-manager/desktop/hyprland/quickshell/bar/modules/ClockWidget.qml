@@ -28,8 +28,16 @@ Rectangle {
                     let map = {};
                     for (let i = 0; i < list.length; i++) {
                         let ev = list[i];
-                        if (!map[ev.date]) map[ev.date] = [];
-                        map[ev.date].push(ev);
+                        let cursor = new Date(ev.date + "T00:00:00");
+                        let last = new Date((ev.endDate || ev.date) + "T00:00:00");
+                        for (let n = 0; n < 366 && cursor <= last; n++) {
+                            let mm = String(cursor.getMonth() + 1).padStart(2, "0");
+                            let dd = String(cursor.getDate()).padStart(2, "0");
+                            let key = cursor.getFullYear() + "-" + mm + "-" + dd;
+                            if (!map[key]) map[key] = [];
+                            map[key].push(ev);
+                            cursor.setDate(cursor.getDate() + 1);
+                        }
                     }
                     for (let date in map) {
                         map[date].sort((a, b) => (a.time || "").localeCompare(b.time || ""));
@@ -354,10 +362,16 @@ Rectangle {
                             }
 
                             Text {
-                                visible: !!eventDelegate.modelData.time
+                                readonly property bool spansDays: !!eventDelegate.modelData.endDate && eventDelegate.modelData.endDate !== eventDelegate.modelData.date
+                                visible: eventDelegate.modelData.allDay || !!eventDelegate.modelData.time || spansDays
                                 leftPadding: barWindow ? barWindow.s(14) : 14
-                                text: eventDelegate.modelData.time
-                                    + (eventDelegate.modelData.endTime ? "  –  " + eventDelegate.modelData.endTime : "")
+                                text: {
+                                    let ev = eventDelegate.modelData;
+                                    let range = spansDays ? (ev.date + "  →  " + ev.endDate) : "";
+                                    if (ev.allDay) return range ? ("All day  ·  " + range) : "All day";
+                                    let time = ev.time + (ev.endTime ? "  –  " + ev.endTime : "");
+                                    return range ? (time + "  ·  " + range) : time;
+                                }
                                 font.family: ThemeBackend.fontFamily
                                 font.pixelSize: barWindow ? barWindow.s(11) : 11
                                 color: ThemeBackend.overlay1

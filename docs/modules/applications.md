@@ -179,6 +179,12 @@ minutes. The bar's clock popup reads events straight out of that cache via `eds-
 `calendar.proton.me` and queries its cache directly, so there's no second URL or fetch to manage.
 Clicking a day with a dot shows that day's events; no synced source means no dots, same as before.
 
+All-day and multi-day events are supported: the popup shows a dot on every day an event spans
+and labels all-day events as "All day" instead of a time. This relies on a fallback in
+`eds-calendar-events` — EDS leaves `occur_start`/`occur_end` NULL in its cache for all-day events,
+so the script parses `DTSTART`/`DTEND` directly out of the raw ICS blob when those columns are
+empty. Without that fallback, all-day events are silently dropped from the query entirely.
+
 GNOME Calendar is launched (hidden behind other windows, not just installed) via Hyprland's
 `exec-once` so its EDS backend activates and syncs on login — without a running client for that
 source, EDS never queries `calendar.proton.me` and the bar's cache stays empty until someone opens
