@@ -80,5 +80,3 @@ used `-t $'\t' -l 0 -V 1` flags that no longer exist in 2.x. Keybind: `$mod, Tab
 Walker passes the FULL input string (including prefix character) to qalc.
 `=1+1` → qalc receives `=1+1` → evaluates as `(0 = (1+1)) = false`.
 `+` is safe as unary plus. Use `+` for calc prefix, `=` for websearch.
-
-[[project_hyprpanel]]

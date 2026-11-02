@@ -56,10 +56,15 @@ Variants {
                 barWindow: barWindow
                 targetX: barWindow.width - width
             }
+            ResizeModeWidget {
+                id: resizeModeWidget
+                barWindow: barWindow
+                targetX: notificationWidget.x - width - barWindow.s(2)
+            }
             TrayWidget {
                 id: trayWidget
                 barWindow: barWindow
-                targetX: notificationWidget.x - width - barWindow.s(2)
+                targetX: resizeModeWidget.x - width - barWindow.s(2)
             }
             BatWidget {
                 id: batWidget

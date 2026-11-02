@@ -9,7 +9,7 @@ in {
 
   options = {
     hyprland.enable   = lib.mkEnableOption "Enable hyprland home-manager configuration";
-    hyprland.battery  = lib.mkEnableOption "Include battery module in HyprPanel bar";
+    hyprland.battery  = lib.mkEnableOption "Include battery module in Quickshell bar";
   };
 
   config = lib.mkIf config.hyprland.enable {
@@ -37,6 +37,7 @@ in {
           "col.active_border" = "rgba(${hyprHex c.border}ee)";
           "col.inactive_border" = "rgba(${hyprHex c.border}aa)";
           layout = "dwindle";
+          resize_on_border = true;
         };
         
 
@@ -207,8 +208,6 @@ in {
           "$mod, mouse_down, workspace, e+1"
           "$mod, mouse_up, workspace, e-1"
 
-          "$mod, N, exec, hyprpanel -t notificationsmenu"
-
           "$mod, C, exec, proton-mail"
 
           ''$mod SHIFT, O, exec, if [ "$(cat ~/.config/hypr/lid-suspend-enabled 2>/dev/null)" = "0" ]; then echo 1 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: ON"; else echo 0 > ~/.config/hypr/lid-suspend-enabled && notify-send "Lid Suspend" "Lid suspend: OFF"; fi''
@@ -241,7 +240,6 @@ in {
           "[ -f ~/.config/hypr/lid-suspend-enabled ] || echo 1 > ~/.config/hypr/lid-suspend-enabled"
           "dex --autostart --environment hyprland"
           "swaybg -i ~/.config/wallpapers/wallpaper.png -m fill"
-          "hyprpanel"
           "hyprctl dispatch workspace 1"
           "swayosd-server &"
           "batsignal -b -w 20 -c 10 -d 5 -n BAT0"
@@ -251,7 +249,7 @@ in {
           # syncs the Proton webcal source — otherwise nothing ever queries
           # it and the bar's eds-calendar-events cache stays empty until
           # GNOME Calendar is opened manually.
-          "gnome-calendar &"
+          "gnome-calendar --gapplication-service &"
         ];
         
 

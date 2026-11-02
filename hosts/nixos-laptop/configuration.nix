@@ -48,7 +48,7 @@
   networking.firewall.allowedUDPPorts = [ 53 67 53317 ];
 
   # Declarative hotspot profile — autoconnect is always false so it never
-  # starts on boot. Toggle via HyprPanel dashboard or `nmcli connection up Hotspot`.
+  # starts on boot. Toggle via `nmcli connection up Hotspot`.
   # PSK is injected from /etc/NetworkManager/hotspot.env (not in the Nix store).
   # Create that file manually: HOTSPOT_PSK=<password>
   networking.networkmanager.ensureProfiles = {
@@ -75,7 +75,7 @@
 
   # Battery charge thresholds — keeps battery between 80–90% when plugged in.
   # START=80 ensures the EC starts a charge cycle at 79%, so UPower reports
-  # 'charging' (not 'pending-charge') and HyprPanel shows the charging icon.
+  # 'charging' (not 'pending-charge') and Quickshell shows the charging icon.
   services.tlp = {
     enable = true;
     settings = {

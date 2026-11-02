@@ -8,3 +8,4 @@ SysMonWidget 1.0 SysMonWidget.qml
 BatWidget 1.0 BatWidget.qml
 TrayWidget 1.0 TrayWidget.qml
 NotificationWidget 1.0 NotificationWidget.qml
+ResizeModeWidget 1.0 ResizeModeWidget.qml

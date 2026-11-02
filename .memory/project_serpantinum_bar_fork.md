@@ -1,12 +1,20 @@
 ---
 name: project-serpantinum-bar-fork
-description: In-progress fork of Serpantinum's QuickShell bar + power menu to replace HyprPanel and wlogout
+description: Fork of Serpantinum's QuickShell bar + power menu; fully replaced and deleted both HyprPanel and wlogout
 metadata:
   type: project
 ---
 
-Replacing `modules/home-manager/desktop/hyprland/hyprpanel.nix` and `wlogout.nix` with a
-custom QuickShell (QML/Qt6) bar, living at `modules/home-manager/desktop/hyprland/quickshell.nix`
+**Status (2026-10-23):** Done. `hyprpanel.nix` and `wlogout.nix` are both deleted, along with
+the `hyprpanel` flake input and dead HyprPanel keybind/exec-once lines in `hyprland.nix`.
+Quickshell's `PowerMenu.qml` (bound to `$mod SHIFT, P`, see `hyprland.nix`) fully covers what
+wlogout used to do. If a similarly orphaned module (imported nowhere, superseded by Quickshell
+QML) turns up again later, same pattern: delete the module file, any flake input it needed, and
+dead keybind/exec-once lines referencing it.
+
+Replaced `modules/home-manager/desktop/hyprland/hyprpanel.nix` and `wlogout.nix` (both deleted)
+with a custom QuickShell (QML/Qt6) bar, living at
+`modules/home-manager/desktop/hyprland/quickshell.nix`
 + `modules/home-manager/desktop/hyprland/quickshell/`. Originally started as a trimmed fork of
 [Serpantinum](https://github.com/ilyamiro/serpantinum) and was named `serpantinum-bar/`
 accordingly, but renamed to `quickshell/` once most of the content became original code (only

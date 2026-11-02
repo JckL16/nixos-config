@@ -55,6 +55,14 @@ summaries alone and don't.
   check `systemctl --user status quickshell` for a stale `Active: ... since <old date>` timestamp
   if a config change doesn't seem to apply.
 
+## Hyprland submap IPC events (used by ResizeModeWidget)
+
+`Quickshell.Hyprland`'s `Hyprland.rawEvent(event)` signal fires for every line on Hyprland's
+`.socket2.sock`, with `event.name`/`event.data` holding the unparsed `EVENT>>DATA` split. For
+submap changes the event name is literally `"submap"` and `data` is the submap name — empty
+string `""` when back in the default/global submap (e.g. after a `submap, reset` dispatch), not
+the string `"reset"` itself (`"reset"` is a dispatcher keyword, never an emitted submap name).
+
 ## Hyprland windowrule syntax
 
 Hyprland 0.53+ replaced the legacy `windowrule = PROPERTY on class:^(x)$` form with

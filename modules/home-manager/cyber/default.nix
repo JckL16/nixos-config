@@ -203,6 +203,7 @@ in {
       ngrep
       ettercap
       networkminer
+      snort
 
       exiftool
       exifprobe

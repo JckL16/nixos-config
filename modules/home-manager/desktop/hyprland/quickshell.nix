@@ -58,7 +58,7 @@ let
           [ -n "$name" ] || name="$id"
 
           new=$(sqlite3 -json "$dbFile" \
-            "SELECT ECacheOBJ, occur_start, occur_end FROM ECacheObjects WHERE length(occur_start) >= 8;" \
+            "SELECT ECacheOBJ, occur_start, occur_end FROM ECacheObjects;" \
             2>/dev/null) || new="[]"
           [ -n "$new" ] || new="[]"
 
@@ -70,20 +70,50 @@ let
       echo "$rows" | jq -c '
         def toLocal(d):
           d | strptime("%Y%m%d%H%M%S") | mktime | localtime | strftime("%Y-%m-%dT%H:%M");
+        def subtractDay(d):
+          (d | strptime("%Y-%m-%d") | mktime) - 86400 | strftime("%Y-%m-%d");
         def unescapeIcs:
           gsub("\\\\n"; " ") | gsub("\\\\,"; ",") | gsub("\\\\;"; ";");
         def icsField(obj; name):
           (((obj // "") | capture(name + "[^:\r\n]*:(?<v>[^\r\n]*)"; "i")) // {v:""}).v | unescapeIcs;
+        def icsRawDate(obj; name):
+          (((obj // "") | capture(name + "[^:\r\n]*:(?<v>[0-9]{8})(?!T)"; "i")) // {v:null}).v;
         [.[] |
           (icsField(.ECacheOBJ; "SUMMARY")) as $summary |
-          select($summary != "" and (.occur_start // "") != "") |
+          select($summary != "") |
           (icsField(.ECacheOBJ; "LOCATION")) as $location |
-          (if (.occur_start | length) >= 12 then toLocal(.occur_start) else (.occur_start[0:4] + "-" + .occur_start[4:6] + "-" + .occur_start[6:8] + "T00:00") end) as $start |
-          ((.occur_end // "") | if length >= 12 then toLocal(.) else null end) as $end |
+          (.occur_start // "") as $occStart |
+          (if ($occStart | length) >= 8 then
+             {raw: $occStart, allDay: (($occStart | length) < 12)}
+           else
+             (icsRawDate(.ECacheOBJ; "DTSTART")) as $d |
+             (if $d != null then {raw: $d, allDay: true} else null end)
+           end) as $startInfo |
+          select($startInfo != null) |
+          ($startInfo.allDay) as $allDay |
+          ($startInfo.raw) as $rawStart |
+          (if $allDay then ($rawStart[0:4] + "-" + $rawStart[4:6] + "-" + $rawStart[6:8] + "T00:00") else toLocal($rawStart) end) as $start |
+          (.occur_end // "") as $occEnd |
+          (if ($occEnd | length) >= 8 then $occEnd
+           elif $allDay then icsRawDate(.ECacheOBJ; "DTEND")
+           else null
+           end) as $rawEnd |
+          (if $rawEnd == null then null
+           elif ($rawEnd | length) >= 12 then toLocal($rawEnd)
+           else ($rawEnd[0:4] + "-" + $rawEnd[4:6] + "-" + $rawEnd[6:8] + "T00:00")
+           end) as $end |
+          ($start[0:10]) as $startDate |
+          (if $end == null then $startDate
+           elif $allDay then subtractDay($end[0:10])
+           else $end[0:10]
+           end) as $endDateRaw |
+          (if $endDateRaw < $startDate then $startDate else $endDateRaw end) as $endDate |
           {
-            date: $start[0:10],
-            time: (if (.occur_start | length) >= 12 then $start[11:16] else null end),
-            endTime: (if $end != null then $end[11:16] else null end),
+            date: $startDate,
+            endDate: $endDate,
+            allDay: $allDay,
+            time: (if $allDay then null else $start[11:16] end),
+            endTime: (if $allDay then null elif $end != null then $end[11:16] else null end),
             location: $location,
             calendar: .calendar,
             summary: $summary

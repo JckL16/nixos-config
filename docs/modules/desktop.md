@@ -24,40 +24,34 @@ Provides:
 | File | Purpose |
 |---|---|
 | `hyprland.nix` | Keybindings, window rules, layer rules, exec-once startup, keyboard input options |
-| `hyprpanel.nix` | HyprPanel bar — replaces Waybar and Mako |
+| `quickshell.nix` | Quickshell bar — replaces Waybar, Mako, and HyprPanel |
 | `nordic-theme.nix` | Nordic GTK theme, Papirus icons, Nordzy cursors, GTK popup CSS |
 | `walker.nix` | Walker GTK4 app launcher — Nord theme, per-mode prompt icons, window switcher |
 | `clipman.nix` | Clipboard history via cliphist; picker via walker `--dmenu` |
 | `swayosd.nix` | Volume/brightness OSD (SwayOSD) |
-| `wlogout.nix` | Logout/shutdown/reboot/lock menu |
 
-### HyprPanel (Bar + Notifications)
+### Quickshell (Bar + Notifications + Power Menu)
 
-HyprPanel replaces both Waybar (status bar) and Mako (notification daemon). It is an
-AGS/GJS-based bar with animated popups, media controls, a calendar, network manager UI,
-notification center, and audio mixer.
+Quickshell replaces Waybar, Mako, HyprPanel, and wlogout (power menu). It's a custom QML/Qt6 bar — originally
+forked from [Serpantinum](https://github.com/ilyamiro/serpantinum), now mostly original code —
+living at `modules/home-manager/desktop/hyprland/quickshell.nix` +
+`modules/home-manager/desktop/hyprland/quickshell/`.
 
-**Config:** `modules/home-manager/desktop/hyprland/hyprpanel.nix`
+**Config:** `modules/home-manager/desktop/hyprland/quickshell.nix` (Nix side: theme color/font
+JSON generation, EDS calendar-event extraction script, package install). QuickShell has no
+Nix-attrset-to-QML translation layer, so the actual bar layout, widgets, and power menu are
+defined in QML under `quickshell/` (`Bar.qml`, `PowerMenu.qml`, `Notifications.qml`, `bar/modules/`).
 
-Bar layout (left → middle → right):
-- **Left:** dashboard launcher, workspaces, active window title, media player
-- **Middle:** clock + date (`DD-MM-YYYY  HH:MM`)
-- **Right:** volume, network, bluetooth, battery (if `hyprland.battery = true`), CPU%, RAM used, CPU temp, systray, notifications
+Bar widgets (`quickshell/bar/Bar.qml`): workspaces, media, clock, notifications, systray, battery,
+CPU/RAM/temp (`SysMonWidget`), bluetooth, network, volume, resize-mode indicator (`ResizeModeWidget`
+— pill that appears next to the systray while Hyprland's `resize` submap is active, via
+`Quickshell.Hyprland`'s `rawEvent`/`submap` IPC event).
 
-Key configuration decisions:
-- `systemd.enable = false` — started via `exec-once` in hyprland.nix, consistent with the rest of the desktop
-- `wallpaper.enable = false` — swaybg handles wallpaper
-- `theme.bar.menus.monochrome = true` — **required** for `background`/`cards`/`text` color overrides to take effect; without it per-menu Catppuccin defaults override everything
-- Battery widget is gated on `hyprland.battery = true` (home.nix) — set on laptop/rugged hosts only; desktop hosts omit it. UPower 1.90.10 with `usePercentageForPolicy = true` correctly reports dual-battery percentage via the DisplayDevice.
-- `bar.customModules.{cpu,ram,cpuTemp}` — correct path for custom resource modules (not `bar.{cpu,...}`)
-
-**GLib ELOOP workaround:** HyprPanel's `readFile()` follows symlinks into the nix store
-and hits the kernel ELOOP limit on multi-level symlinks. The activation scripts work around
-this by:
-1. `cleanHyprpanelConfig` (before linkGeneration) — wipes `~/.config/hyprpanel` so home-manager creates fresh symlinks
-2. `copyHyprpanelConfig` (after linkGeneration) — dereferences `config.json` symlink to a real file, and copies `modules.scss` from the nix store
-
-`modules.scss` is generated via `pkgs.writeText` and copied (never symlinked) to avoid the ELOOP. It contains Nord theme overrides for: calendar today indicator, systray popup menus, bar module fixed widths, media control active state, and notification popup margins.
+- Theme colors/font are handed to QML via generated JSON (`qs_colors.json`, `settings.json`) —
+  see `quickshell.nix` — not via Nix options, since Quickshell reads its own config format.
+- Power menu: `$mod SHIFT, P` → `quickshell -c quickshell ipc call powermenu toggle` (`hyprland.nix`).
+- Calendar events for the bar's clock widget come from `eds-calendar-events`, a shell script
+  (built in `quickshell.nix`) that reads the EDS SQLite cache directly — see the EDS section below.
 
 ### Startup sequence (exec-once)
 
@@ -68,7 +62,7 @@ Configured in `hyprland.nix`:
 3. Lid suspend state file initialisation
 4. `dex --autostart --environment hyprland` — XDG autostart (udiskie, nm-applet, etc.)
 5. `swaybg` — wallpaper
-6. `hyprpanel` — bar
+6. Quickshell bar (started via `programs.quickshell.systemd.enable = true`, not `exec-once`)
 7. `hyprctl dispatch workspace 1`
 8. `swayosd-server`
 9. `batsignal -b -w 20 -c 10 -d 5 -n BAT0` — low battery alerts for BAT0 only (no -f flag to avoid "battery full" notification spam)
@@ -78,7 +72,7 @@ Configured in `hyprland.nix`:
 
 `services.blueman.enable = true` is set in `modules/nixos/hardware/bluetooth.nix` and
 installs a system-level `/etc/xdg/autostart/blueman.desktop`. To prevent `dex` from
-auto-launching the blueman tray applet (HyprPanel has its own bluetooth module), an
+auto-launching the blueman tray applet (Quickshell has its own bluetooth widget), an
 override is written to `~/.config/autostart/blueman.desktop` with `Hidden=true`.
 
 `services.blueman-applet.enable = false` disables the home-manager systemd service but
@@ -133,12 +127,12 @@ The picker script (`~/.config/walker/clipboard.sh`) works around two non-obvious
 - `tray = "never"` — udiskie's GTK StatusIcon tray causes `gtk_widget_get_scale_factor`
   assertion failures on Wayland that crash the daemon. Running headless (no tray) is stable.
 - `notify = true` — mount/unmount events appear as desktop notifications via libnotify,
-  which HyprPanel's notification center catches.
+  which Quickshell's notification widget catches.
 - Automounting itself works correctly when headless.
 
 ### Monitor Configuration
 
-Monitor layout is managed per-host using **nwg-displays**, a GUI tool for arranging monitors visually. A shortcut to nwg-displays is in the HyprPanel dashboard (top-left launcher menu).
+Monitor layout is managed per-host using **nwg-displays**, a GUI tool for arranging monitors visually.
 
 The Hyprland config sources `~/.config/hypr/monitors.conf` on startup. If the file doesn't exist (e.g. on a new host), Hyprland falls back to the default `preferred,auto` layout.
 
