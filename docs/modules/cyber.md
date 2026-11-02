@@ -41,7 +41,7 @@ Automatically installed: pwntools, unicorn, capstone, keystone-engine, ropper, p
 ### Forensics
 - Disk recovery: sleuthkit, testdisk, foremost, scalpel, ddrescue
 - Memory forensics: volatility3
-- Network forensics: wireshark, tshark, tcpdump, ettercap, NetworkMiner
+- Network forensics: wireshark, tshark, tcpdump, ettercap, NetworkMiner, snort
 - Metadata: exiftool
 - PDF analysis: pdf-parser, pdfid
 - Windows forensics: regripper, evtx

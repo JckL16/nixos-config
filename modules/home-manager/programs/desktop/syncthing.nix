@@ -11,7 +11,7 @@
         enable = true;
         # Default command adds --wait, which appears to make syncthingtray
         # publish its tray icon in two phases (pre- and post-wait) that
-        # Quickshell/HyprPanel's systray doesn't dedupe, showing 2 icons.
+        # Quickshell's systray doesn't dedupe, showing 2 icons.
         command = "syncthingtray qt-widgets-gui --single-instance";
       };
     };
