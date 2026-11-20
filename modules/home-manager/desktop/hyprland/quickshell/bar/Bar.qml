@@ -87,8 +87,13 @@ Variants {
                 targetX: btWidget.x - width - barWindow.s(2)
             }
             VolWidget {
+                id: volWidget
                 barWindow: barWindow
                 targetX: networkWidget.x - width - barWindow.s(2)
+            }
+            KbLayoutWidget {
+                barWindow: barWindow
+                targetX: volWidget.x - width - barWindow.s(2)
             }
         }
     }

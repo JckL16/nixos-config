@@ -9,3 +9,4 @@ BatWidget 1.0 BatWidget.qml
 TrayWidget 1.0 TrayWidget.qml
 NotificationWidget 1.0 NotificationWidget.qml
 ResizeModeWidget 1.0 ResizeModeWidget.qml
+KbLayoutWidget 1.0 KbLayoutWidget.qml
